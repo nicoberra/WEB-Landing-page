@@ -2,3 +2,5 @@ node_modules/
 dist/
 .DS_Store
 *.log
+# Paquetes generados para subir a mano
+*.zip
