@@ -90,7 +90,7 @@ const title = page.match(/<title>([^<]*)<\/title>/)?.[1] || '';
 if (title.length > 65) warnings.push(`El título tiene ${title.length} caracteres (ideal: hasta 60).`);
 
 if (config.demo) warnings.push('Modo demostración activo (demo: true): avisos visibles, formulario sin envío y noindex.');
-if (/example\.(com|org)/.test(config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
+if (/example\.(com|org)/.test(process.env.SITE_URL || config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
 if (/example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
 if (/^\d+0{6,}$/.test(config.contact.whatsapp.number)) warnings.push('El número de WhatsApp es de ejemplo.');
 if (!config.person.photo) warnings.push('Falta la foto del profesional (se muestra el bloque de reemplazo).');

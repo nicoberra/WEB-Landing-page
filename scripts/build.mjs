@@ -13,6 +13,9 @@ const fresh = (file) => import(`${pathToFileURL(path.join(root, file)).href}?t=$
 
 export async function build() {
   const { default: config } = await fresh('site.config.mjs');
+  // En GitHub Pages el flujo de publicación pasa la dirección real del sitio.
+  if (process.env.SITE_URL) config.site.url = process.env.SITE_URL;
+  config.site.url = config.site.url.replace(/\/$/, '');
   const { renderPage } = await fresh('src/render.mjs');
   const { faviconSvg } = await fresh('src/sections/logo.mjs');
 
@@ -23,7 +26,7 @@ export async function build() {
     await cp(path.join(root, 'public'), dist, { recursive: true });
   }
 
-  const url = config.site.url.replace(/\/$/, '');
+  const url = config.site.url;
   await Promise.all([
     writeFile(path.join(dist, 'index.html'), renderPage(config)),
     copyFile(path.join(root, 'src/styles.css'), path.join(dist, 'styles.css')),

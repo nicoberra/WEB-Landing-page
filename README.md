@@ -6,7 +6,7 @@ La versión incluida usa una **marca de demostración**: _Martina López, diseñ
 
 - **Sin dependencias.** HTML, CSS y JavaScript sin frameworks. Solo hace falta Node.js 20 o superior para generar el sitio.
 - **Un solo archivo para personalizar:** [`site.config.mjs`](site.config.mjs).
-- **Resultado estático** en `dist/`: se puede subir a cualquier hosting.
+- **Resultado estático** en `dist/`: se publica solo en GitHub Pages con cada cambio, o se sube a cualquier hosting.
 
 ---
 
@@ -16,7 +16,7 @@ La versión incluida usa una **marca de demostración**: _Martina López, diseñ
 2. [Estructura del proyecto](#2-estructura-del-proyecto)
 3. [Personalizar para un cliente](#3-personalizar-para-un-cliente)
 4. [Duplicar la plantilla para un cliente nuevo](#4-duplicar-la-plantilla-para-un-cliente-nuevo)
-5. [Publicar](#5-publicar)
+5. [Publicar en GitHub Pages](#5-publicar-en-github-pages)
 6. [Ficha de información para pedirle al profesional](#6-ficha-de-información-para-pedirle-al-profesional)
 7. [Proceso de adaptación](#7-proceso-de-adaptación)
 8. [Qué es contenido de muestra](#8-qué-es-contenido-de-muestra)
@@ -58,6 +58,8 @@ scripts/
   dev.mjs              ← servidor local con recarga automática
   check.mjs            ← revisión de calidad y datos pendientes
   og-image.mjs         ← (opcional) genera la imagen para redes desde el config
+.github/workflows/
+  deploy-pages.yml     ← revisa el sitio en cada cambio y lo publica en GitHub Pages
 ```
 
 ## 3. Personalizar para un cliente
@@ -145,34 +147,50 @@ node scripts/og-image.mjs
 
 ## 4. Duplicar la plantilla para un cliente nuevo
 
-```bash
-cp -r WEB-Landing-page landing-nombre-cliente   # o usá "Use this template" en GitHub
-cd landing-nombre-cliente
-rm -rf .git && git init                          # historial propio para el cliente
-```
+La forma recomendada es usar este repositorio como **plantilla de GitHub**:
+
+1. Una sola vez, en este repositorio: _Settings → General_ → marcá **Template repository**.
+2. Para cada cliente: botón **Use this template → Create a new repository** (por ejemplo `landing-nombre-cliente`). El repositorio nuevo arranca con todos los archivos, sin el historial de la plantilla.
+3. Activá GitHub Pages en el repositorio nuevo (ver [Publicar](#5-publicar-en-github-pages)).
 
 Después:
 
 1. Completá la [ficha](#6-ficha-de-información-para-pedirle-al-profesional) con el cliente.
-2. Editá `site.config.mjs` y poné `demo: false`.
-3. Reemplazá fotos, logo e imagen para redes en `public/assets/`.
-4. Corré `npm run check` hasta que no queden errores ni avisos pendientes.
+2. Editá `site.config.mjs` y poné `demo: false`. Se puede editar directo en GitHub con el lápiz (_Edit this file_).
+3. Subí fotos, logo e imagen para redes a `public/assets/` (_Add file → Upload files_).
+4. Guardá los cambios (_Commit changes_). GitHub revisa y publica solo; si `npm run check` encuentra un error, la publicación se frena y el error aparece en la pestaña **Actions**.
 
-## 5. Publicar
+Si preferís trabajar en tu computadora: `git clone`, editá, `npm run dev` para ver los cambios y `git push` para publicar.
 
-El sitio final es la carpeta `dist/`. Cualquier hosting de archivos estáticos sirve.
+## 5. Publicar en GitHub Pages
 
-**Antes de publicar un sitio real:** `demo: false`, `site.url` con el dominio final, datos de contacto reales y `npm run check` sin errores. Con `demo: true` la página se marca como `noindex` y `robots.txt` bloquea a los buscadores, para que la demo no compita con sitios reales.
+El repositorio ya trae el flujo [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml), que en cada cambio:
+
+- genera el sitio y corre `npm run check` (en cualquier rama y en los pull requests);
+- si el cambio está en la **rama principal** del repositorio (la _default branch_, normalmente `main`), publica `dist/` en GitHub Pages.
+
+**Activarlo (una sola vez por repositorio):**
+
+1. _Settings → Pages → Build and deployment → Source:_ elegí **GitHub Actions**.
+2. Hacé un cambio en la rama principal, o andá a _Actions → Revisar y publicar → Run workflow_.
+3. Cuando termina, la dirección aparece en _Settings → Pages_ y en el resumen del flujo. Para un repositorio `usuario/nombre` es `https://usuario.github.io/nombre/`.
+
+**Dirección del sitio (`site.url`):** mientras `site.url` sea el de ejemplo (`https://www.example.com`), el flujo usa automáticamente la dirección de GitHub Pages para el enlace canónico, la imagen para redes y el `sitemap.xml`. Si el cliente tiene dominio propio, poné ese dominio en `site.url`.
+
+**Dominio propio:** _Settings → Pages → Custom domain_, escribí el dominio y configurá los registros DNS que indica GitHub en el proveedor del dominio. Activá _Enforce HTTPS_ cuando esté disponible.
+
+**Antes de publicar un sitio real:** `demo: false`, datos de contacto reales y `npm run check` sin errores. Con `demo: true` la página se marca como `noindex` para que la demo no aparezca en buscadores.
+
+### Otros hostings
+
+El sitio final es la carpeta `dist/` (se genera con `npm run build`). Cualquier hosting de archivos estáticos sirve:
 
 | Servicio | Configuración |
 | --- | --- |
 | **Netlify** | Conectá el repositorio. Comando de build: `npm run build`. Carpeta de publicación: `dist`. También podés arrastrar la carpeta `dist/` a app.netlify.com/drop. |
 | **Vercel** | Importá el repositorio. Framework: _Other_. Build: `npm run build`. Output: `dist`. |
 | **Cloudflare Pages** | Build: `npm run build`. Directorio de salida: `dist`. |
-| **GitHub Pages** | En _Settings → Pages_, elegí _GitHub Actions_ y usá el flujo "Static HTML" apuntando a `dist` después de `npm run build`. |
 | **Hosting tradicional (cPanel, FTP)** | Corré `npm run build` y subí el contenido de `dist/` a la carpeta pública (`public_html`). |
-
-Dominio propio: se configura en el panel del hosting (registros DNS en el proveedor del dominio). Recordá actualizar `site.url`.
 
 ## 6. Ficha de información para pedirle al profesional
 
@@ -252,7 +270,7 @@ Todo lo siguiente es ficticio y debe reemplazarse:
 
 ## 9. Qué necesita configuración externa
 
-- **Dominio y hosting:** no incluidos. La página no está publicada hasta que se suba `dist/` a un hosting.
+- **GitHub Pages y dominio:** hay que activar Pages una vez por repositorio (_Settings → Pages → Source: GitHub Actions_). El dominio propio se compra y configura aparte. La página no está publicada hasta que el flujo de publicación termina bien.
 - **Recepción de mensajes del formulario:** con los modos incluidos no hay servidor; el mensaje se envía desde el WhatsApp o el correo del visitante. Para recibirlos en una casilla sin que el visitante use su app hace falta un servicio de formularios (por ejemplo Formspree, Netlify Forms o similar) o un backend propio, con su cuenta y configuración. En ese caso conviene sumar una política de privacidad provista por el cliente.
 - **Analítica** (Google Analytics, Plausible, etc.): no incluida. Si se agrega, puede requerir aviso de cookies según la jurisdicción.
 - **Search Console / indexación:** con `demo: false`, cargá el dominio en Google Search Console y enviá `sitemap.xml`.
