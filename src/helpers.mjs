@@ -30,10 +30,23 @@ export const whatsappUrl = (contact) => {
 
 export const mailtoUrl = (contact) => `mailto:${contact.email}`;
 
-/** Resuelve los atajos 'whatsapp' y 'email' de los botones. */
+/** Enlace de WhatsApp con un mensaje propio (por ejemplo, para pedir un producto). */
+export const whatsappWith = (contact, message) =>
+  `https://wa.me/${contact.whatsapp.number}?text=${encodeURIComponent(message)}`;
+
+/**
+ * Enlace al turnero externo. Si todavía no está configurado, lleva a la
+ * sección de turnos de la página (o, sin esa sección, a contacto).
+ */
+export const bookingUrl = (config) =>
+  config.booking?.url || (config.sections.includes('booking') ? `#${config.bookingSection.id}` : `#${config.contact.id}`);
+
+/** Resuelve los atajos 'whatsapp', 'email', 'booking' e 'instagram' de los botones. */
 export const resolveHref = (href, config) => {
   if (href === 'whatsapp') return whatsappUrl(config.contact);
   if (href === 'email') return mailtoUrl(config.contact);
+  if (href === 'booking') return bookingUrl(config);
+  if (href === 'instagram') return config.instagramUrl || '#';
   return href;
 };
 
@@ -47,7 +60,8 @@ export const linkAttrs = (href) =>
  * Foto real o bloque de reemplazo rotulado.
  * ratio: '4/5', '4/3', etc. Se usa para reservar el espacio y evitar saltos.
  */
-export const media = ({ image, label, ratio, hint, alt, eager = false, className = '' }) => {
+export const media = ({ image, label, ratio, hint, alt, eager = false, className = '', shape = '' }) => {
+  if (shape) className += ` media--${shape}`;
   const [w, h] = ratio.split('/').map(Number);
   if (image && image.src) {
     const width = image.width || w * 300;
@@ -57,14 +71,12 @@ export const media = ({ image, label, ratio, hint, alt, eager = false, className
 </figure>`;
   }
   return `<div class="media media--placeholder ${className}" style="--ratio:${w}/${h}" role="img" aria-label="${esc(`${alt}. Espacio reservado para una foto.`)}">
-  <span class="crop crop--tl" aria-hidden="true"></span><span class="crop crop--tr" aria-hidden="true"></span>
-  <span class="crop crop--bl" aria-hidden="true"></span><span class="crop crop--br" aria-hidden="true"></span>
   <span class="media__label" aria-hidden="true">${esc(label)}</span>
   <span class="media__hint" aria-hidden="true">${esc(hint)}</span>
 </div>`;
 };
 
-export const sectionHeader = ({ eyebrow, title, intro, id }) => `<header class="section-head">
+export const sectionHeader = ({ eyebrow, title, intro, id }) => `<header class="section-head" data-reveal>
   <p class="eyebrow">${esc(eyebrow)}</p>
   <h2 id="${esc(id)}-titulo">${rich(title)}</h2>
   ${intro ? `<p class="section-head__intro">${rich(intro)}</p>` : ''}
@@ -78,5 +90,10 @@ export const icons = {
   down: '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
   copy: '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="1.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/></svg>',
   plus: '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  insta: '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>',
+  calendar: '<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  user: '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>',
+  pin: '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/></svg>',
+  leaf: '<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14"/><path d="M5 19 13 11"/></svg>',
   menu: '<svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>',
 };

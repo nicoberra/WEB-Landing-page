@@ -9,10 +9,15 @@ import projects from './sections/projects.mjs';
 import faq from './sections/faq.mjs';
 import contact from './sections/contact.mjs';
 import footer from './sections/footer.mjs';
+import marquee from './sections/marquee.mjs';
+import products from './sections/products.mjs';
+import booking from './sections/booking.mjs';
+import instagram from './sections/instagram.mjs';
+import credentials from './sections/credentials.mjs';
 
 // Registro de secciones: para agregar una nueva, creá su archivo en
 // src/sections/, importalo arriba y sumalo acá y en `sections` del config.
-export const SECTIONS = { hero, about, services, process: processSection, projects, faq, contact };
+export const SECTIONS = { hero, marquee, about, services, credentials, process: processSection, projects, products, booking, instagram, faq, contact };
 
 const TOKEN_NAMES = {
   bg: '--bg',
@@ -36,7 +41,7 @@ const tokens = (palette) =>
 export function themeCss(config) {
   const { light, dark } = config.colors;
   const f = config.fonts;
-  const fonts = `--font-display:${f.display};--font-body:${f.body};--font-accent:${f.accent};--font-mono:${f.mono};`;
+  const fonts = `--font-display:${f.display};--font-body:${f.body};--font-accent:${f.accent};--font-mono:${f.mono};--display-weight:${f.displayWeight || 700};--accent-style:${f.accentStyle || 'italic'};--accent-size:${f.accentSize || '1em'};`;
   let css = `:root{${tokens(light)}${fonts}color-scheme:light}`;
   if (dark) {
     css += `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${tokens(dark)}color-scheme:dark}}`;
@@ -54,12 +59,20 @@ function structuredData(config) {
     jobTitle: config.person.profession,
     description: config.site.description,
     url: config.site.url,
-    email: `mailto:${config.contact.email}`,
     sameAs: config.social.filter((s) => s.url).map((s) => s.url),
   };
+  if (config.contact.email) data.email = `mailto:${config.contact.email}`;
   if (config.person.photo?.src) data.image = `${config.site.url}/${config.person.photo.src}`;
   return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
+
+// Se ejecuta antes de pintar: marca que hay JavaScript y, si la persona no pidió
+// reducir el movimiento, activa las animaciones de aparición. Si main.js no
+// llega a cargar en 3 segundos, se desactivan para que nada quede oculto.
+export const MOTION_BOOT =
+  "var d=document.documentElement;d.classList.add('js');" +
+  "if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('motion');" +
+  "setTimeout(function(){if(!window.__motionReady)d.classList.remove('motion')},3000)}";
 
 /** Contenido del <head>: SEO, metadatos sociales, fuentes y tema. */
 export function head(config, { inlineCss, inlineJs } = {}) {
@@ -67,7 +80,7 @@ export function head(config, { inlineCss, inlineJs } = {}) {
   const ogImage = s.ogImage ? `${s.url}/${s.ogImage}` : '';
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>document.documentElement.classList.add('js')</script>
+<script>${MOTION_BOOT}</script>
 <title>${esc(s.title)}</title>
 <meta name="description" content="${esc(s.description)}">
 <link rel="canonical" href="${esc(s.url)}/">

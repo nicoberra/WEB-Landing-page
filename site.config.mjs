@@ -1,265 +1,297 @@
 // ============================================================================
-//  CONFIGURACIÓN DEL SITIO
-//  Este es el ÚNICO archivo que hace falta editar para adaptar la plantilla
-//  a otro profesional: datos, textos, colores, fotos, servicios, proyectos,
-//  redes y contacto. Después de editarlo, ejecutá `npm run build`.
+//  CONFIGURACIÓN DEL SITIO · Jesica Cuevas, nutricionista (@nutricionista.cj)
+//  Este es el ÚNICO archivo que hace falta editar para adaptar la página:
+//  datos, textos, colores, fotos, servicios, recetarios, turnos, redes y
+//  contacto. Después de editarlo, ejecutá `npm run build` (o `npm run dev`).
+//
+//  ⚠ DATOS PENDIENTES: los valores marcados con "PENDIENTE" son provisorios
+//  y hay que reemplazarlos por los reales (`npm run check` los lista).
 //
 //  Convenciones:
 //  - Los textos son texto plano. Para resaltar una palabra en cursiva con la
-//    tipografía de acento, rodeala con asteriscos: "con *criterio*".
+//    tipografía de acento, rodeala con asteriscos: "comer *rico*".
 //  - Las fotos van en /public/assets/ y se referencian como "assets/archivo.jpg".
 //    Si una foto queda en null, se muestra un bloque de reemplazo rotulado.
 //  - Para quitar una sección, sacala de la lista `sections`.
+//  - Atajos para enlaces: 'whatsapp', 'email', 'booking' (turnero) e
+//    'instagram' se convierten en el enlace configurado más abajo.
 // ============================================================================
 
 export default {
-  // --- Modo demostración ----------------------------------------------------
-  // true: muestra avisos de que la marca y los proyectos son de muestra,
-  // y el formulario no envía nada. Ponelo en false al publicar un sitio real.
+  // true: muestra un aviso de versión en preparación, el formulario no envía
+  // nada y la página no se indexa en buscadores. false al publicar.
   demo: true,
 
   // --- Datos del sitio y SEO --------------------------------------------------
   site: {
     lang: 'es-AR',
     locale: 'es_AR',
-    url: 'https://www.example.com', // dominio final, sin barra al final
-    title: 'Martina López · Diseñadora gráfica independiente',
+    url: 'https://www.example.com', // PENDIENTE: dominio final, sin barra al final
+    title: 'Jesica Cuevas · Lic. en Nutrición · Nutrición deportiva',
     description:
-      'Identidad visual, diseño editorial, packaging y piezas para redes para emprendimientos, marcas pequeñas y proyectos culturales.',
+      'Licenciada en Nutrición especialista en nutrición deportiva, antropometría y nutrición hormonal. Consultas en Castelar y online.',
     ogImage: 'assets/og-image.png', // 1200×630 px
-    themeColor: '#2A36C9',
-    // Agrega datos estructurados (schema.org/Person) con nombre, profesión y redes.
+    themeColor: '#3E5B47',
     structuredData: true,
   },
 
   // --- Profesional ------------------------------------------------------------
   person: {
-    name: 'Martina López',
-    profession: 'Diseñadora gráfica independiente',
-    location: 'Trabajo a distancia', // ej.: "Rosario, Argentina · también a distancia"
-    photo: null, // ej.: { src: 'assets/martina.jpg', alt: 'Martina López sonriendo en su estudio' }
+    name: 'Jesica Cuevas',
+    profession: 'Licenciada en Nutrición',
+    license: 'M.N. 12233', // matrícula tal como debe mostrarse. Vacío = no se muestra.
+    location: 'Castelar · Online y presencial',
+    photo: null, // PENDIENTE: { src: 'assets/jesica.jpg', alt: 'Jesica Cuevas sonriendo en su consultorio' }
   },
 
   // --- Logo ---------------------------------------------------------------------
-  // type 'monogram' dibuja las iniciales con los colores de la marca.
-  // type 'image' usa un archivo: { type: 'image', src: 'assets/logo.svg', alt: 'Logo de ...', width: 120, height: 32 }
-  logo: { type: 'monogram', text: 'ml' },
+  // 'monogram' dibuja las iniciales; 'image' usa un archivo:
+  // { type: 'image', src: 'assets/logo.svg', alt: '', width: 120, height: 40 }
+  logo: { type: 'monogram', text: 'JC' },
 
-  // --- Colores ------------------------------------------------------------------
-  // Se usan en toda la página. `npm run check` avisa si algún par no llega
-  // al contraste mínimo recomendado (WCAG AA).
+  // --- Colores: tomados de su Instagram (verdes salvia y bosque, fondo crema) ------
+  // `npm run check` avisa si algún par no llega al contraste mínimo (WCAG AA).
+  // Sin paleta `dark`, el sitio se ve siempre con la paleta clara de la marca.
   colors: {
     light: {
-      bg: '#F2F3EF', // fondo general
-      surface: '#E6E8E1', // paneles y tarjetas
-      placeholder: '#DCDFD6', // bloques de foto
-      ink: '#16181D', // texto principal
-      muted: '#4F5560', // texto secundario
-      line: '#C9CCC2', // bordes y divisores
-      accent: '#2A36C9', // color de marca (botones, enlaces)
-      accentInk: '#FFFFFF', // texto sobre el color de marca
-      accentSoft: '#DADDF7', // fondos suaves con el color de marca
-      highlight: '#E9533B', // detalle puntual (marcas de registro)
-    },
-    dark: {
-      bg: '#111318',
-      surface: '#1A1D24',
-      placeholder: '#232731',
-      ink: '#ECEDE8',
-      muted: '#A3A8B3',
-      line: '#2E333D',
-      accent: '#93A0FF',
-      accentInk: '#0E1020',
-      accentSoft: '#232A55',
-      highlight: '#FF7B63',
+      bg: '#F4F3EE', // fondo general (papel crema de sus posteos)
+      surface: '#E8ECE0', // paneles y tarjetas (salvia muy claro)
+      placeholder: '#DCE3D2', // bloques de foto
+      ink: '#1F2D25', // texto principal (verde casi negro)
+      muted: '#4F5E54', // texto secundario
+      line: '#D3DACA', // bordes y divisores
+      accent: '#3E5B47', // verde bosque (botones, enlaces)
+      accentInk: '#FFFFFF', // texto sobre el verde
+      accentSoft: '#D9E4CF', // salvia suave
+      highlight: '#A7BC8F', // salvia (formas decorativas)
     },
   },
 
-  // --- Tipografías --------------------------------------------------------------
-  // Se cargan desde Google Fonts (licencia SIL Open Font License).
-  // Si cambiás las familias, actualizá también `googleFontsUrl`.
+  // --- Tipografías (Google Fonts, licencia SIL Open Font License) -----------------
   fonts: {
     googleFontsUrl:
-      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@1&family=IBM+Plex+Mono:wght@400;500&display=swap',
-    display: "'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif",
-    body: "'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif",
-    accent: "'Instrument Serif', Georgia, 'Times New Roman', serif",
-    mono: "'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace",
+      'https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Caveat:wght@500&family=Montserrat:wght@400;500;600&display=swap',
+    // Títulos: serif condensada, como sus placas. Acentos: manuscrita, como
+    // "Saludable" o "Rapiditas". Textos: sans-serif clara.
+    display: "'Instrument Serif', Georgia, 'Times New Roman', serif",
+    displayWeight: 400,
+    body: "'Montserrat', 'Helvetica Neue', Arial, sans-serif",
+    accent: "'Caveat', 'Segoe Script', cursive",
+    accentStyle: 'normal', // la manuscrita no necesita cursiva
+    accentSize: '1.18em', // la manuscrita se ve más chica: se agranda un poco
+    mono: "'Montserrat', 'Helvetica Neue', Arial, sans-serif", // rótulos pequeños
   },
 
-  // --- Orden de secciones y navegación -----------------------------------------
-  // Quitá o reordená ids. `nav` define qué aparece en el menú y con qué texto.
-  sections: ['hero', 'about', 'services', 'process', 'projects', 'faq', 'contact'],
+  // --- Turnos, panel de pacientes y redes ------------------------------------------
+  booking: {
+    // PENDIENTE: enlace al turnero online. Mientras esté vacío, los botones de
+    // turno llevan a la sección de turnos, que avisa que el enlace está pendiente.
+    url: '',
+    pendingNote: 'Turnero online: enlace pendiente de configuración.',
+  },
+  portal: {
+    url: '', // PENDIENTE: enlace al panel de pacientes. Vacío = no se muestra.
+    label: 'Acceso pacientes',
+  },
+  instagramUrl: 'https://www.instagram.com/nutricionista.cj/',
+
+  // --- Secciones y navegación -----------------------------------------------------
+  sections: ['hero', 'marquee', 'about', 'services', 'credentials', 'process', 'products', 'booking', 'instagram', 'faq', 'contact'],
   nav: [
     { id: 'sobre-mi', label: 'Sobre mí' },
-    { id: 'servicios', label: 'Servicios' },
-    { id: 'proceso', label: 'Proceso' },
-    { id: 'proyectos', label: 'Proyectos' },
-    { id: 'preguntas', label: 'Preguntas' },
+    { id: 'consultas', label: 'Consultas' },
+    { id: 'formacion', label: 'Formación' },
+    { id: 'recetarios', label: 'Recetarios' },
+    { id: 'contacto', label: 'Contacto' },
   ],
-  navCta: { label: 'Contacto', href: '#contacto' },
+  navCta: { label: 'Sacar turno', href: 'booking' },
 
   // --- Presentación inicial -----------------------------------------------------
   hero: {
-    tagline: 'Diseño gráfico con *criterio* para marcas que están por mostrarse.',
+    tagline: 'Rendí mejor, comé *sin restricciones*.',
     description:
-      'Ayudo a emprendimientos, marcas pequeñas y proyectos culturales a ordenar cómo se ven: una identidad clara, piezas coherentes y archivos listos para usar.',
-    primaryCta: { label: 'Escribime por WhatsApp', href: 'whatsapp' }, // 'whatsapp', 'email' o un enlace
-    secondaryCta: { label: 'Ver proyectos', href: '#proyectos' },
+      'Planes 100% personalizados según tu objetivo: rendimiento, descenso de grasa o aumento muscular. Con evaluación antropométrica y seguimiento.',
+    primaryCta: { label: 'Sacar turno', href: 'booking' },
+    secondaryCta: { label: 'Ver recetarios', href: '#recetarios' },
+    badges: ['Especialista en nutrición deportiva', 'Antropometrista ISAK nivel 2'], // etiquetas flotantes junto a la foto
+  },
+
+  // --- Cinta animada (frases de su Instagram) ----------------------------------------
+  marquee: {
+    items: [
+      'Comé para nutrirte, no para castigarte',
+      'No elimines: agregá y mejorá',
+      'No hace falta hacerlo perfecto para empezar',
+      'Rendí mejor',
+      'Comé sin restricciones',
+    ],
   },
 
   // --- Sobre mí -----------------------------------------------------------------
   about: {
     id: 'sobre-mi',
     eyebrow: 'Sobre mí',
-    title: 'Me gusta que una marca se *entienda* antes de que se luzca.',
+    title: 'Comé para *nutrirte*, no para castigarte.',
     paragraphs: [
-      'Soy Martina, diseñadora gráfica. Trabajo de forma independiente con personas que tienen un proyecto propio y necesitan que su comunicación visual esté a la altura de lo que hacen.',
-      'Antes de abrir un programa de diseño, pregunto mucho: a quién le hablás, qué querés que sientan y dónde se va a ver cada pieza. Con esas respuestas armo propuestas simples de aplicar y fáciles de sostener en el tiempo.',
+      'Hola, soy Jesi, Licenciada en Nutrición y especialista en nutrición deportiva. Trabajo con deportistas, clubes y con personas que quieren sentirse mejor, en mi consultorio de Castelar y online.',
+      'Me niego a que la única meta sea bajar de peso. Quiero que rindas mejor, que tengas energía y que aprendas a elegir qué comer en el súper, en tu casa o antes de entrenar. Mi objetivo es que, con el tiempo, no me necesites.',
     ],
     highlights: [
-      { title: 'Trabajo con', text: 'Emprendimientos, marcas pequeñas, estudios y proyectos culturales.' },
-      { title: 'Cómo trabajo', text: 'Por etapas, con propuestas explicadas y revisiones acordadas desde el inicio.' },
-      { title: 'Qué te llevás', text: 'Archivos ordenados para imprenta y pantalla, y una guía para usarlos.' },
+      { title: 'Mi enfoque', text: 'No elimines: agregá y mejorá. Sin dietas extremas ni listas de prohibidos.' },
+      { title: 'Cómo trabajo', text: 'Planes 100% personalizados, evaluación antropométrica y seguimiento. Online o en Castelar.' },
+      { title: 'Qué te llevás', text: 'Herramientas para comer rico, rendir mejor y sostenerlo en el tiempo.' },
     ],
   },
 
-  // --- Servicios ----------------------------------------------------------------
+  // --- Consultas / especialidades --------------------------------------------------
   services: {
-    id: 'servicios',
-    eyebrow: 'Servicios',
-    title: 'Lo que puedo hacer por tu proyecto',
-    intro: 'Cada servicio se puede contratar por separado. Si no sabés por dónde empezar, lo vemos juntas en la primera charla.',
+    id: 'consultas',
+    eyebrow: 'Consultas',
+    title: 'Cómo te puedo *acompañar*',
+    intro: 'Planes 100% personalizados según tu objetivo. Si no sabés por dónde empezar, escribime y lo vemos.',
     items: [
       {
-        title: 'Identidad visual',
-        description: 'El sistema que hace reconocible a tu marca, pensado para usarse en todos lados.',
-        includes: ['Logo y variantes', 'Paleta de colores y tipografías', 'Guía de uso básica'],
-        idealFor: 'Marcas nuevas o que necesitan ordenarse.',
+        title: 'Nutrición deportiva',
+        description: 'Para que tu alimentación acompañe tu entrenamiento y mejore tu rendimiento.',
+        includes: ['Plan según tu deporte y tu rutina', 'Planificación de competencias', 'Trabajo con deportistas y clubes'],
+        idealFor: 'Si entrenás o competís y querés rendir mejor.',
       },
       {
-        title: 'Diseño editorial',
-        description: 'Publicaciones legibles y con carácter, del primer boceto al archivo para imprenta.',
-        includes: ['Diagramación de revistas, catálogos o fanzines', 'Grilla y estilos reutilizables', 'Preparación de originales'],
-        idealFor: 'Proyectos culturales, catálogos de producto y publicaciones independientes.',
+        title: 'Antropometría',
+        description: 'Evaluación corporal con protocolo ISAK para objetivos de descenso de grasa o aumento muscular.',
+        includes: ['Mediciones antropométricas', 'Plan según tu objetivo', 'Seguimiento de tus cambios'],
+        idealFor: 'Si querés medir tu progreso más allá de la balanza.',
       },
       {
-        title: 'Packaging y etiquetas',
-        description: 'Envases y etiquetas que se distinguen en la góndola y respetan la información obligatoria.',
-        includes: ['Diseño de etiqueta o caja', 'Adaptación a distintos tamaños', 'Archivos con troquel para imprenta'],
-        idealFor: 'Productos artesanales y líneas nuevas.',
+        title: 'Nutrición hormonal',
+        description: 'Una alimentación pensada para acompañar SOP, menopausia, endometriosis o hipotiroidismo.',
+        includes: ['Evaluación de hábitos y síntomas', 'Plan personalizado', 'Seguimiento cercano'],
+        idealFor: 'Si querés entender a tu cuerpo y sentirte mejor.',
       },
       {
-        title: 'Piezas para redes',
-        description: 'Plantillas y piezas coherentes con tu identidad, para publicar con constancia sin depender de mí.',
-        includes: ['Plantillas editables para publicaciones e historias', 'Piezas para lanzamientos o campañas', 'Indicaciones para usarlas'],
-        idealFor: 'Marcas que publican seguido y quieren verse consistentes.',
+        title: 'Nutrición clínica y hábitos',
+        description: 'Cambio de hábitos, alimentación antiinflamatoria y planes para necesidades específicas.',
+        includes: ['Plant-based', 'Celiaquía, SIBO e IMO', 'Alimentación antiinflamatoria'],
+        idealFor: 'Si necesitás un plan adaptado a tu situación.',
       },
     ],
   },
 
-  // --- Proceso de trabajo -------------------------------------------------------
+  // --- Especialidades y formación ------------------------------------------------------
+  credentials: {
+    id: 'formacion',
+    eyebrow: 'Especialidades y formación',
+    title: 'Formación para *acompañarte* mejor',
+    specialtiesTitle: 'Especialidades',
+    specialties: [
+      'Nutrición deportiva (mejora del rendimiento)',
+      'Antropometría: descenso de grasa y/o aumento muscular',
+      'Plant-based, celiaquía, SIBO, IMO',
+      'Nutrición clínica, cambio de hábitos y antiinflamatoria',
+      'Planificación de competencias',
+      'Nutrición hormonal: SOP, menopausia, endometriosis, hipotiroidismo',
+    ],
+    educationTitle: 'Formación',
+    education: [
+      { title: 'Licenciada en Nutrición', detail: 'M.N. 12233' },
+      { title: 'Antropometrista ISAK nivel 2', detail: 'Francis Holway' },
+      { title: 'Posgrado en Deportes Específicos', detail: 'Francis Holway' },
+      { title: 'Posgrado en Suplementación', detail: 'Suplementando ConCiencia' },
+      { title: 'Posgrado Plant-Based con orientación deportiva', detail: 'ULP' },
+      { title: 'Curso Internacional de Nutrición Hormonal', detail: 'Viví Sano' },
+      { title: 'Actualización en Microbiota', detail: 'AADYND' },
+    ],
+  },
+
+  // --- Proceso --------------------------------------------------------------------
   process: {
     id: 'proceso',
-    eyebrow: 'Proceso',
-    title: 'Cómo trabajamos, paso a paso',
+    eyebrow: 'Paso a paso',
+    title: 'Así arrancamos',
     steps: [
-      { title: 'Primera charla', text: 'Me contás tu proyecto, qué necesitás y para cuándo. Sin compromiso.' },
-      { title: 'Propuesta', text: 'Te envío alcance, etapas, plazos y presupuesto por escrito para que decidas con claridad.' },
-      { title: 'Diseño y ajustes', text: 'Presento las propuestas explicadas y hacemos las rondas de cambios acordadas.' },
-      { title: 'Entrega', text: 'Recibís los archivos finales ordenados y una guía para usarlos.' },
+      { title: 'Reservás tu turno', text: 'Elegís día y horario en el turnero online, presencial u online.' },
+      { title: 'Primera consulta', text: 'Charlamos sobre tus hábitos, tu entrenamiento y tu objetivo. Hacemos la evaluación antropométrica.' },
+      { title: 'Tu plan', text: 'Recibís un plan a tu medida, con ideas de comidas y reemplazos.' },
+      { title: 'Seguimiento', text: 'Nos volvemos a ver para ajustar y sostener lo que funciona.' },
     ],
   },
 
-  // --- Proyectos ----------------------------------------------------------------
-  // Si `demo` es true, cada proyecto se marca como "Muestra".
-  // image: null muestra un bloque "FOTO DEL PROYECTO". Para una foto real:
-  // image: { src: 'assets/proyecto-1.jpg', alt: 'Descripción de la imagen' }
-  projects: {
-    id: 'proyectos',
-    eyebrow: 'Proyectos',
-    title: 'Una selección de trabajos',
-    intro: 'Algunos ejemplos del tipo de proyectos que hago.',
-    demoNote: 'Proyectos ficticios de muestra: ilustran el formato de la sección y no son trabajos reales.',
-    filterLabel: 'Filtrar proyectos por categoría',
-    allLabel: 'Todos',
+  // --- Recetarios y productos (PENDIENTE: títulos, precios y enlaces reales) --------
+  // href: enlace de compra (Mercado Pago, tienda, etc.). Vacío = abre WhatsApp
+  // con un mensaje que nombra el producto.
+  // image: null muestra un bloque "FOTO DEL RECETARIO".
+  products: {
+    id: 'recetarios',
+    eyebrow: 'Recetarios',
+    title: 'Recetas *rapiditas* para tu semana',
+    intro: 'Guías digitales con recetas fáciles y reales. Las tenés en el celu para usarlas cuando quieras.',
+    demoNote: 'Recetarios de ejemplo: títulos, descripciones y precios provisorios.',
     items: [
       {
-        title: 'Identidad para una panadería de barrio',
-        category: 'Identidad',
-        description: 'Logo, paleta cálida y aplicaciones en bolsas, etiquetas y cartelería.',
+        title: 'Snacks dulces saludables',
+        description: 'Mug cakes, barritas y opciones dulces fáciles para cortar la tarde.',
+        format: 'Recetario digital · PDF',
+        price: '', // ej.: '$ 9.900'. Vacío = no se muestra.
         image: null,
-        link: null, // ej.: { label: 'Ver caso', href: 'https://...' }
+        href: '',
+        ctaLabel: 'Lo quiero',
       },
       {
-        title: 'Etiquetas para una línea de té en hebras',
-        category: 'Packaging',
-        description: 'Sistema de etiquetas con un color por variedad y la información de cada blend.',
+        title: 'Pre y post entreno',
+        description: 'Qué comer antes y después de entrenar, con recetas simples para cada momento.',
+        format: 'Recetario digital · PDF',
+        price: '',
         image: null,
-        link: null,
+        href: '',
+        ctaLabel: 'Lo quiero',
       },
       {
-        title: 'Revista de un centro cultural',
-        category: 'Editorial',
-        description: 'Grilla, estilos tipográficos y portada para una publicación trimestral.',
+        title: 'Viandas rapiditas',
+        description: 'Ideas prácticas para armar almuerzos saludables y llevar a donde vayas.',
+        format: 'Recetario digital · PDF',
+        price: '',
         image: null,
-        link: null,
-      },
-      {
-        title: 'Plantillas para un estudio de yoga',
-        category: 'Redes',
-        description: 'Plantillas editables para horarios, novedades y frases de las clases.',
-        image: null,
-        link: null,
-      },
-      {
-        title: 'Afiches para un ciclo de cine',
-        category: 'Editorial',
-        description: 'Serie de afiches con una estructura común y una imagen distinta por función.',
-        image: null,
-        link: null,
-      },
-      {
-        title: 'Cajas para velas artesanales',
-        category: 'Packaging',
-        description: 'Caja con troquel simple, sello de aroma y una tarjeta de cuidados.',
-        image: null,
-        link: null,
+        href: '',
+        ctaLabel: 'Lo quiero',
       },
     ],
   },
 
-  // --- Preguntas frecuentes -----------------------------------------------------
+  // --- Bloque de turnos -----------------------------------------------------------
+  bookingSection: {
+    id: 'turnos',
+    eyebrow: 'Turnos',
+    title: 'No hace falta hacerlo *perfecto* para empezar.',
+    text: 'Reservá tu primera consulta, online o presencial en Castelar.',
+    ctaLabel: 'Quiero mi turno',
+  },
+
+  // --- Instagram ------------------------------------------------------------------
+  // images: fotos de publicaciones para los bloques, ej.: [{ src: 'assets/ig-1.jpg', alt: '...' }]
+  instagram: {
+    id: 'instagram',
+    eyebrow: 'Instagram',
+    handle: '@nutricionista.cj',
+    title: 'Recetas, reemplazos saludables, data del súper y el día a día del consultorio.',
+    ctaLabel: 'Seguime en Instagram',
+    tiles: 4,
+    images: [],
+  },
+
+  // --- Preguntas frecuentes (PENDIENTE: validar respuestas con Jesica) ---------------
   faq: {
     id: 'preguntas',
     eyebrow: 'Preguntas frecuentes',
-    title: 'Antes de escribirme',
+    title: 'Antes de tu *consulta*',
     intro: '¿No encontrás tu duda? Escribime y te respondo.',
     items: [
-      {
-        q: '¿Cómo empezamos?',
-        a: 'Me escribís por WhatsApp o email con una idea general de lo que necesitás. Coordinamos una charla corta y después te envío una propuesta por escrito.',
-      },
-      {
-        q: '¿Cuánto cuesta un proyecto?',
-        a: 'Depende del alcance, la cantidad de piezas y los plazos. Por eso el presupuesto llega después de la primera charla, detallado por etapas.',
-      },
-      {
-        q: '¿Cuánto tiempo lleva?',
-        a: 'Lo definimos en la propuesta según el proyecto y tu fecha objetivo. Si tenés un lanzamiento, contámelo desde el principio.',
-      },
-      {
-        q: '¿Trabajás con personas de otras ciudades?',
-        a: 'Sí. Las charlas y revisiones se pueden hacer por videollamada y los archivos se comparten en línea.',
-      },
-      {
-        q: '¿Qué archivos recibo al final?',
-        a: 'Los formatos que necesites para imprenta y pantalla, ordenados en carpetas y con nombres claros. Lo detallamos en la propuesta.',
-      },
-      {
-        q: '¿Puedo contratar solo una parte?',
-        a: 'Sí. Por ejemplo, solo el logo o solo las plantillas para redes. Te voy a avisar si alguna pieza depende de otra para funcionar bien.',
-      },
+      { q: '¿Cómo saco un turno?', a: 'Desde el botón "Sacar turno" entrás al turnero online y elegís día, horario y modalidad.' },
+      { q: '¿Atendés online?', a: 'Sí. Atiendo online por videollamada y presencial en Castelar. El plan te llega en formato digital.' },
+      { q: '¿Tengo que dejar de comer lo que me gusta?', a: 'No. La idea es no eliminar, sino agregar y mejorar. Armamos un plan que se adapte a vos.' },
+      { q: '¿Trabajás con deportistas y clubes?', a: 'Sí. Armo planes para mejorar el rendimiento y planifico la alimentación para competencias.' },
+      { q: '¿Qué es la evaluación antropométrica?', a: 'Son mediciones corporales con protocolo ISAK que permiten seguir cambios en grasa y masa muscular, más allá del peso.' },
+      { q: '¿Qué llevo a la primera consulta?', a: 'Si tenés análisis recientes, traelos. Y muchas ganas de contarme cómo es tu día a día.' },
+      { q: '¿Cómo recibo un recetario?', a: 'Después de la compra te llega el archivo digital para usarlo desde el celu o imprimirlo.' },
     ],
   },
 
@@ -267,40 +299,34 @@ export default {
   contact: {
     id: 'contacto',
     eyebrow: 'Contacto',
-    title: '¿Tenés un proyecto en *mente*?',
-    intro: 'Contame en pocas líneas qué necesitás. Te respondo para coordinar una primera charla.',
-    // WhatsApp: número en formato internacional, solo dígitos (ej.: 5491122334455).
+    title: '¿Arrancamos? *Escribime*',
+    intro: 'Contame qué te gustaría trabajar y te respondo por WhatsApp.',
     whatsapp: {
-      number: '5490000000000',
-      display: '+54 9 000 000-0000',
-      message: 'Hola Martina, vi tu página y quería consultarte por un proyecto.',
+      number: '5491164072673', // formato internacional, solo dígitos
+      display: '+54 9 11 6407-2673',
+      message: 'Hola Jesi! Vi tu página y quería hacerte una consulta.',
     },
-    email: 'hola@example.com',
-    responseNote: 'Respondo consultas de lunes a viernes.',
+    email: '', // opcional. Vacío = no se muestra.
+    responseNote: '',
     form: {
       enabled: true,
-      // 'demo': valida y muestra el resultado, pero no envía ni guarda nada.
-      // 'whatsapp': arma el mensaje y abre WhatsApp con el texto listo para enviar.
-      // 'email': abre el programa de correo con el mensaje armado.
-      mode: 'demo',
+      // 'demo' valida sin enviar; 'whatsapp' abre WhatsApp con el mensaje armado;
+      // 'email' abre el correo (requiere `email`).
+      mode: 'whatsapp',
       title: 'Dejame tu consulta',
-      projectTypes: ['Identidad visual', 'Diseño editorial', 'Packaging y etiquetas', 'Piezas para redes', 'Otro / no estoy segura'],
-      submitLabel: 'Enviar consulta',
+      projectTypes: ['Nutrición deportiva', 'Salud hormonal', 'Plan de alimentación', 'Consulta online', 'Recetarios', 'Otra consulta'],
+      typeLabel: 'Motivo de consulta',
+      messageHint: 'Contame brevemente qué te gustaría trabajar.',
+      submitLabel: 'Enviar por WhatsApp',
     },
   },
 
-  // --- Pie de página ---------------------------------------------------------------
+  // --- Redes y pie de página ---------------------------------------------------------
   // Dejá url vacía ('') para ocultar una red.
-  social: [
-    { label: 'Instagram', url: 'https://www.instagram.com/' },
-    { label: 'Behance', url: 'https://www.behance.net/' },
-    { label: 'LinkedIn', url: 'https://www.linkedin.com/' },
-  ],
+  social: [{ label: 'Instagram', url: 'https://www.instagram.com/nutricionista.cj/' }],
   footer: {
-    note: 'Diseño gráfico para emprendimientos, marcas pequeñas y proyectos culturales.',
-    links: [
-      // Enlaces extra configurables, ej.: { label: 'Política de privacidad', href: 'privacidad.html' }
-    ],
-    demoNotice: 'Sitio demostrativo: la marca, los textos, los datos de contacto y los proyectos son ficticios.',
+    note: 'Licenciada en Nutrición · M.N. 12233. Nutrición deportiva y hormonal. Castelar · Online y presencial.',
+    links: [],
+    demoNotice: 'Versión en preparación: recetarios, precios y turnero provisorios.',
   },
 };

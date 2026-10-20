@@ -1,5 +1,6 @@
 // Genera el sitio estático en /dist a partir de site.config.mjs.
 // Uso: node scripts/build.mjs
+// Otro archivo de configuración: SITE_CONFIG=examples/disenadora-grafica.config.mjs node scripts/build.mjs
 import { mkdir, writeFile, copyFile, cp, rm, readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -12,7 +13,7 @@ const dist = path.join(root, 'dist');
 const fresh = (file) => import(`${pathToFileURL(path.join(root, file)).href}?t=${Date.now()}`);
 
 export async function build() {
-  const { default: config } = await fresh('site.config.mjs');
+  const { default: config } = await fresh(process.env.SITE_CONFIG || 'site.config.mjs');
   // En GitHub Pages el flujo de publicación pasa la dirección real del sitio.
   if (process.env.SITE_URL) config.site.url = process.env.SITE_URL;
   config.site.url = config.site.url.replace(/\/$/, '');
@@ -51,7 +52,7 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   build()
     .then((config) => {
       console.log(`✔ Sitio generado en dist/ (${Date.now() - started} ms)`);
-      if (config.demo) console.log('  Modo demostración activo: avisos visibles, formulario sin envío y noindex.');
+      if (config.demo) console.log('  Modo demostración activo: avisos visibles y noindex.');
     })
     .catch((error) => {
       console.error(`✖ No se pudo generar el sitio: ${error.message}`);

@@ -5,7 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { default: config } = await import(pathToFileURL(path.join(root, 'site.config.mjs')).href);
+const { default: config } = await import(pathToFileURL(path.join(root, process.env.SITE_CONFIG || 'site.config.mjs')).href);
 const page = await readFile(path.join(root, 'dist/index.html'), 'utf8');
 
 const errors = [];
@@ -36,6 +36,8 @@ const PAIRS = [
   ['accent', 'bg', 4.5, 'enlaces y rótulos de color'],
   ['accent', 'surface', 3, 'detalles de color sobre paneles'],
   ['ink', 'accentSoft', 4.5, 'mensajes del formulario'],
+  ['bg', 'ink', 4.5, 'texto del panel de contacto'],
+  ['highlight', 'ink', 3, 'palabra destacada del panel de contacto'],
 ];
 for (const [mode, palette] of Object.entries(config.colors)) {
   for (const [fg, bg, min, label] of PAIRS) {
@@ -89,13 +91,28 @@ if (description.length < 70 || description.length > 170)
 const title = page.match(/<title>([^<]*)<\/title>/)?.[1] || '';
 if (title.length > 65) warnings.push(`El título tiene ${title.length} caracteres (ideal: hasta 60).`);
 
-if (config.demo) warnings.push('Modo demostración activo (demo: true): avisos visibles, formulario sin envío y noindex.');
+if (config.demo) warnings.push('Modo demostración activo (demo: true): avisos visibles y la página no se indexa.');
 if (/example\.(com|org)/.test(process.env.SITE_URL || config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
-if (/example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
+if (config.contact.email && /example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
 if (/^\d+0{6,}$/.test(config.contact.whatsapp.number)) warnings.push('El número de WhatsApp es de ejemplo.');
+if (config.sections.includes('booking') && !config.booking?.url) warnings.push('Falta el enlace al turnero (booking.url).');
+if (config.portal && !config.portal.url) warnings.push('Falta el enlace al panel de pacientes (portal.url): el acceso no se muestra.');
+if (config.sections.includes('products')) {
+  const items = config.products.items;
+  const noPrice = items.filter((p) => !p.price).length;
+  const noLink = items.filter((p) => !p.href).length;
+  const noCover = items.filter((p) => !p.image).length;
+  if (noPrice) warnings.push(`${noPrice} recetario(s) sin precio.`);
+  if (noLink) warnings.push(`${noLink} recetario(s) sin enlace de compra (abren WhatsApp).`);
+  if (noCover) warnings.push(`${noCover} recetario(s) sin tapa (se muestran bloques de reemplazo).`);
+}
+if (config.sections.includes('instagram') && !(config.instagram.images || []).length)
+  warnings.push('Instagram sin fotos de publicaciones (se muestran bloques de reemplazo).');
 if (!config.person.photo) warnings.push('Falta la foto del profesional (se muestra el bloque de reemplazo).');
-const noImage = config.projects.items.filter((p) => !p.image).length;
-if (noImage) warnings.push(`${noImage} proyecto(s) sin imagen (se muestran bloques de reemplazo).`);
+if (config.sections.includes('projects')) {
+  const noImage = config.projects.items.filter((p) => !p.image).length;
+  if (noImage) warnings.push(`${noImage} proyecto(s) sin imagen (se muestran bloques de reemplazo).`);
+}
 const rootSocial = config.social.filter((s) => s.url && new URL(s.url).pathname.replace(/\/$/, '') === '');
 if (rootSocial.length) warnings.push(`Redes con enlace genérico, sin perfil: ${rootSocial.map((s) => s.label).join(', ')}.`);
 if (config.contact.form.enabled && config.contact.form.mode === 'demo' && !config.demo)

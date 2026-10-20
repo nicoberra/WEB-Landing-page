@@ -1,11 +1,15 @@
-import { esc, icons, linkAttrs } from '../helpers.mjs';
+import { esc, icons, linkAttrs, resolveHref } from '../helpers.mjs';
 import { logo } from './logo.mjs';
 
 export default function header(config) {
   const links = config.nav
     .map((item) => `<li><a href="#${esc(item.id)}">${esc(item.label)}</a></li>`)
     .join('\n        ');
-  return `<header class="site-header" data-header>
+  const portal = config.portal?.url
+    ? `<a class="site-nav__portal" ${linkAttrs(config.portal.url)}>${icons.user}${esc(config.portal.label)}</a>`
+    : '';
+  return `<div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
+<header class="site-header" data-header>
   <div class="container site-header__inner">
     <a class="brand" href="#inicio" aria-label="${esc(config.person.name)}, ir al inicio">
       ${logo(config)}
@@ -18,7 +22,10 @@ export default function header(config) {
       <ul>
         ${links}
       </ul>
-      <a class="button button--small" ${linkAttrs(config.navCta.href)}>${esc(config.navCta.label)}</a>
+      <div class="site-nav__actions">
+        ${portal}
+        <a class="button button--small" ${linkAttrs(resolveHref(config.navCta.href, config))}>${esc(config.navCta.label)}</a>
+      </div>
     </nav>
   </div>
 </header>`;

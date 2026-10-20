@@ -4,7 +4,16 @@ import { readFile, stat } from 'node:fs/promises';
 import { watch } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { build } from './build.mjs';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+// Cada recompilación corre en un proceso nuevo: así Node no reutiliza módulos
+// viejos de src/sections/ que tenga en caché.
+const run = promisify(execFile);
+const build = async () => {
+  const { stdout } = await run(process.execPath, [path.join(root, 'scripts/build.mjs')], { cwd: root, env: process.env });
+  return stdout;
+};
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -61,7 +70,7 @@ createServer(async (req, res) => {
 });
 
 let timer;
-for (const target of ['site.config.mjs', 'src', 'public']) {
+for (const target of ['site.config.mjs', 'examples', 'src', 'public']) {
   watch(path.join(root, target), { recursive: true }, () => {
     clearTimeout(timer);
     timer = setTimeout(async () => {
@@ -70,7 +79,7 @@ for (const target of ['site.config.mjs', 'src', 'public']) {
         console.log('↻ Cambios aplicados');
         for (const client of clients) client.write('data: reload\n\n');
       } catch (error) {
-        console.error(`✖ ${error.message}`);
+        console.error(`✖ ${(error.stderr || error.message).trim()}`);
       }
     }, 120);
   });

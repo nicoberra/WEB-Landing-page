@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { default: config } = await import(pathToFileURL(path.join(root, 'site.config.mjs')).href);
+const { default: config } = await import(pathToFileURL(path.join(root, process.env.SITE_CONFIG || 'site.config.mjs')).href);
 const { esc, rich } = await import(pathToFileURL(path.join(root, 'src/helpers.mjs')).href);
 
 let chromium;
@@ -25,17 +25,17 @@ const html = `<!doctype html><html><head><meta charset="utf-8">
 <link rel="stylesheet" href="${esc(f.googleFontsUrl)}">
 <style>
   *{box-sizing:border-box;margin:0}
+  body>*:not(.mark):not(.bar){position:relative;z-index:1}
   body{width:1200px;height:630px;background:${c.bg};color:${c.ink};font-family:${f.body};padding:72px 80px;display:grid;grid-template-rows:auto 1fr auto;position:relative;overflow:hidden}
   .eyebrow{font-family:${f.mono};font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:${c.muted}}
-  h1{align-self:end;font-family:${f.display};font-weight:800;font-size:150px;line-height:.88;letter-spacing:-.045em}
-  p{margin-top:28px;font-family:${f.display};font-size:40px;font-weight:500;letter-spacing:-.015em;max-width:880px;line-height:1.15}
-  em{font-family:${f.accent};font-style:italic;font-weight:400;color:${c.accent}}
-  .mark{position:absolute;top:64px;right:72px;width:84px;height:84px;border:3px solid ${c.highlight};border-radius:50%;
-    background:linear-gradient(${c.highlight},${c.highlight}) center/3px 100% no-repeat,linear-gradient(${c.highlight},${c.highlight}) center/100% 3px no-repeat}
-  .mark::after{content:'';position:absolute;inset:20px;border:3px solid ${c.highlight};border-radius:50%}
+  h1{align-self:end;font-family:${f.display};font-weight:${f.displayWeight || 800};font-size:150px;line-height:.88;letter-spacing:-.045em}
+  p{margin-top:28px;font-family:${f.display};font-size:44px;font-weight:${f.displayWeight || 500};letter-spacing:-.015em;max-width:880px;line-height:1.15}
+  em{font-family:${f.accent};font-style:${f.accentStyle || 'italic'};font-size:${f.accentSize || '1em'};font-weight:400;color:${c.accent}}
+  .mark{position:absolute;top:-160px;right:-140px;width:560px;height:560px;border-radius:50%;background:${c.accentSoft}}
+  .mark::after{content:'';position:absolute;width:220px;height:220px;left:-60px;bottom:-40px;border-radius:50%;background:${c.highlight};opacity:.55}
   .bar{position:absolute;left:0;right:0;bottom:0;height:18px;background:${c.accent}}
 </style></head><body>
-  <div class="eyebrow">${esc(config.person.profession)}</div>
+  <div class="eyebrow">${esc([config.person.profession, config.person.license].filter(Boolean).join(' · '))}</div>
   <h1>${esc(config.person.name)}</h1>
   <p>${rich(config.hero.tagline)}</p>
   <span class="mark"></span><span class="bar"></span>

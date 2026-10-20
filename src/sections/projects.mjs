@@ -12,7 +12,7 @@ export default function projects(config) {
       : '';
   const cards = p.items
     .map(
-      (item) => `<li class="project" data-category="${esc(slug(item.category))}">
+      (item) => `<li class="project" data-reveal data-category="${esc(slug(item.category))}">
         <article>
           <div class="project__media">
             ${media({ image: item.image, label: 'FOTO DEL PROYECTO', hint: 'Horizontal 4:3 · 1600 × 1200 px', ratio: '4/3', alt: `Imagen del proyecto ${item.title}` })}

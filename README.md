@@ -2,10 +2,13 @@
 
 Landing page informativa para presentar a un profesional independiente: quién es, qué hace, cómo trabaja y cómo contactarlo. Sirve como demo para vender servicios de diseño web y como base reutilizable para cada cliente.
 
-La versión incluida usa una **marca de demostración**: _Martina López, diseñadora gráfica independiente_. La persona, los textos, los datos de contacto y los proyectos son **ficticios** y la página lo avisa (pie de página y sección de proyectos).
+La configuración actual es la de **Jesica Cuevas, Licenciada en Nutrición (M.N. 12233)**, [@nutricionista.cj](https://www.instagram.com/nutricionista.cj/). La identidad sale de su Instagram: verdes salvia y bosque, fondo crema, títulos con serif condensada, acentos manuscritos y su forma de hablar. La matrícula, las especialidades y la formación las cargó la persona que encargó la página; los recetarios, sus precios y el turnero todavía son provisorios (ver [sección 8](#8-qué-está-pendiente)).
+
+También queda un segundo ejemplo, ficticio, en [`examples/disenadora-grafica.config.mjs`](examples/disenadora-grafica.config.mjs) (_Martina López, diseñadora gráfica_), para mostrar cómo la misma plantilla sirve para otra profesión.
 
 - **Sin dependencias.** HTML, CSS y JavaScript sin frameworks. Solo hace falta Node.js 20 o superior para generar el sitio.
 - **Un solo archivo para personalizar:** [`site.config.mjs`](site.config.mjs).
+- **Con movimiento:** el nombre entra palabra por palabra, las secciones aparecen al hacer scroll, hay una cinta de frases en movimiento, efecto de profundidad (parallax), barra de progreso de lectura y tarjetas que se inclinan con el mouse. Todo se apaga si la persona tiene activado "reducir movimiento" en su dispositivo.
 - **Resultado estático** en `dist/`: se publica solo en GitHub Pages con cada cambio, o se sube a cualquier hosting.
 
 ---
@@ -19,7 +22,7 @@ La versión incluida usa una **marca de demostración**: _Martina López, diseñ
 5. [Publicar en GitHub Pages](#5-publicar-en-github-pages)
 6. [Ficha de información para pedirle al profesional](#6-ficha-de-información-para-pedirle-al-profesional)
 7. [Proceso de adaptación](#7-proceso-de-adaptación)
-8. [Qué es contenido de muestra](#8-qué-es-contenido-de-muestra)
+8. [Qué está pendiente](#8-qué-está-pendiente)
 9. [Qué necesita configuración externa](#9-qué-necesita-configuración-externa)
 10. [Recursos y licencias](#10-recursos-y-licencias)
 
@@ -33,6 +36,12 @@ npm run build   # genera el sitio final en dist/
 npm run check   # genera el sitio y revisa contraste, encabezados, enlaces y datos pendientes
 ```
 
+Para ver o generar el ejemplo de la diseñadora gráfica (u otro archivo de configuración):
+
+```bash
+SITE_CONFIG=examples/disenadora-grafica.config.mjs npm run dev
+```
+
 No hace falta `npm install`: el proyecto no tiene dependencias.
 
 `npm run check` muestra:
@@ -44,15 +53,19 @@ No hace falta `npm install`: el proyecto no tiene dependencias.
 
 ```
 site.config.mjs        ← TODOS los datos editables (textos, colores, fotos, contacto…)
+examples/              ← otras configuraciones de ejemplo (diseñadora gráfica)
 public/                ← archivos que se copian tal cual (fotos, logo, imagen para redes)
   assets/og-image.png  ← imagen que se ve al compartir el enlace (1200×630)
 src/
   render.mjs           ← arma la página y el <head> (SEO, metadatos sociales, tema)
   helpers.mjs          ← utilidades: escapado de textos, fotos/bloques de reemplazo, íconos
-  sections/            ← una sección por archivo (header, hero, about, services, process,
-                         projects, faq, contact, footer, logo)
+  sections/            ← una sección por archivo: header, hero, marquee (cinta), about,
+                         services, credentials (formación), process, products
+                         (recetarios), booking (turnos), instagram, projects
+                         (portfolio), faq, contact, footer, logo
   styles.css           ← estilos (usa los colores y fuentes del config como variables)
-  main.js              ← menú móvil, filtro de proyectos, copiar email, validación del formulario
+  main.js              ← menú móvil, animaciones al hacer scroll, filtro de proyectos,
+                         copiar email, validación del formulario
 scripts/
   build.mjs            ← genera dist/
   dev.mjs              ← servidor local con recarga automática
@@ -78,7 +91,14 @@ Todo se edita en **`site.config.mjs`**. Cada bloque tiene comentarios. Lo princi
 | Textos de cada sección | `hero`, `about`, `services`, `process`, `projects`, `faq`, `contact` |
 | WhatsApp, email y formulario | `contact` |
 | Redes y enlaces del pie | `social` y `footer` |
-| Avisos de demostración | `demo` |
+| Turnero (enlace externo) | `booking` |
+| Panel de pacientes (enlace externo) | `portal` |
+| Instagram | `instagramUrl` e `instagram` |
+| Cinta de frases en movimiento | `marquee` |
+| Especialidades y formación | `credentials` |
+| Recetarios o productos digitales | `products` |
+| Bloque de turnos | `bookingSection` |
+| Avisos de versión en preparación | `demo` |
 
 ### Textos
 
@@ -105,13 +125,40 @@ Medidas recomendadas (ya están reservadas en el diseño):
 
 Si una foto queda en `null`, se muestra un bloque rotulado **FOTO DEL PROFESIONAL** o **FOTO DEL PROYECTO** con marcas de corte.
 
-### Proyectos
+### Turnero y panel de pacientes
+
+El turnero y el panel son sistemas aparte: la página solo los enlaza.
+
+- `booking.url`: enlace al turnero. Todos los botones "Sacar turno" lo usan. Mientras esté vacío, llevan a la sección de turnos, que muestra "Turnero online: enlace pendiente de configuración".
+- `portal.url`: enlace al panel de pacientes. Cuando se completa, aparece "Acceso pacientes" en el menú.
+
+### Recetarios
+
+Cada recetario es un objeto en `products.items` con título, descripción, formato, precio, tapa (`image`) y enlace de compra (`href`, por ejemplo un link de pago de Mercado Pago). Si `href` está vacío, el botón abre WhatsApp con un mensaje que nombra el recetario. Si `price` está vacío, no se muestra precio.
+
+### Formación
+
+`credentials` muestra las especialidades (la primera va destacada) y la formación con su institución. Cargá solo datos reales y verificables.
+
+### Movimiento
+
+Las animaciones están en `src/styles.css` (sección "Movimiento") y `src/main.js`. Para sumar la animación de aparición a un elemento nuevo, agregale el atributo `data-reveal`; para escalonar varios, `style="--reveal-delay:1"`, `2`, etc. Para un efecto de profundidad, `data-parallax="0.08"` (valores chicos, positivos o negativos).
+
+Si JavaScript no carga, a los 3 segundos se desactivan las animaciones de aparición para que no quede contenido oculto.
+
+### Proyectos (portfolio)
+
+Sección usada en el ejemplo de la diseñadora.
 
 Cada proyecto es un objeto en `projects.items`. Para quitarlo, borrá el objeto; para quitar la sección completa, sacá `'projects'` de `sections` y su entrada de `nav`. El filtro por categoría aparece solo si hay dos categorías o más. Con `demo: true` cada proyecto se marca como "Muestra".
 
 ### Colores
 
-Cada paleta tiene diez colores con su uso comentado. Después de cambiarlos corré `npm run check`: avisa si algún par (texto/fondo, botón, enlaces) no llega al contraste WCAG AA. Si no querés modo oscuro, borrá `colors.dark`.
+Cada paleta tiene diez colores con su uso comentado. Después de cambiarlos corré `npm run check`: avisa si algún par (texto/fondo, botón, enlaces) no llega al contraste WCAG AA. `colors.dark` es opcional: sin esa paleta (como en la página de Jesica), el sitio se ve siempre con los colores de la marca.
+
+### Tipografías
+
+`fonts` define la familia de títulos (`display`), textos (`body`), acentos (`accent`, la que se usa en las palabras entre asteriscos) y rótulos (`mono`), y la URL de Google Fonts que las carga. `displayWeight`, `accentStyle` y `accentSize` ajustan el peso de los títulos, si el acento va en cursiva y su tamaño relativo (útil con letras manuscritas, que se ven más chicas).
 
 ### Logo
 
@@ -138,7 +185,7 @@ Si el cliente necesita recibir los mensajes en un servidor, hay que sumar un ser
 
 ### Imagen para redes
 
-`public/assets/og-image.png` está generada con el nombre y los colores de la demo. Reemplazala por una imagen propia de 1200×630, o regenerala desde el config:
+`public/assets/og-image.png` está generada con el nombre, la matrícula y los colores del config actual. Reemplazala por una imagen propia de 1200×630, o regenerala desde el config:
 
 ```bash
 npm install --no-save playwright && npx playwright install chromium
@@ -179,7 +226,7 @@ El repositorio ya trae el flujo [`.github/workflows/deploy-pages.yml`](.github/w
 
 **Dominio propio:** _Settings → Pages → Custom domain_, escribí el dominio y configurá los registros DNS que indica GitHub en el proveedor del dominio. Activá _Enforce HTTPS_ cuando esté disponible.
 
-**Antes de publicar un sitio real:** `demo: false`, datos de contacto reales y `npm run check` sin errores. Con `demo: true` la página se marca como `noindex` para que la demo no aparezca en buscadores.
+**Antes de publicar un sitio real:** `demo: false`, datos de contacto reales y `npm run check` sin errores. Con `demo: true` la página se marca como `noindex` para que la versión en preparación no aparezca en buscadores.
 
 ### Otros hostings
 
@@ -239,6 +286,11 @@ REDES Y ENLACES
 PREGUNTAS FRECUENTES
   Las 4 a 6 preguntas que más le hacen sus clientes, con su respuesta:
 
+TURNOS, PANEL Y PRODUCTOS
+  Enlace al turnero online (si tiene):
+  Enlace al panel o sistema de pacientes (si tiene):
+  Productos digitales (recetarios, guías). Para cada uno: título, descripción, precio, tapa y enlace de pago:
+
 DOMINIO Y PUBLICACIÓN
 ★ ¿Tiene dominio? ¿Cuál y dónde está registrado?:
   ¿Tiene hosting o lo elegimos juntos?:
@@ -253,20 +305,24 @@ Al adaptar la plantilla para un profesional:
 2. **Detectar qué falta o sobra.** Por ejemplo: un profesional sin portfolio visual puede reemplazar "Proyectos" por "Para quién trabajo" o por casos descritos en texto; quien atiende con turno puede necesitar un enlace a su agenda; una profesión regulada puede requerir mostrar su matrícula (dato real que debe proveer el cliente).
 3. **Pedir solo la información esencial** (lo marcado con ★ en la ficha) y completar lo demás después.
 4. **No inventar** títulos, años de experiencia, clientes, premios, testimonios ni resultados. Si falta un dato, se deja fuera o se marca como pendiente.
-5. **No presentar los proyectos de muestra como reales.** Con `demo: false`, quitá o reemplazá todos los proyectos ficticios.
+5. **No presentar contenido de muestra como real.** Con `demo: false`, quitá o reemplazá todo lo provisorio (proyectos, recetarios, precios).
 6. Correr `npm run check`, revisar en celular y computadora, y probar cada botón de contacto con los datos reales.
 
-## 8. Qué es contenido de muestra
+## 8. Qué está pendiente
 
-Todo lo siguiente es ficticio y debe reemplazarse:
+**Página de Jesica Cuevas (`site.config.mjs`).** `npm run check` lista todo lo pendiente. Hoy:
 
-- La profesional "Martina López", su descripción y textos en primera persona.
-- Los 6 proyectos (panadería, té, revista, yoga, cine, velas): no son trabajos reales ni clientes reales.
-- Servicios, proceso y preguntas frecuentes: redactados como ejemplo plausible.
-- Datos de contacto: `hola@example.com` (dominio reservado para ejemplos) y el WhatsApp `+54 9 000 000-0000` (no existe).
-- Dominio `https://www.example.com`.
-- Redes: apuntan a la página principal de cada red, no a un perfil.
-- La paleta, el monograma "ml" y la imagen para redes: son la identidad de la demo.
+- **Turnero:** falta el enlace (`booking.url`).
+- **Panel de pacientes:** falta el enlace (`portal.url`).
+- **Recetarios:** los tres títulos, descripciones y formatos son provisorios, inspirados en temas de su Instagram. Faltan precios, tapas y enlaces de compra.
+- **Fotos:** faltan el retrato (4:5), las tapas de los recetarios (3:4) y las fotos de publicaciones para el bloque de Instagram (1:1).
+- **Textos a validar con ella:** detalle de cada consulta, pasos del proceso y respuestas de preguntas frecuentes. Están redactados a partir de su bio y de la información que pasó, pero no los revisó ella.
+- **Dominio:** `site.url` sigue siendo el de ejemplo (en GitHub Pages se usa la dirección de Pages automáticamente).
+- **Publicación:** con `demo: true`, la página muestra un aviso de versión en preparación y no se indexa.
+
+Datos confirmados: nombre, matrícula M.N. 12233, especialidades, formación, Castelar con atención online y presencial, WhatsApp +54 9 11 6407-2673 e Instagram @nutricionista.cj.
+
+**Ejemplo de la diseñadora (`examples/disenadora-grafica.config.mjs`).** Todo es ficticio: la persona, los textos, los proyectos, el email `hola@example.com` y el WhatsApp `+54 9 000 000-0000`.
 
 ## 9. Qué necesita configuración externa
 
@@ -278,7 +334,7 @@ Todo lo siguiente es ficticio y debe reemplazarse:
 
 ## 10. Recursos y licencias
 
-- **Tipografías:** Bricolage Grotesque, Instrument Serif e IBM Plex Mono, servidas por Google Fonts bajo la licencia SIL Open Font License 1.1 (uso comercial permitido).
+- **Tipografías:** Instrument Serif, Caveat y Montserrat (página de Jesica) y Bricolage Grotesque, Instrument Serif e IBM Plex Mono (ejemplo de la diseñadora), servidas por Google Fonts bajo la licencia SIL Open Font License 1.1 (uso comercial permitido).
 - **Íconos:** dibujados para esta plantilla (SVG simples). No se usan logos de marcas; las redes se muestran como texto.
 - **Imágenes:** no hay fotos. Los bloques de reemplazo están hechos con CSS. `og-image.png` se generó con `scripts/og-image.mjs` a partir del config.
 - **Textos legales:** no se incluyen. Si el sitio los necesita, debe proveerlos el cliente o su asesor.

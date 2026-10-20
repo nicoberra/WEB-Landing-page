@@ -5,6 +5,7 @@
   'use strict';
   document.documentElement.classList.add('js');
 
+
   // ---------- Encabezado y menú móvil ----------
   var header = document.querySelector('[data-header]');
   var toggle = document.querySelector('[data-menu-toggle]');
@@ -34,12 +35,96 @@
     });
   }
 
-  if (header) {
-    var onScroll = function () {
-      header.classList.toggle('is-scrolled', window.scrollY > 8);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+  // ---------- Movimiento al hacer scroll ----------
+  var root = document.documentElement;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var progressBar = document.querySelector('[data-scroll-progress]');
+  var parallaxItems = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+  var progressSections = Array.prototype.slice.call(document.querySelectorAll('[data-progress]'));
+  var lastY = window.scrollY;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    var y = window.scrollY;
+    var vh = window.innerHeight;
+    var max = root.scrollHeight - vh;
+
+    if (header) {
+      header.classList.toggle('is-scrolled', y > 8);
+      // Se esconde al bajar y vuelve al subir (nunca con el menú abierto).
+      var menuOpen = toggle && toggle.getAttribute('aria-expanded') === 'true';
+      header.classList.toggle('is-hidden', !menuOpen && y > 240 && y > lastY + 2);
+      if (y < lastY - 2) header.classList.remove('is-hidden');
+    }
+    lastY = y;
+
+    if (progressBar) progressBar.style.setProperty('--progress', max > 0 ? Math.min(1, y / max) : 0);
+
+    if (reduceMotion) return;
+
+    parallaxItems.forEach(function (el) {
+      var rect = el.getBoundingClientRect();
+      var speed = parseFloat(el.getAttribute('data-parallax')) || 0;
+      var offset = (rect.top + rect.height / 2 - vh / 2) * speed;
+      el.style.setProperty('--parallax', offset.toFixed(1) + 'px');
+    });
+
+    progressSections.forEach(function (section) {
+      var rect = section.getBoundingClientRect();
+      var p = (vh * 0.75 - rect.top) / (rect.height * 0.7);
+      section.style.setProperty('--progress', Math.max(0, Math.min(1, p)).toFixed(3));
+    });
+  }
+
+  function requestUpdate() {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(update);
+    }
+  }
+
+  update();
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+
+  // Aparición de elementos al entrar en pantalla.
+  var revealItems = document.querySelectorAll('[data-reveal]');
+  if (root.classList.contains('motion') && 'IntersectionObserver' in window) {
+    var revealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -6% 0px', threshold: 0.04 }
+    );
+    revealItems.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+  } else {
+    root.classList.remove('motion');
+  }
+  window.__motionReady = true;
+
+  // Inclinación suave de tarjetas siguiendo el mouse (solo con mouse).
+  if (!reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(function (card) {
+      card.addEventListener('pointermove', function (event) {
+        var rect = card.getBoundingClientRect();
+        var x = (event.clientX - rect.left) / rect.width - 0.5;
+        var y = (event.clientY - rect.top) / rect.height - 0.5;
+        card.style.setProperty('--tilt-x', (-y * 6).toFixed(2) + 'deg');
+        card.style.setProperty('--tilt-y', (x * 6).toFixed(2) + 'deg');
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.setProperty('--tilt-x', '0deg');
+        card.style.setProperty('--tilt-y', '0deg');
+      });
+    });
   }
 
   // ---------- Sección activa en el menú ----------
@@ -194,14 +279,14 @@
 
     var data = {
       nombre: form.elements.nombre.value.trim(),
-      email: form.elements.email.value.trim(),
+      email: form.elements.email ? form.elements.email.value.trim() : '',
       tipo: form.elements.tipo.value,
       mensaje: form.elements.mensaje.value.trim(),
     };
     var mode = form.getAttribute('data-mode');
     var text =
-      'Hola, soy ' + data.nombre + ' (' + data.email + ').' +
-      (data.tipo ? '\nTipo de proyecto: ' + data.tipo + '.' : '') +
+      'Hola, soy ' + data.nombre + (data.email ? ' (' + data.email + ')' : '') + '.' +
+      (data.tipo ? '\n' + (form.getAttribute('data-type-label') || 'Tipo de proyecto') + ': ' + data.tipo + '.' : '') +
       '\n\n' + data.mensaje;
 
     if (mode === 'whatsapp' || mode === 'email') {

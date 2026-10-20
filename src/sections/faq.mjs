@@ -4,7 +4,7 @@ export default function faq(config) {
   const f = config.faq;
   const items = f.items
     .map(
-      (item) => `<details class="faq__item">
+      (item) => `<details class="faq__item" data-reveal>
         <summary><span>${esc(item.q)}</span>${icons.plus}</summary>
         <div class="faq__answer"><p>${rich(item.a)}</p></div>
       </details>`
