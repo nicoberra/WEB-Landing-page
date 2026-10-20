@@ -1,4 +1,4 @@
-import { esc, rich, sectionHeader } from '../helpers.mjs';
+import { esc, rich, media, sectionHeader } from '../helpers.mjs';
 
 export default function about(config) {
   const a = config.about;
@@ -11,9 +11,12 @@ export default function about(config) {
       ${sectionHeader(a)}
       ${a.paragraphs.map((p) => `<p data-reveal>${rich(p)}</p>`).join('\n      ')}
     </div>
-    <dl class="about__list">
-      ${highlights}
-    </dl>
+    <div class="about__aside">
+      ${a.photo ? `<div class="about__photo" data-reveal>${media({ image: a.photo, label: 'FOTO', hint: '', ratio: '4/5', alt: a.photo.alt })}</div>` : ''}
+      <dl class="about__list">
+        ${highlights}
+      </dl>
+    </div>
   </div>
 </section>`;
 }

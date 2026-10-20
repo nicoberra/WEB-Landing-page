@@ -15,7 +15,7 @@ export default function services(config) {
   return `<section class="section services" id="${esc(s.id)}" aria-labelledby="${esc(s.id)}-titulo">
   <div class="container">
     ${sectionHeader(s)}
-    <ul class="services__grid" role="list">
+    <ul class="services__grid${s.items.length % 3 === 0 ? ' services__grid--thirds' : ''}" role="list">
       ${items}
     </ul>
   </div>

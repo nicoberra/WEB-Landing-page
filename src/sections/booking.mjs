@@ -13,7 +13,10 @@ export default function booking(config) {
       ${
         config.booking?.url
           ? `<a class="button button--invert" ${linkAttrs(bookingUrl(config))}>${icons.calendar}${esc(b.ctaLabel)}<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a>`
-          : `<p class="booking__pending">${icons.calendar}${esc(config.booking?.pendingNote || 'Turnero online: próximamente.')}</p>`
+          : config.booking?.interim?.url
+            ? `<p class="booking__interim">${esc(config.booking.interim.text)}</p>
+      <a class="button button--invert" ${linkAttrs(config.booking.interim.url)}>${icons.insta}${esc(config.booking.interim.label)}<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a>`
+            : `<p class="booking__pending">${icons.calendar}${esc(config.booking?.pendingNote || 'Turnero online: próximamente.')}</p>`
       }
     </div>
   </div>

@@ -312,15 +312,15 @@ Al adaptar la plantilla para un profesional:
 
 **Página de Jesica Cuevas (`site.config.mjs`).** `npm run check` lista todo lo pendiente. Hoy:
 
-- **Turnero:** falta el enlace (`booking.url`).
+- **Turnero:** falta el enlace (`booking.url`). Mientras tanto, la sección de turnos indica reservar escribiendo a [@nm.trainingcenter](https://www.instagram.com/nm.trainingcenter/), como dice su placa de servicios.
 - **Panel de pacientes:** falta el enlace (`portal.url`).
 - **Recetarios:** los tres títulos, descripciones y formatos son provisorios, inspirados en temas de su Instagram. Faltan precios, tapas y enlaces de compra.
-- **Fotos:** faltan el retrato (4:5), las tapas de los recetarios (3:4) y las fotos de publicaciones para el bloque de Instagram (1:1).
-- **Textos a validar con ella:** detalle de cada consulta, pasos del proceso y respuestas de preguntas frecuentes. Están redactados a partir de su bio y de la información que pasó, pero no los revisó ella.
+- **Fotos:** están el retrato de la presentación y el de "Sobre mí" (`public/assets/jesica-*.webp`). Faltan las tapas de los recetarios (3:4) y fotos de publicaciones para el bloque de Instagram (1:1).
+- **Textos a validar con ella:** descripciones de cada plan, pasos del proceso y respuestas de preguntas frecuentes.
 - **Dominio:** `site.url` sigue siendo el de ejemplo (en GitHub Pages se usa la dirección de Pages automáticamente).
 - **Publicación:** con `demo: true`, la página muestra un aviso de versión en preparación y no se indexa.
 
-Datos confirmados: nombre, matrícula M.N. 12233, especialidades, formación, Castelar con atención online y presencial, WhatsApp +54 9 11 6407-2673 e Instagram @nutricionista.cj.
+Fuentes de los datos: su placa de servicios (los seis planes, que son el eje de la página), su CV (matrícula, experiencia, formación y email), su Instagram (colores, tipografías, tono, Castelar y modalidad online/presencial) y el WhatsApp +54 9 11 6407-2673 indicado por quien encargó la página. El CV trae otro teléfono (11 3797-8217) que no se usa. Por pedido, no se menciona Espacio SilRagolia ni se publica la fecha de nacimiento.
 
 **Ejemplo de la diseñadora (`examples/disenadora-grafica.config.mjs`).** Todo es ficticio: la persona, los textos, los proyectos, el email `hola@example.com` y el WhatsApp `+54 9 000 000-0000`.
 

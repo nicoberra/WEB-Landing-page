@@ -41,7 +41,14 @@ export default {
     profession: 'Licenciada en Nutrición',
     license: 'M.N. 12233', // matrícula tal como debe mostrarse. Vacío = no se muestra.
     location: 'Castelar · Online y presencial',
-    photo: null, // PENDIENTE: { src: 'assets/jesica.jpg', alt: 'Jesica Cuevas sonriendo en su consultorio' }
+    // position: qué parte de la foto queda visible al recortarla (horizontal vertical).
+    photo: {
+      src: 'assets/jesica-jardin.webp',
+      alt: 'Jesica Cuevas sonriendo en un jardín',
+      width: 960,
+      height: 1280,
+      position: '50% 30%',
+    },
   },
 
   // --- Logo ---------------------------------------------------------------------
@@ -88,6 +95,12 @@ export default {
     // turno llevan a la sección de turnos, que avisa que el enlace está pendiente.
     url: '',
     pendingNote: 'Turnero online: enlace pendiente de configuración.',
+    // Cómo se reserva hoy, mientras no hay turnero propio. Vacío = no se muestra.
+    interim: {
+      text: 'Por ahora, reservá tu turno escribiendo a',
+      label: '@nm.trainingcenter',
+      url: 'https://www.instagram.com/nm.trainingcenter/',
+    },
   },
   portal: {
     url: '', // PENDIENTE: enlace al panel de pacientes. Vacío = no se muestra.
@@ -96,11 +109,11 @@ export default {
   instagramUrl: 'https://www.instagram.com/nutricionista.cj/',
 
   // --- Secciones y navegación -----------------------------------------------------
-  sections: ['hero', 'marquee', 'about', 'services', 'credentials', 'process', 'products', 'booking', 'instagram', 'faq', 'contact'],
+  sections: ['hero', 'marquee', 'services', 'about', 'credentials', 'process', 'products', 'booking', 'instagram', 'faq', 'contact'],
   nav: [
+    { id: 'planes', label: 'Planes' },
     { id: 'sobre-mi', label: 'Sobre mí' },
-    { id: 'consultas', label: 'Consultas' },
-    { id: 'formacion', label: 'Formación' },
+    { id: 'formacion', label: 'Trayectoria' },
     { id: 'recetarios', label: 'Recetarios' },
     { id: 'contacto', label: 'Contacto' },
   ],
@@ -112,8 +125,8 @@ export default {
     description:
       'Planes 100% personalizados según tu objetivo: rendimiento, descenso de grasa o aumento muscular. Con evaluación antropométrica y seguimiento.',
     primaryCta: { label: 'Sacar turno', href: 'booking' },
-    secondaryCta: { label: 'Ver recetarios', href: '#recetarios' },
-    badges: ['Especialista en nutrición deportiva', 'Antropometrista ISAK nivel 2'], // etiquetas flotantes junto a la foto
+    secondaryCta: { label: 'Ver planes', href: '#planes' },
+    badges: ['Planes 100% personalizados', 'Especialista en nutrición deportiva'], // etiquetas flotantes junto a la foto
   },
 
   // --- Cinta animada (frases de su Instagram) ----------------------------------------
@@ -132,8 +145,15 @@ export default {
     id: 'sobre-mi',
     eyebrow: 'Sobre mí',
     title: 'Comé para *nutrirte*, no para castigarte.',
+    photo: {
+      src: 'assets/jesica-retrato.webp',
+      alt: 'Retrato de Jesica Cuevas con musculosa blanca',
+      width: 960,
+      height: 1280,
+      position: '50% 25%',
+    },
     paragraphs: [
-      'Hola, soy Jesi, Licenciada en Nutrición y especialista en nutrición deportiva. Trabajo con deportistas, clubes y con personas que quieren sentirse mejor, en mi consultorio de Castelar y online.',
+      'Hola, soy Jesi, Licenciada en Nutrición y especialista en nutrición deportiva. Acompaño a deportistas, clubes y personas que quieren sentirse mejor, en consultorio y online.',
       'Me niego a que la única meta sea bajar de peso. Quiero que rindas mejor, que tengas energía y que aprendas a elegir qué comer en el súper, en tu casa o antes de entrenar. Mi objetivo es que, con el tiempo, no me necesites.',
     ],
     highlights: [
@@ -143,36 +163,36 @@ export default {
     ],
   },
 
-  // --- Consultas / especialidades --------------------------------------------------
+  // --- Planes 100% personalizados (lo principal: tomado de su placa de servicios) ----
   services: {
-    id: 'consultas',
+    id: 'planes',
     eyebrow: 'Consultas',
-    title: 'Cómo te puedo *acompañar*',
-    intro: 'Planes 100% personalizados según tu objetivo. Si no sabés por dónde empezar, escribime y lo vemos.',
+    title: 'Planes *100% personalizados*',
+    intro: 'Cada plan se arma según tu objetivo: rendimiento, descenso de grasa o aumento muscular. Con evaluación antropométrica y seguimiento.',
     items: [
       {
         title: 'Nutrición deportiva',
-        description: 'Para que tu alimentación acompañe tu entrenamiento y mejore tu rendimiento.',
-        includes: ['Plan según tu deporte y tu rutina', 'Planificación de competencias', 'Trabajo con deportistas y clubes'],
-        idealFor: 'Si entrenás o competís y querés rendir mejor.',
+        description: 'Mejora del rendimiento deportivo, con un plan pensado para tu deporte y tu rutina.',
       },
       {
         title: 'Antropometría',
-        description: 'Evaluación corporal con protocolo ISAK para objetivos de descenso de grasa o aumento muscular.',
-        includes: ['Mediciones antropométricas', 'Plan según tu objetivo', 'Seguimiento de tus cambios'],
-        idealFor: 'Si querés medir tu progreso más allá de la balanza.',
+        description: 'Descenso de grasa y/o aumento muscular, medido con evaluación antropométrica.',
+      },
+      {
+        title: 'Plant-based, celiaquía, SIBO, IMO',
+        description: 'Planes adaptados a tu forma de comer y a tu diagnóstico.',
+      },
+      {
+        title: 'Cambio de hábitos y nutrición antiinflamatoria',
+        description: 'Ordenar tu alimentación sin restricciones y sostenerlo en el tiempo.',
+      },
+      {
+        title: 'Planificación de competencias',
+        description: 'Tu alimentación organizada para llegar bien a cada competencia.',
       },
       {
         title: 'Nutrición hormonal',
-        description: 'Una alimentación pensada para acompañar SOP, menopausia, endometriosis o hipotiroidismo.',
-        includes: ['Evaluación de hábitos y síntomas', 'Plan personalizado', 'Seguimiento cercano'],
-        idealFor: 'Si querés entender a tu cuerpo y sentirte mejor.',
-      },
-      {
-        title: 'Nutrición clínica y hábitos',
-        description: 'Cambio de hábitos, alimentación antiinflamatoria y planes para necesidades específicas.',
-        includes: ['Plant-based', 'Celiaquía, SIBO e IMO', 'Alimentación antiinflamatoria'],
-        idealFor: 'Si necesitás un plan adaptado a tu situación.',
+        description: 'SOP, menopausia, endometriosis e hipotiroidismo.',
       },
     ],
   },
@@ -180,26 +200,43 @@ export default {
   // --- Especialidades y formación ------------------------------------------------------
   credentials: {
     id: 'formacion',
-    eyebrow: 'Especialidades y formación',
-    title: 'Formación para *acompañarte* mejor',
+    eyebrow: 'Trayectoria',
+    title: 'Experiencia y formación para *acompañarte* mejor',
+    intro: 'Licenciada en Nutrición (M.N. 12233) con orientación al ámbito deportivo. Trabajo con deportistas, clubes y pacientes en consultorio.',
+    // Especialidades como etiquetas (opcional). Vacío = solo se muestra la formación.
     specialtiesTitle: 'Especialidades',
-    specialties: [
-      'Nutrición deportiva (mejora del rendimiento)',
-      'Antropometría: descenso de grasa y/o aumento muscular',
-      'Plant-based, celiaquía, SIBO, IMO',
-      'Nutrición clínica, cambio de hábitos y antiinflamatoria',
-      'Planificación de competencias',
-      'Nutrición hormonal: SOP, menopausia, endometriosis, hipotiroidismo',
+    specialties: [],
+    experienceTitle: 'Experiencia',
+    experience: [
+      {
+        title: 'Nutrición deportiva, clínica y hormonal',
+        place: 'Consultorio particular',
+        detail: 'Evaluación y diagnóstico, planes personalizados, planificación de competencias y evaluación antropométrica.',
+      },
+      {
+        title: 'Consultoría en clubes',
+        place: 'Club Argentinos de Castelar y Club 77',
+        detail: 'Charlas, talleres, planes personalizados, planificación de alimentación en viajes y evaluación antropométrica individual o grupal.',
+      },
+      {
+        title: 'Asesoría nutricional',
+        place: 'Savia Viandas Saludables',
+        detail: 'Planificación de menús saludables según objetivos y cálculo de información nutricional.',
+      },
     ],
     educationTitle: 'Formación',
     education: [
-      { title: 'Licenciada en Nutrición', detail: 'M.N. 12233' },
-      { title: 'Antropometrista ISAK nivel 2', detail: 'Francis Holway' },
-      { title: 'Posgrado en Deportes Específicos', detail: 'Francis Holway' },
-      { title: 'Posgrado en Suplementación', detail: 'Suplementando ConCiencia' },
+      { title: 'Licenciatura en Nutrición', detail: 'Universidad Nacional de La Matanza' },
+      { title: 'Curso Internacional de Nutrición Hormonal', detail: 'Instituto Universitario Vive Sano', status: 'En curso' },
       { title: 'Posgrado Plant-Based con orientación deportiva', detail: 'ULP' },
-      { title: 'Curso Internacional de Nutrición Hormonal', detail: 'Viví Sano' },
-      { title: 'Actualización en Microbiota', detail: 'AADYND' },
+      { title: 'Posgrado de Deportes Específicos', detail: 'Francis Holway' },
+      { title: 'Curso de Antropometría ISAK II', detail: 'Francis Holway' },
+      { title: 'Curso de Interpretación de Antropometría', detail: 'Francis Holway' },
+      { title: 'Posgrado de Suplementación', detail: 'Suplementando ConCiencia' },
+      { title: 'Tramo de Formación Pedagógica', detail: 'Universidad FASTA' },
+      { title: 'Curso de Embarazo en Patologías y Situaciones de Riesgo', detail: 'Nutrinfo' },
+      { title: 'Posgrado de Nutrición en Adultos Mayores', detail: 'Nutrinfo' },
+      { title: 'Curso de Actualización en Microbiota', detail: 'AADYND' },
     ],
   },
 
@@ -209,7 +246,7 @@ export default {
     eyebrow: 'Paso a paso',
     title: 'Así arrancamos',
     steps: [
-      { title: 'Reservás tu turno', text: 'Elegís día y horario en el turnero online, presencial u online.' },
+      { title: 'Reservás tu turno', text: 'Coordinás día y horario, presencial u online.' },
       { title: 'Primera consulta', text: 'Charlamos sobre tus hábitos, tu entrenamiento y tu objetivo. Hacemos la evaluación antropométrica.' },
       { title: 'Tu plan', text: 'Recibís un plan a tu medida, con ideas de comidas y reemplazos.' },
       { title: 'Seguimiento', text: 'Nos volvemos a ver para ajustar y sostener lo que funciona.' },
@@ -285,7 +322,7 @@ export default {
     title: 'Antes de tu *consulta*',
     intro: '¿No encontrás tu duda? Escribime y te respondo.',
     items: [
-      { q: '¿Cómo saco un turno?', a: 'Desde el botón "Sacar turno" entrás al turnero online y elegís día, horario y modalidad.' },
+      { q: '¿Cómo saco un turno?', a: 'Por ahora, escribiéndole a @nm.trainingcenter por Instagram. Muy pronto vas a poder reservar desde el turnero online.' },
       { q: '¿Atendés online?', a: 'Sí. Atiendo online por videollamada y presencial en Castelar. El plan te llega en formato digital.' },
       { q: '¿Tengo que dejar de comer lo que me gusta?', a: 'No. La idea es no eliminar, sino agregar y mejorar. Armamos un plan que se adapte a vos.' },
       { q: '¿Trabajás con deportistas y clubes?', a: 'Sí. Armo planes para mejorar el rendimiento y planifico la alimentación para competencias.' },
@@ -306,7 +343,7 @@ export default {
       display: '+54 9 11 6407-2673',
       message: 'Hola Jesi! Vi tu página y quería hacerte una consulta.',
     },
-    email: '', // opcional. Vacío = no se muestra.
+    email: 'nutricionista.cj@gmail.com', // del CV. Vacío = no se muestra.
     responseNote: '',
     form: {
       enabled: true,

@@ -67,7 +67,7 @@ export const media = ({ image, label, ratio, hint, alt, eager = false, className
     const width = image.width || w * 300;
     const height = image.height || h * 300;
     return `<figure class="media ${className}" style="--ratio:${w}/${h}">
-  <img src="${esc(image.src)}" alt="${esc(image.alt || alt || '')}" width="${width}" height="${height}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
+  <img src="${esc(image.src)}" alt="${esc(image.alt || alt || '')}" width="${width}" height="${height}"${image.position ? ` style="object-position:${esc(image.position)}"` : ''} ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
 </figure>`;
   }
   return `<div class="media media--placeholder ${className}" style="--ratio:${w}/${h}" role="img" aria-label="${esc(`${alt}. Espacio reservado para una foto.`)}">
