@@ -287,7 +287,7 @@ main:focus {
 }
 
 /* Línea de abajo: curva, como dibujada con un fibrón marrón clarito.
-   Se dibuja cuando aparece el fondo de la barra. */
+   Se va dibujando mientras se baja, a la par de la foto. */
 .top__line {
   position: absolute;
   inset: 0 0 -16px;
@@ -305,12 +305,13 @@ main:focus {
   stroke-linejoin: round;
   opacity: 0.9;
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1.2s var(--ease);
+  /* --line va de 0 a 1: main.js la mueve a la par del scroll */
+  stroke-dashoffset: calc(1 - var(--line, 0));
 }
 
-.top.is-solid .top__line path {
-  stroke-dashoffset: 0;
+/* Sin animaciones: aparece entera junto con el fondo de la barra */
+.top.is-solid {
+  --line: 1;
 }
 
 .top.is-hidden {
@@ -775,6 +776,110 @@ main section[id] {
 
 .trust__item span {
   font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- Columna fija debajo de la foto (pantallas anchas) ---------- */
+
+.rail {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .motion .rail {
+    display: block;
+    position: fixed;
+    z-index: 48;
+    top: 122px;
+    left: var(--gutter);
+    width: 190px;
+    pointer-events: none;
+  }
+
+  /* En compu la información vive en la columna; en celular, en la portada */
+  .motion .trust {
+    display: none;
+  }
+
+  /* Debajo de la portada, el contenido deja libre el costado de la columna */
+  .motion main > :not(.hero):not(.plans):not(.pin-spacer),
+  .motion .foot {
+    margin-left: calc(190px + var(--gutter));
+  }
+
+  /* Planes queda fijo a pantalla completa mientras se desliza: el lugar de
+     la columna se deja por dentro */
+  .motion .plans {
+    padding-left: calc(190px + var(--gutter));
+  }
+}
+
+.rail__list {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0 0 0 18px;
+  list-style: none;
+}
+
+/* Línea que baja desde la foto y va uniendo los ítems */
+.rail__list::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: -14px;
+  width: 2px;
+  height: calc(100% + 14px);
+  border-radius: 2px;
+  background: #C4A27F;
+  transform: scaleY(var(--grow, 0));
+  transform-origin: top;
+}
+
+.rail__item {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  box-shadow: 0 12px 26px -18px rgb(31 45 37 / 0.6), inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 18%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  --q: 0;
+  opacity: var(--q);
+  transform: translateY(calc((1 - var(--q)) * -14px)) scaleY(calc(0.6 + var(--q) * 0.4));
+  transform-origin: top;
+  clip-path: inset(0 0 calc((1 - var(--q)) * 100%) 0 round 16px);
+}
+
+/* Puntito sobre la línea */
+.rail__item::before {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--apple);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+.rail__item strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  font-variation-settings: 'wdth' 85;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rail__item span {
+  font-size: 12px;
+  line-height: 1.35;
   color: var(--muted);
 }
 

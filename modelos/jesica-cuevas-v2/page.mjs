@@ -68,6 +68,14 @@ ${headHtml}
   </div>
 </header>
 
+<!-- Columna que se despliega debajo de la foto (arriba a la izquierda) al
+     bajar, en pantallas anchas; ver main.js. Mismos datos que "trust". -->
+<aside class="rail" data-rail aria-label="Formación y matrícula">
+  <ul class="rail__list" role="list">
+    ${v.trust.map((t) => `<li class="rail__item"><strong>${esc(t.big)}</strong><span>${esc(t.small)}</span></li>`).join('\n    ')}
+  </ul>
+</aside>
+
 <main id="contenido" tabindex="-1">
 
   <section class="hero" id="inicio" aria-labelledby="inicio-titulo">

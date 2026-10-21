@@ -278,6 +278,25 @@
     tagEl.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
   }
 
+  // ---------- Columna debajo de la foto ----------
+  // Cuando la foto llegó arriba, los ítems se despliegan uno por uno según
+  // cuánto se baja (y se repliegan al volver a subir).
+  var rail = document.querySelector('[data-rail]');
+  var railList = rail && rail.querySelector('.rail__list');
+  var railItems = rail ? [].slice.call(rail.querySelectorAll('.rail__item')) : [];
+  function updateRail(dockDist) {
+    if (!railItems.length || !rail.offsetWidth) return;
+    var STEP = 120;
+    var from = view.top - dockDist * 0.85;
+    var total = Math.max(0, Math.min(1, from / (STEP * railItems.length)));
+    railList.style.setProperty('--grow', total.toFixed(3));
+    railItems.forEach(function (it, i) {
+      var q = Math.max(0, Math.min(1, (from - i * STEP) / STEP));
+      it.style.setProperty('--q', (1 - Math.pow(1 - q, 3)).toFixed(3));
+    });
+    rail.style.transform = view.off ? 'translate3d(0,' + view.off.toFixed(1) + 'px,0)' : '';
+  }
+
   // ---------- La foto vuela al lugar del logo mientras se baja ----------
   // Va desde su lugar en la portada hasta el encabezado, achicándose, con el
   // texto que gira y las hojas. Al volver a subir hace el camino inverso.
@@ -295,7 +314,8 @@
       fly.style.width = h.width + 'px';
       fly.style.height = h.height + 'px';
       // Recorrido: más o menos la mitad de la pantalla de scroll.
-      var p = Math.min(1, Math.max(0, view.top / Math.max(240, view.h * 0.55)));
+      var dockDist = Math.max(240, view.h * 0.55);
+      var p = Math.min(1, Math.max(0, view.top / dockDist));
       var e = smooth(p);
       // Tamaño final: el círculo con su texto entra en el lugar del logo.
       var kEnd = (s.width * 0.95) / (h.width * 1.12);
@@ -314,6 +334,9 @@
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
       updateBubbles(h, startY, p);
       updateTag(e);
+      updateRail(dockDist);
+      // La línea curva de la barra se dibuja al mismo ritmo que sube la foto
+      if (top) top.style.setProperty('--line', e.toFixed(4));
     };
     updateFly();
     gsap.ticker.add(updateFly);
@@ -357,7 +380,7 @@
   var track = document.querySelector('[data-plans-track]');
   if (plans && track) {
     plans.classList.add('is-horizontal');
-    var dist = function () { return Math.max(0, track.scrollWidth - window.innerWidth); };
+    var dist = function () { return Math.max(0, track.offsetLeft + track.scrollWidth - plans.clientWidth); };
     gsap.to(track, {
       x: function () { return -dist(); },
       ease: 'none',
