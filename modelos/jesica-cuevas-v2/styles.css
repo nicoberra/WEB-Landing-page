@@ -13,6 +13,12 @@
   --gutter: clamp(16px, 4vw, 56px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --apple: var(--highlight);
+  /* Fondo: tonos salvia y piedra de los posteos de Instagram */
+  --sage: #A7B292;
+  --sage-soft: #CBD4B4;
+  --stone: #DDDBD1;
+  /* Líneas suaves tipo mármol (SVG con ruido, se repite en mosaico) */
+  --lines: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271000%27 height=%271000%27 viewBox=%270 0 1000 1000%27%3E%3Cfilter id=%27m%27 x=%270%27 y=%270%27 width=%27100%25%27 height=%27100%25%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.0011 0.0032%27 numOctaves=%272%27 seed=%274%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 0.33 0 0 0 0 0.42 0 0 0 0 0.36 1.6 0 0 0 -0.3%27/%3E%3CfeComponentTransfer%3E%3CfeFuncA type=%27table%27 tableValues=%270 0.02 0.11 0.02 0 0.03 0.13 0.03 0 0.02 0.1 0.02 0 0.03 0.12 0.02 0%27/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23m)%27/%3E%3C/svg%3E");
 }
 
 *,
@@ -23,7 +29,7 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--bg) var(--lines) 0 0 / 1000px auto;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 17px;
@@ -317,6 +323,80 @@ main:focus {
   padding: calc(env(safe-area-inset-top, 0px) + 100px) var(--gutter) 60px;
   overflow: hidden;
 }
+
+/* Formas orgánicas de fondo, como en los posteos (ola salvia + piedra).
+   Sin "isolation" en la portada: la foto que vuela (fixed) tiene que poder
+   quedar por encima del encabezado. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__bg svg {
+  position: absolute;
+  width: auto;
+  height: auto;
+}
+
+.blob-wave {
+  left: -8%;
+  bottom: -6%;
+  width: max(78%, 720px);
+  fill: var(--sage-soft);
+  opacity: 0.8;
+}
+
+.blob-stone {
+  top: -12%;
+  right: -10%;
+  width: max(46%, 420px);
+  fill: var(--stone);
+}
+
+.blob-sage {
+  top: 30%;
+  right: -6%;
+  width: max(22%, 200px);
+  fill: var(--sage);
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blob-wave { animation: drift 22s ease-in-out infinite alternate; }
+  .blob-stone { animation: drift 26s ease-in-out -8s infinite alternate-reverse; }
+  .blob-sage { animation: drift 18s ease-in-out -4s infinite alternate; }
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  to { transform: translate3d(3%, -4%, 0) rotate(6deg) scale(1.06); }
+}
+
+/* Otras secciones lisas llevan una forma suave en un costado */
+.career,
+.faq {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.career::before,
+.faq::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: min(70vw, 760px);
+  aspect-ratio: 1.2;
+  border-radius: 58% 42% 63% 37% / 46% 58% 42% 54%;
+  background: var(--sage-soft);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.career::before { left: -26%; bottom: -24%; background: var(--stone); opacity: 0.9; }
+.faq::before { right: -24%; bottom: -30%; }
 
 .hero__copy {
   display: grid;

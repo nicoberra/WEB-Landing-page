@@ -61,6 +61,11 @@ ${headHtml}
 <main id="contenido" tabindex="-1">
 
   <section class="hero" id="inicio" aria-labelledby="inicio-titulo">
+    <div class="hero__bg" aria-hidden="true">
+      <svg class="blob-wave" viewBox="0 0 800 560"><path d="M0 92C96 30 214 18 300 70c92 56 118 170 196 252 70 74 186 96 268 126 22 8 36 22 36 40V560H0Z"/></svg>
+      <svg class="blob-stone" viewBox="0 0 500 500"><path d="M120 0h380v430c-40 50-120 70-176 36-70-42-60-140-130-190C130 236 40 250 12 196-18 136 50 56 120 0Z"/></svg>
+      <svg class="blob-sage" viewBox="0 0 200 200"><path d="M150 20c34 24 52 74 36 116s-64 66-108 56S2 140 6 96 46 14 86 6s40-10 64 14Z"/></svg>
+    </div>
     <div class="hero__copy">
       <p class="tag"><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
       <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
