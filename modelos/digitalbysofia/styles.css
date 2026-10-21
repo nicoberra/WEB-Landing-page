@@ -275,6 +275,21 @@ main:focus {
   opacity: 0.3;
 }
 
+/* Una versión para pantallas anchas y otra para pantallas altas */
+.lines--tall {
+  display: none;
+}
+
+@media (max-aspect-ratio: 3/4) {
+  .lines--wide {
+    display: none;
+  }
+
+  .lines--tall {
+    display: block;
+  }
+}
+
 /* Con animaciones arrancan sin dibujar */
 .motion .lines path {
   stroke-dasharray: 1;
@@ -1560,19 +1575,48 @@ main:focus {
   box-shadow: inset 0 0 0 0.4cqw rgb(0 0 0 / 0.06);
 }
 
-/* Teclado negro */
+/* Teclado: hueco un poco más oscuro y teclas negras redondeadas (SVG) */
 .mac__keys {
   position: absolute;
-  left: 13%;
-  right: 13%;
-  top: 8%;
-  height: 40%;
-  border-radius: 1cqw;
-  background:
-    repeating-linear-gradient(90deg, transparent 0 5.1cqw, #c9cbd1 5.1cqw 5.9cqw),
-    repeating-linear-gradient(0deg, #1b1b1e 0 3.9cqw, #c9cbd1 3.9cqw 4.7cqw);
-  box-shadow: 0 0 0 0.5cqw #b9bbc1;
+  left: 14.5%;
+  right: 14.5%;
+  top: 7%;
+  height: 43%;
+  padding: 0.6cqw;
+  border-radius: 1.2cqw;
+  background: linear-gradient(#b4b6bc, #bfc1c7);
+  box-shadow: inset 0 0.2cqw 0.4cqw rgb(0 0 0 / 0.18);
 }
+
+.mac__kb {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mac__kb rect {
+  fill: #1f1f22;
+  stroke: rgb(255 255 255 / 0.07);
+  stroke-width: 0.5;
+}
+
+.mac__kb rect.tid {
+  fill: #2e2e33;
+  stroke: #6d6f75;
+}
+
+/* Rejillas de los parlantes a los costados del teclado */
+.mac__grille {
+  position: absolute;
+  top: 7%;
+  height: 43%;
+  width: 5.5%;
+  background: radial-gradient(circle, rgb(0 0 0 / 0.35) 0.18cqw, transparent 0.24cqw) 0 0 / 0.75cqw 0.75cqw;
+  opacity: 0.8;
+}
+
+.mac__grille--l { left: 7%; }
+.mac__grille--r { right: 7%; }
 
 /* Trackpad grande */
 .mac__pad {

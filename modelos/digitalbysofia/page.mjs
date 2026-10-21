@@ -54,6 +54,47 @@ function screen(image, kind, i) {
  * arriba, después aparecen el título y los botones, y al final se van los
  * dispositivos. Sin animaciones se ve directamente la composición final.
  */
+/**
+ * Teclado de MacBook en SVG: filas con las medidas reales (unidades de tecla),
+ * teclas redondeadas y separadas, Touch ID arriba a la derecha y flechas.
+ */
+function macKeyboard() {
+  const u = 20, gap = 1.8, rowH = 17;
+  const rows = [
+    { h: 8.5, keys: Array(14).fill(1) },
+    { keys: [...Array(13).fill(1), 2] },
+    { keys: [1.5, ...Array(12).fill(1), 1.5] },
+    { keys: [1.75, ...Array(11).fill(1), 2.25] },
+    { keys: [2.25, ...Array(10).fill(1), 2.75] },
+    { keys: [1, 1, 1, 1.25, 5.5, 1.25, 1, 'arrows'] },
+  ];
+  let y = 0;
+  const rects = [];
+  const key = (x, ky, w, h, extra = '') => rects.push(`<rect x="${x.toFixed(1)}" y="${ky.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="2.2"${extra}/>`);
+  rows.forEach((r, ri) => {
+    const h = r.h || rowH;
+    let x = 0;
+    r.keys.forEach((k, ki) => {
+      if (k === 'arrows') {
+        // ← (↑ sobre ↓) →, como en la Mac
+        const w = u - gap, half = (h - gap) / 2;
+        key(x, y + half + gap, w, half);
+        key(x + u, y, w, half);
+        key(x + u, y + half + gap, w, half);
+        key(x + 2 * u, y + half + gap, w, half);
+        x += 3 * u;
+        return;
+      }
+      const w = k * u - gap;
+      // Touch ID: última tecla de la fila de funciones
+      key(x, y, w, h, ri === 0 && ki === r.keys.length - 1 ? ' class="tid"' : '');
+      x += k * u;
+    });
+    y += h + gap;
+  });
+  return `<svg class="mac__kb" viewBox="-3 -3 ${15 * u + 4} ${(y + 4).toFixed(1)}" preserveAspectRatio="none">${rects.join('')}</svg>`;
+}
+
 function intro(config) {
   const it = config.intro;
   const devices = it.devices
@@ -81,7 +122,7 @@ function intro(config) {
               <div class="mac__face"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div><i class="mac__notch"></i></div>
               <div class="mac__back"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></div>
             </div>
-            <div class="mac__deck"><i class="mac__keys"></i><i class="mac__pad"></i><i class="mac__lip"></i></div>
+            <div class="mac__deck"><i class="mac__grille mac__grille--l"></i><i class="mac__keys">${macKeyboard()}</i><i class="mac__grille mac__grille--r"></i><i class="mac__pad"></i><i class="mac__lip"></i></div>
           </div>
         </div>
         <div class="badge" ><div class="pop" data-pop>${wordmark(config, 'wordmark--badge')}</div></div>
@@ -273,7 +314,7 @@ ${headHtml}
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
-<svg class="lines" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true" data-lines>
+<svg class="lines lines--wide" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true" data-lines>
   <path pathLength="1" d="M-20 170C110 90 210 40 300 -20"/>
   <path pathLength="1" d="M-20 225C130 150 240 90 370 -20"/>
   <path pathLength="1" d="M1020 330C890 380 800 470 820 570s150 120 200 100"/>
@@ -281,6 +322,17 @@ ${headHtml}
   <path pathLength="1" d="M-20 700C80 640 190 650 225 735s-10 200 -110 260"/>
   <path pathLength="1" d="M-20 745C60 700 150 710 180 780s-15 180 -90 230"/>
   <path pathLength="1" d="M600 1020C650 900 760 840 880 850s140 70 160 100"/>
+</svg>
+<!-- Versión para pantallas angostas (celular): mismas curvas, proporcionadas
+     a una pantalla alta para que no se estiren -->
+<svg class="lines lines--tall" viewBox="0 0 500 1000" preserveAspectRatio="none" aria-hidden="true" data-lines>
+  <path pathLength="1" d="M-10 120C70 80 140 40 190 -10"/>
+  <path pathLength="1" d="M-10 160C80 115 160 65 230 -10"/>
+  <path pathLength="1" d="M510 360C430 385 385 440 395 500s75 75 115 65"/>
+  <path pathLength="1" d="M510 395C450 412 420 455 428 500s55 55 82 48"/>
+  <path pathLength="1" d="M-10 690C55 655 120 665 140 715s-5 120 -70 160"/>
+  <path pathLength="1" d="M-10 720C40 695 95 703 112 742s-8 105 -60 140"/>
+  <path pathLength="1" d="M290 1010C320 940 385 905 450 912s70 35 70 55"/>
 </svg>
 <header class="top" data-header>
   <a class="top__brand" href="#inicio" aria-label="${esc(config.brand.wordmark)}, ir al inicio">${wordmark(config, 'wordmark--small')}</a>
