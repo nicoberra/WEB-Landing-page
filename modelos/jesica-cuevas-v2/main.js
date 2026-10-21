@@ -18,9 +18,8 @@
     var y = window.scrollY, max = root.scrollHeight - window.innerHeight;
     if (bar) bar.style.setProperty('--p', max > 0 ? Math.min(1, y / max) : 0);
     if (top) {
+      // El encabezado no se esconde: ahí queda la foto como logo.
       top.classList.toggle('is-solid', y > 30);
-      top.classList.toggle('is-hidden', y > 400 && y > lastY + 2);
-      if (y < lastY - 2) top.classList.remove('is-hidden');
     }
     lastY = y;
   }
@@ -43,8 +42,7 @@
       { yPercent: 110, opacity: 0, '--wdth': 62, '--wght': 300 },
       { yPercent: 0, opacity: 1, '--wdth': function (i) { return i === 3 ? 100 : 78; }, '--wght': 900, duration: 1.3, stagger: 0.12, ease: 'expo.out' }, 0)
     .from('[data-blob]', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'expo.out' }, 0.1)
-    .from('.hero__text, .hero__ctas, .hero__where, .tag', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, 0.45)
-    .from('[data-sticker]', { scale: 0, rotation: -40, duration: 0.9, ease: 'back.out(2)' }, 0.9);
+    .from('.hero__text, .hero__ctas, .hero__where, .tag', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, 0.45);
   // Ocultas hasta que entran (si no, los acentos se verían sueltos arriba).
   gsap.set(lines, { yPercent: 110, opacity: 0 });
 
@@ -83,8 +81,42 @@
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 },
     });
   });
-  gsap.to('[data-hero-visual]', { yPercent: 18, rotation: 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
-  gsap.to('[data-blob] img', { scale: 1.3, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 } });
+  // ---------- La foto vuela al lugar del logo mientras se baja ----------
+  // Va desde su lugar en la portada hasta el encabezado, achicándose, con el
+  // texto que gira y las hojas. Al volver a subir hace el camino inverso.
+  var fly = document.querySelector('[data-fly]');
+  var holder = document.querySelector('[data-hero-visual]');
+  var slot = document.querySelector('[data-avatar-slot]');
+  var slotLogo = document.querySelector('[data-avatar-logo]');
+  if (fly && holder && slot) {
+    fly.classList.add('is-flying');
+    var smooth = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+    var updateFly = function () {
+      var h = holder.getBoundingClientRect();
+      var s = slot.getBoundingClientRect();
+      if (!h.width) return;
+      fly.style.width = h.width + 'px';
+      fly.style.height = h.height + 'px';
+      // Recorrido: más o menos la mitad de la pantalla de scroll.
+      var p = Math.min(1, Math.max(0, window.scrollY / Math.max(240, window.innerHeight * 0.55)));
+      var e = smooth(p);
+      // Tamaño final: el círculo con su texto entra en el lugar del logo.
+      var kEnd = (s.width * 0.95) / (h.width * 1.12);
+      var k = 1 + (kEnd - 1) * e;
+      var endX = s.left + s.width / 2 - (h.width * kEnd) / 2;
+      var endY = s.top + s.height / 2 - (h.height * kEnd) / 2;
+      // Sale desde donde se ve al principio (sin arrastrarse con el scroll),
+      // así nunca se va por arriba de la pantalla en el celular.
+      var startY = h.top + window.scrollY;
+      var x = h.left + (endX - h.left) * e;
+      var y = startY + (endY - startY) * e;
+      fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
+      // El ícono de la manzana se desvanece justo cuando llega la foto.
+      if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
+    };
+    updateFly();
+    gsap.ticker.add(updateFly);
+  }
 
   // ---------- Cinta: se mueve sola y acelera con el scroll ----------
   var tick = document.querySelector('[data-tick]');

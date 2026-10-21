@@ -52,8 +52,8 @@ ${headHtml}
 
 <header class="top" data-top>
   <a class="top__brand" href="#inicio" aria-label="${esc(p.name)}, ir al inicio">
-    <img src="${esc(config.logo.src)}" alt="" width="${config.logo.width}" height="${config.logo.height}">
-    <span>${esc(p.name)}</span>
+    <span class="top__slot" data-avatar-slot><img src="${esc(config.logo.src)}" alt="" width="${config.logo.width}" height="${config.logo.height}" data-avatar-logo></span>
+    <span class="top__name">${esc(p.name)}</span>
   </a>
   <nav class="top__nav" aria-label="Principal">
     <a href="#planes">Planes</a>
@@ -79,18 +79,21 @@ ${headHtml}
       </div>
       <p class="hero__where">${esc(p.location)}</p>
     </div>
+    <!-- El hueco (hero__visual) guarda el lugar; al bajar, "hero__fly" vuela
+         achicándose hasta el lugar del logo en el encabezado (ver main.js). -->
     <div class="hero__visual" data-hero-visual>
-      <svg class="ring" viewBox="0 0 400 400" aria-hidden="true">
-        <defs><path id="ring-path" d="M200,200 m-170,0 a170,170 0 1,1 340,0 a170,170 0 1,1 -340,0"/></defs>
-        <text><textPath href="#ring-path" textLength="1060" lengthAdjust="spacing">${esc(v.ring)}</textPath></text>
-      </svg>
-      <div class="blob" data-blob>
-        <img src="${esc(p.photo.src)}" alt="${esc(p.photo.alt)}" width="${p.photo.width}" height="${p.photo.height}" style="object-position:${esc(p.photo.position || '50% 30%')}" fetchpriority="high">
+      <div class="hero__fly" data-fly>
+        <svg class="ring" viewBox="0 0 400 400" aria-hidden="true">
+          <defs><path id="ring-path" d="M200,200 m-170,0 a170,170 0 1,1 340,0 a170,170 0 1,1 -340,0"/></defs>
+          <text><textPath href="#ring-path" textLength="1060" lengthAdjust="spacing">${esc(v.ring)}</textPath></text>
+        </svg>
+        <div class="blob" data-blob>
+          <img src="${esc(p.photo.src)}" alt="${esc(p.photo.alt)}" width="${p.photo.width}" height="${p.photo.height}" style="object-position:${esc(p.photo.position || '50% 30%')}" fetchpriority="high">
+        </div>
+        ${leaf('float float--1')}
+        ${leaf('float float--2')}
+        ${leaf('float float--3')}
       </div>
-      ${leaf('float float--1')}
-      ${leaf('float float--2')}
-      ${leaf('float float--3')}
-      <p class="sticker" data-sticker>${esc(config.hero.badges?.[1] || 'Especialista en nutrición deportiva')}</p>
     </div>
   </section>
 
