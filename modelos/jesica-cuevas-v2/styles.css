@@ -251,9 +251,9 @@ main:focus {
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
-  /* Marca a la izquierda, menú en el medio y "Turnos" a la derecha */
+  /* Marca a la izquierda y "Turnos" a la derecha */
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: calc(env(safe-area-inset-top, 0px) + 12px) var(--gutter) 12px;
@@ -299,60 +299,8 @@ main:focus {
   transition: opacity 0.25s;
 }
 
-.top__nav {
-  display: flex;
-  gap: 28px;
-}
-
 .top__cta {
   justify-self: end;
-}
-
-/* Con movimiento, los botones del menú arrancan como burbujas que flotan
-   alrededor de la foto (main.js) y se vuelven texto al llegar arriba. */
-.top__nav.is-bubbles a {
-  isolation: isolate;
-  opacity: 0;
-  will-change: transform;
-}
-
-.top__nav.is-bubbles a::before {
-  content: '';
-  position: absolute;
-  inset: -11px -18px;
-  z-index: -1;
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: 0 14px 30px -14px rgb(31 45 37 / 0.55), inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 22%, transparent);
-  opacity: var(--bub, 0);
-}
-
-.top__nav a {
-  position: relative;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.top__nav a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  height: 2px;
-  background: var(--apple);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s var(--ease);
-}
-
-.top__nav a:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
 }
 
 /* ---------- Portada ---------- */
@@ -399,6 +347,42 @@ main:focus {
   border-radius: 50%;
   background: var(--apple);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--apple) 30%, transparent);
+}
+
+.hero__nav {
+  position: relative;
+  z-index: 56;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 14px;
+}
+
+.hero__nav a {
+  display: inline-block;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 14px 30px -16px rgb(31 45 37 / 0.55), inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 22%, transparent);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.hero__nav a:hover,
+.hero__nav a:focus-visible {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Con movimiento, arrancan ocultas y aparecen como burbujas (main.js) */
+.hero__nav.is-bubbles a {
+  opacity: 0;
+  will-change: transform;
 }
 
 .hero__title {
@@ -538,6 +522,13 @@ main:focus {
   z-index: 55;
   transform-origin: 0 0;
   will-change: transform;
+  /* La foto no es un botón: los clics pasan a las burbujas del menú */
+  pointer-events: none;
+}
+
+/* Al saltar a una sección, el encabezado fijo no tapa el título */
+main section[id] {
+  scroll-margin-top: 90px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1376,32 +1367,6 @@ main:focus {
 /* ---------- Celular y tablet ---------- */
 
 @media (max-width: 900px) {
-  .top__nav {
-    display: none;
-  }
-
-  /* En celular el menú solo existe como burbujas sobre la portada */
-  .top__nav.is-bubbles {
-    display: flex;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    justify-content: center;
-    gap: 16px;
-    pointer-events: none;
-  }
-
-  .top__nav.is-bubbles a {
-    font-size: 12px;
-    pointer-events: auto;
-  }
-
-  /* Sin menú: marca a la izquierda y "Turnos" a la derecha */
-  .top {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
   .hero {
     padding-top: calc(env(safe-area-inset-top, 0px) + 84px);
   }
@@ -1442,6 +1407,11 @@ main:focus {
 
   .hl:nth-child(4) {
     font-size: 0.42em;
+  }
+
+  .hero__nav a {
+    padding: 9px 14px;
+    font-size: 11px;
   }
 
   /* Al estirarse, las palabras largas no se salen de la pantalla */

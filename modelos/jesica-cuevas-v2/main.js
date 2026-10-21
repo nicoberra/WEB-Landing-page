@@ -32,6 +32,19 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+  // ---------- Enlaces internos (menú, burbujas, "Ver planes") ----------
+  // Se desplaza con scrollIntoView: funciona también cuando la página se ve
+  // dentro de otra (ahí el salto común con "#" no mueve nada).
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest && ev.target.closest('a[href^="#"]');
+    if (!a || a.getAttribute('href').length < 2) return;
+    var dest = document.getElementById(a.getAttribute('href').slice(1));
+    if (!dest) return;
+    ev.preventDefault();
+    var go = dest.id === 'inicio' ? document.body : dest;
+    go.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
 
@@ -187,50 +200,51 @@
   });
   // ---------- Menú en burbujas alrededor de la foto ----------
   // Al cargar, los botones del menú aparecen como burbujas a los costados de
-  // la foto y flotan. Al bajar se juntan en el medio del encabezado y quedan
-  // alineados (en celular, donde no hay menú arriba, se desvanecen).
-  var nav = document.querySelector('.top__nav');
+  // la foto y flotan. Al bajar, bajan y se alinean en su lugar: una fila de
+  // botones arriba del título. Se pueden apretar en cualquier momento.
+  var nav = document.querySelector('[data-hero-nav]');
   var links = nav ? [].slice.call(nav.querySelectorAll('a')) : [];
   var small = window.matchMedia('(max-width: 900px)');
-  // Lugar de cada burbuja: lado (-1 izquierda, 1 derecha) y altura respecto de la foto.
-  var spots = [[-1, -0.24], [1, -0.3], [-1, 0.28], [1, 0.24]];
+  // Lugar de cada burbuja: lado (-1 izquierda, 1 derecha), altura respecto de
+  // la foto y un corrimiento extra hacia afuera (Planes, lejos de la hoja).
+  var spots = [[-1, -0.08, 34], [1, -0.3, 0], [-1, 0.3, 0], [1, 0.24, 0]];
   // En celular no hay lugar a los costados: van arriba y abajo del aro.
-  var spotsSmall = [[-1, -0.47], [1, -0.47], [-1, 0.47], [1, 0.47]];
+  var spotsSmall = [[-1, -0.3, 0], [1, -0.47, 0], [-1, 0.47, 0], [1, 0.47, 0]];
   var pops = links.map(function () { return { v: 0 }; });
   if (links.length) {
     nav.classList.add('is-bubbles');
     heroIn.to(pops, { v: 1, duration: 1.1, ease: 'elastic.out(1, 0.55)', stagger: 0.14 }, 0.35);
   }
-  function updateBubbles(h, startY, e) {
+  function updateBubbles(h, startY, p) {
     if (!links.length) return;
+    // Se acomodan antes que la foto, así la fila ya está lista al leer el título.
+    var e = smooth(Math.min(1, p * 1.5));
     var t = gsap.ticker.time;
-    var bar = top.getBoundingClientRect();
     var cx = h.left + h.width / 2, cy = startY + h.height / 2;
     var mobile = small.matches;
+    var f = 1 - e;
+    // Mientras flotan van por encima de la foto; ya alineadas, por debajo del encabezado.
+    nav.style.zIndex = e < 1 ? '' : '40';
     links.forEach(function (a, i) {
       var sp = (mobile ? spotsSmall : spots)[i % spots.length], pop = pops[i].v;
       var w = a.offsetWidth, hh = a.offsetHeight;
-      // Dónde está en el menú (en pantalla; offsetLeft no cuenta el transform)
+      // Su lugar en la fila, en coordenadas de la página (offsetLeft no cuenta el transform)
       var ox = 0, oy = 0, el = a;
-      while (el && el !== top) { ox += el.offsetLeft; oy += el.offsetTop; el = el.offsetParent; }
-      var nx = bar.left + ox + w / 2;
-      var ny = bar.top - view.off + oy + hh / 2;
+      while (el) { ox += el.offsetLeft; oy += el.offsetTop; el = el.offsetParent; }
+      var nx = ox + w / 2, ny = oy + hh / 2;
       // Dónde flota, a un costado del aro de la foto, sin salirse de la pantalla
       var ring = Math.sqrt(Math.max(0, 0.56 * 0.56 - sp[1] * sp[1])) * h.width;
-      var bx = cx + sp[0] * (ring + w / 2 + (mobile ? 8 : 26));
-      bx = Math.max(w / 2 + 22, Math.min(window.innerWidth - w / 2 - 22, bx));
+      var bx = cx + sp[0] * (ring + w / 2 + (mobile ? 8 : 26) + sp[2]);
+      bx = Math.max(w / 2 + 12, Math.min(window.innerWidth - w / 2 - 12, bx));
       var by = cy + sp[1] * h.height;
       // Aparece desde el centro de la foto, como una burbuja
       var sx = cx + (bx - cx) * pop, sy = cy + (by - cy) * pop;
-      var f = 1 - e;
       var bob = f * pop;
       var dx = (sx - nx) * f + Math.sin(t * 1.1 + i * 1.9) * 9 * bob;
       var dy = (sy - ny) * f + Math.cos(t * 0.9 + i * 1.3) * 12 * bob;
       var sc = pop + (1 - pop) * e;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
-      a.style.setProperty('--bub', f.toFixed(3));
       var op = Math.min(1, pop * 1.5 + e);
-      if (mobile) op *= Math.max(0, 1 - e * 1.6);
       a.style.opacity = op.toFixed(3);
       a.style.pointerEvents = op < 0.2 ? 'none' : '';
     });
@@ -270,7 +284,7 @@
       fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
       // El ícono de la manzana se desvanece justo cuando llega la foto.
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
-      updateBubbles(h, startY, e);
+      updateBubbles(h, startY, p);
     };
     updateFly();
     gsap.ticker.add(updateFly);

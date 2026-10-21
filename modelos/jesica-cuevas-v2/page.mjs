@@ -55,12 +55,6 @@ ${headHtml}
     <span class="top__slot" data-avatar-slot><img src="${esc(config.logo.src)}" alt="" width="${config.logo.width}" height="${config.logo.height}" data-avatar-logo></span>
     <span class="top__name">${esc(p.name)}</span>
   </a>
-  <nav class="top__nav" aria-label="Principal">
-    <a href="#planes">Planes</a>
-    <a href="#trayectoria">Trayectoria</a>
-    <a href="#recetarios">Recetarios</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
   <a class="btn btn--solid btn--small top__cta" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}</a>
 </header>
 
@@ -69,6 +63,13 @@ ${headHtml}
   <section class="hero" id="inicio" aria-labelledby="inicio-titulo">
     <div class="hero__copy">
       <p class="tag"><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
+      <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
+      <nav class="hero__nav" aria-label="Principal" data-hero-nav>
+        <a href="#planes">Planes</a>
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#recetarios">Recetarios</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
       <h1 class="hero__title" id="inicio-titulo">
         ${v.heroLines.map((l, i) => `<span class="hl" data-hl style="--i:${i}"><span class="hl__in">${esc(l)}</span></span>`).join('\n        ')}
       </h1>
