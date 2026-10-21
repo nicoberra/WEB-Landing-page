@@ -51,11 +51,21 @@ ${headHtml}
 <div class="progress" aria-hidden="true"><span data-progress></span></div>
 
 <header class="top" data-top>
+  <svg class="top__line" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+    <filter id="fibron"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="3"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
+    <path pathLength="1" filter="url(#fibron)" d="M0 86C110 74 230 99 350 88S590 72 720 84 950 96 1080 87 1330 74 1440 84"/>
+  </svg>
   <a class="top__brand" href="#inicio" aria-label="${esc(p.name)}, ir al inicio">
     <span class="top__slot" data-avatar-slot><img src="${esc(config.logo.src)}" alt="" width="${config.logo.width}" height="${config.logo.height}" data-avatar-logo></span>
     <span class="top__name">${esc(p.name)}</span>
   </a>
-  <a class="btn btn--solid btn--small top__cta" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}</a>
+  <!-- Lugar de la matrícula: al bajar, la etiqueta de la portada sube hasta acá (main.js) -->
+  <span class="top__tag" data-tag-slot></span>
+  <div class="top__cta">
+    <a class="top__icon" ${linkAttrs(config.instagramUrl)} aria-label="Instagram de ${esc(p.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="fill"/></svg></a>
+    <a class="top__icon" ${linkAttrs(whatsappUrl(config.contact))} aria-label="WhatsApp de ${esc(p.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.6Z"/><path d="M9.2 8.6c.3-.6.8-.6 1-.1l.6 1.4c.1.3 0 .6-.2.8l-.4.4c.5 1 1.3 1.8 2.3 2.3l.4-.4c.2-.2.5-.3.8-.2l1.4.6c.5.2.5.7-.1 1-1 .6-2.4.4-3.9-.7a8.6 8.6 0 0 1-2.6-2.9c-.7-1.4-.6-2.4.7-2.2Z" class="fill"/></svg></a>
+    <a class="btn btn--solid btn--small" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}</a>
+  </div>
 </header>
 
 <main id="contenido" tabindex="-1">
@@ -67,7 +77,7 @@ ${headHtml}
       <svg class="blob-sage" viewBox="0 0 200 200"><path d="M150 20c34 24 52 74 36 116s-64 66-108 56S2 140 6 96 46 14 86 6s40-10 64 14Z"/></svg>
     </div>
     <div class="hero__copy">
-      <p class="tag"><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
+      <p class="tag" data-tag><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
       <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
       <nav class="hero__nav" aria-label="Principal" data-hero-nav>
         <a href="#planes">Planes</a>

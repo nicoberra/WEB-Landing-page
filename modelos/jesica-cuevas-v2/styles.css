@@ -257,19 +257,60 @@ main:focus {
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
-  /* Marca a la izquierda y "Turnos" a la derecha */
+  /* Marca a la izquierda, matrícula en el medio y "Turnos" a la derecha */
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   padding: calc(env(safe-area-inset-top, 0px) + 12px) var(--gutter) 12px;
   transition: transform 0.45s var(--ease), background-color 0.3s;
 }
 
-.top.is-solid {
+/* Fondo de la barra: termina en una curva (máscara) en lugar de una recta */
+.top::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -16px;
+  z-index: -1;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0V86C110 74 230 99 350 88S590 72 720 84 950 96 1080 87 1330 74 1440 84V0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0V86C110 74 230 99 350 88S590 72 720 84 950 96 1080 87 1330 74 1440 84V0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.top.is-solid::before {
+  opacity: 1;
+}
+
+/* Línea de abajo: curva, como dibujada con un fibrón marrón clarito.
+   Se dibuja cuando aparece el fondo de la barra. */
+.top__line {
+  position: absolute;
+  inset: 0 0 -16px;
+  width: 100%;
+  height: calc(100% + 16px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.top__line path {
+  fill: none;
+  stroke: #C4A27F;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.2s var(--ease);
+}
+
+.top.is-solid .top__line path {
+  stroke-dashoffset: 0;
 }
 
 .top.is-hidden {
@@ -306,7 +347,60 @@ main:focus {
 }
 
 .top__cta {
+  grid-column: 3;
   justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Instagram y WhatsApp, a la izquierda de "Turnos" */
+.top__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: background-color 0.25s, color 0.25s, transform 0.25s var(--ease);
+}
+
+.top__icon:hover,
+.top__icon:focus-visible {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: translateY(-2px);
+}
+
+.top__icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.top__icon svg .fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.top__tag {
+  display: flex;
+  justify-content: center;
+}
+
+.top__tag .tag {
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* Copia invisible que guarda el lugar de la etiqueta en la portada */
+.tag--ghost {
+  visibility: hidden;
 }
 
 /* ---------- Portada ---------- */
@@ -1447,6 +1541,37 @@ main section[id] {
 /* ---------- Celular y tablet ---------- */
 
 @media (max-width: 900px) {
+  /* Marca a la izquierda e íconos + "Turnos" a la derecha; la matrícula
+     queda centrada justo debajo de la línea de la barra */
+  .top {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .top__cta {
+    grid-column: 2;
+    gap: 5px;
+  }
+
+  .top__icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .top__icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .top__tag {
+    position: absolute;
+    top: calc(100% + 18px);
+    left: 0;
+    right: 0;
+    padding-inline: 12px;
+    pointer-events: none;
+  }
+
   .hero {
     padding-top: calc(env(safe-area-inset-top, 0px) + 84px);
   }
@@ -1472,8 +1597,12 @@ main section[id] {
 @media (max-width: 560px) {
   /* En celular el nombre se mantiene, un poco más chico. */
   .top__name {
-    font-size: 15px;
+    font-size: 13px;
     white-space: nowrap;
+  }
+
+  .top .btn--small {
+    padding-inline: 14px;
   }
 
   .top__brand {
@@ -1494,20 +1623,45 @@ main section[id] {
     font-size: 11px;
   }
 
+  .tag {
+    gap: 8px;
+    padding: 7px 12px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+  }
+
   /* Al estirarse, las palabras largas no se salen de la pantalla */
   .big-title {
     font-size: clamp(30px, 9.5vw, 40px);
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
+  /* Muy angosto: el nombre va en dos renglones para dejar lugar a los íconos */
   .top__name {
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.05;
+    white-space: normal;
+    max-width: 7ch;
   }
 
   .top__slot {
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .top__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .top .btn--small {
+    padding-inline: 12px;
+  }
+
+  .tag {
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
   }
 }
 

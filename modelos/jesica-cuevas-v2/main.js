@@ -157,7 +157,8 @@
       { yPercent: 110, opacity: 0, '--wdth': 62, '--wght': 300 },
       { yPercent: 0, opacity: 1, '--wdth': function (i) { return i === 3 ? 100 : 78; }, '--wght': 900, duration: 1.3, stagger: 0.12, ease: 'expo.out' }, 0)
     .from('[data-blob]', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'expo.out' }, 0.1)
-    .from('.hero__text, .hero__ctas, .hero__where, .tag', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, 0.45);
+    .from('.hero__text, .hero__ctas, .hero__where', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, 0.45)
+    .from('[data-tag]', { opacity: 0, duration: 0.9, ease: 'power2.out' }, 0.45);
   // Ocultas hasta que entran (si no, los acentos se verían sueltos arriba).
   gsap.set(lines, { yPercent: 110, opacity: 0 });
 
@@ -250,6 +251,33 @@
     });
   }
 
+  // ---------- La matrícula sube a la barra de arriba ----------
+  // La etiqueta pasa al encabezado (centro) y en la portada queda una copia
+  // invisible que guarda su lugar. Mientras se baja, se mueve desde esa copia
+  // hasta su lugar en la barra, donde queda fija.
+  var tagEl = document.querySelector('[data-tag]');
+  var tagSlot = document.querySelector('[data-tag-slot]');
+  var tagGhost = null;
+  if (tagEl && tagSlot) {
+    tagGhost = tagEl.cloneNode(true);
+    tagGhost.removeAttribute('data-tag');
+    tagGhost.classList.add('tag--ghost');
+    tagGhost.setAttribute('aria-hidden', 'true');
+    tagEl.parentNode.insertBefore(tagGhost, tagEl);
+    tagSlot.appendChild(tagEl);
+  }
+  function updateTag(e) {
+    if (!tagGhost) return;
+    var g = tagGhost.getBoundingClientRect();
+    var s = tagSlot.getBoundingClientRect();
+    // Lugar en la barra (sin el transform propio): centro del hueco del medio
+    var w = tagEl.offsetWidth, hh = tagEl.offsetHeight;
+    var sx = s.left + s.width / 2 - w / 2, sy = s.top + s.height / 2 - hh / 2;
+    var f = 1 - e;
+    var dx = (g.left - sx) * f, dy = (g.top - sy) * f;
+    tagEl.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
+  }
+
   // ---------- La foto vuela al lugar del logo mientras se baja ----------
   // Va desde su lugar en la portada hasta el encabezado, achicándose, con el
   // texto que gira y las hojas. Al volver a subir hace el camino inverso.
@@ -285,6 +313,7 @@
       // El ícono de la manzana se desvanece justo cuando llega la foto.
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
       updateBubbles(h, startY, p);
+      updateTag(e);
     };
     updateFly();
     gsap.ticker.add(updateFly);
