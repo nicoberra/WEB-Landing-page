@@ -241,6 +241,7 @@
     // Flotando o yendo a la columna: por encima de la foto. En la fila: por debajo de la barra.
     nav.style.zIndex = e < 1 || d > 0 ? '' : '40';
     var stackY = dockTop;
+    var away = d > 0 ? bandOut() : 0;
     links.forEach(function (a, i) {
       var sp = (mobile ? spotsSmall : spots)[i % spots.length], pop = pops[i].v;
       var w = a.offsetWidth, hh = a.offsetHeight;
@@ -264,6 +265,8 @@
         stackY += hh + 10;
         dx += (tx - nx - dx) * d;
         dy += (ty - ny - dy) * d;
+        // Se va por la derecha mientras pasa la cinta
+        dx += (window.innerWidth - (tx - w / 2) + 30) * away;
       }
       var sc = pop + (1 - pop) * e;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
@@ -300,6 +303,20 @@
     tagEl.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
   }
 
+  // ---------- Las columnas se apartan cuando pasa la cinta ----------
+  // Mientras la cinta oscura cruza la zona de las columnas, estas se salen
+  // hacia los costados (a la par del scroll) y después vuelven a entrar.
+  var band = document.querySelector('.tick-band');
+  function bandOut() {
+    if (!band) return 0;
+    var r = band.getBoundingClientRect();
+    var t = r.top - view.off, b = r.bottom - view.off;
+    var zoneTop = 110, zoneBottom = Math.min(view.h, 720), RAMP = 220;
+    var o = Math.min((zoneBottom + RAMP - t) / RAMP, (b - zoneTop + RAMP) / RAMP);
+    o = Math.max(0, Math.min(1, o));
+    return o * o * (3 - 2 * o);
+  }
+
   // ---------- Columna debajo de la foto ----------
   // Cuando la foto llegó arriba, los ítems se despliegan uno por uno según
   // cuánto se baja (y se repliegan al volver a subir).
@@ -316,7 +333,8 @@
       var q = Math.max(0, Math.min(1, (from - i * STEP) / STEP));
       it.style.setProperty('--q', (1 - Math.pow(1 - q, 3)).toFixed(3));
     });
-    rail.style.transform = view.off ? 'translate3d(0,' + view.off.toFixed(1) + 'px,0)' : '';
+    var out = bandOut() * (rail.offsetWidth + rail.offsetLeft + 30);
+    rail.style.transform = 'translate3d(' + (-out).toFixed(1) + 'px,' + view.off.toFixed(1) + 'px,0)';
   }
 
   // ---------- La foto vuela al lugar del logo mientras se baja ----------
