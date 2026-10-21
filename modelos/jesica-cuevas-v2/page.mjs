@@ -13,9 +13,10 @@ const arrow = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true
 /** Enlace del turnero o, mientras no exista, el contacto provisorio (Instagram). */
 function bookingLink(config) {
   const b = config.booking || {};
-  if (b.url) return { href: b.url, label: 'Sacar turno' };
-  if (b.interim?.url) return { href: b.interim.url, label: `Turnos: ${b.interim.label}` };
-  return { href: whatsappUrl(config.contact), label: 'Escribime' };
+  // PENDIENTE: definir a dónde lleva (turnero propio). El texto es siempre "Turnos".
+  if (b.url) return { href: b.url, label: 'Turnos' };
+  if (b.interim?.url) return { href: b.interim.url, label: 'Turnos' };
+  return { href: whatsappUrl(config.contact), label: 'Turnos' };
 }
 
 export function renderPage(config) {
@@ -207,8 +208,7 @@ ${headHtml}
       <p class="eyebrow eyebrow--light">Turnos</p>
       <h2 id="turnos-titulo" data-stretch>${esc(v.bookingTitle)}</h2>
       <p>${rich(v.bookingText)}</p>
-      ${config.booking?.url ? '' : config.booking?.interim ? `<p class="booking__interim">${esc(config.booking.interim.text)}</p>` : ''}
-      <a class="btn btn--light" data-magnetic ${linkAttrs(book.href)}>${esc(config.booking?.url ? 'Ver turnos disponibles' : config.booking?.interim?.label || 'Escribime')}${arrow}</a>
+      <a class="btn btn--light" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}${arrow}</a>
     </div>
   </section>
 
