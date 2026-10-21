@@ -4,6 +4,31 @@
 (function () {
   'use strict';
   var root = document.documentElement;
+
+  // ---------- Seguro: si algo falla, la página se ve igual ----------
+  // Saca la apertura y deja todo quieto y visible (como sin animaciones).
+  var rescued = false;
+  function rescue() {
+    if (rescued) return;
+    rescued = true;
+    var l = document.querySelector('[data-loader]');
+    if (l) l.remove();
+    root.style.overflow = '';
+    root.classList.remove('motion');
+    if (window.gsap) { try { window.gsap.ticker.lagSmoothing(0); window.gsap.globalTimeline.clear(); } catch (e) {} }
+    if (window.ScrollTrigger) { try { window.ScrollTrigger.getAll().forEach(function (t) { t.kill(true); }); } catch (e) {} }
+    var sel = '.is-bubbles, .is-flying, .is-horizontal';
+    [].forEach.call(document.querySelectorAll(sel), function (el) { el.classList.remove('is-bubbles', 'is-flying', 'is-horizontal'); });
+    [].forEach.call(document.querySelectorAll('[style]'), function (el) {
+      if (el.closest('.hero, .top, .plans')) { el.style.transform = ''; el.style.opacity = ''; el.style.removeProperty('--wght'); el.style.removeProperty('--wdth'); }
+    });
+  }
+  window.addEventListener('error', rescue);
+  // La apertura nunca dura más de unos segundos, pase lo que pase.
+  setTimeout(function () { if (document.querySelector('[data-loader]')) rescue(); }, 6000);
+  // Dentro de otra página, el alto de "pantalla" no puede crecer con el contenido.
+  if (window.self !== window.top) root.style.setProperty('--screen', Math.min(window.innerHeight, window.screen.height || window.innerHeight) + 'px');
+  try {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -348,4 +373,5 @@
   }
 
   window.addEventListener('load', function () { ST.refresh(); });
+  } catch (err) { rescue(); }
 })();
