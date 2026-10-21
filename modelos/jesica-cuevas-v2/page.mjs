@@ -61,7 +61,7 @@ ${headHtml}
     <a href="#recetarios">Recetarios</a>
     <a href="#contacto">Contacto</a>
   </nav>
-  <a class="btn btn--solid btn--small" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}</a>
+  <a class="btn btn--solid btn--small top__cta" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}</a>
 </header>
 
 <main id="contenido" tabindex="-1">
