@@ -596,6 +596,55 @@
   window.addEventListener('resize', function () { resize(); if (window.ScrollTrigger) window.ScrollTrigger.refresh(); });
 
   var gsap = window.gsap, ST = window.ScrollTrigger;
+
+  /* =====================================================================
+     Apertura: compu sola → caen los dispositivos → aparecen los títulos
+     → se van los dispositivos. La sección queda fija mientras pasa.
+     ===================================================================== */
+  (function initIntro() {
+    var intro = document.querySelector('[data-intro]');
+    if (!intro || !gsap || !ST || reduce) return;
+    gsap.registerPlugin(ST);
+    var scene = intro.querySelector('[data-scene]');
+    var title = intro.querySelector('[data-intro-title]');
+    var hint = intro.querySelector('[data-intro-hint]');
+    var laptop = intro.querySelector('[data-laptop]');
+    var drops = gsap.utils.toArray(intro.querySelectorAll('[data-drop]'));
+    var pops = gsap.utils.toArray(intro.querySelectorAll('[data-pop]'));
+    // Al principio el título no ocupa lugar visual: la escena baja y se agranda
+    // para que la compu quede centrada en la pantalla.
+    // Sube la mitad del alto del título (que todavía no se ve) y un poco más,
+    // porque la compu está en la parte de abajo de la escena.
+    var startY = function () { return -(title.offsetHeight / 2 + 12) - scene.offsetHeight * 0.12; };
+    var fromTop = function (i) { return -(window.innerHeight * 1.5 + i * 60); };
+
+    gsap.set(title.children, { opacity: 0, y: 30 });
+    gsap.set(drops, { y: fromTop, rotation: function (i) { return i % 2 ? 18 : -14; } });
+    gsap.set(pops, { scale: 0, opacity: 0 });
+    // En celular la escena es chica: al principio la compu se muestra más grande.
+    gsap.set(scene, { y: startY, scale: function () { return mobile() ? 1.5 : 1.12; } });
+
+    var tl = gsap.timeline({
+      defaults: { ease: 'power2.out' },
+      scrollTrigger: { trigger: intro, start: 'top top', end: '+=280%', scrub: 0.8, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
+    });
+    tl.to(hint, { opacity: 0, duration: 0.3 }, 0)
+      // 1. Caen los dispositivos desde arriba y se acomodan.
+      .to(drops, { y: 0, rotation: 0, duration: 1.2, stagger: 0.14, ease: 'power3.out' }, 0.1)
+      .to(pops, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(1.8)' }, 0.9)
+      // 2. La escena sube a su lugar y aparecen el título y los botones.
+      .to(scene, { y: 0, scale: 1, duration: 1, ease: 'power2.inOut' }, 1.6)
+      .to(title.children, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 1.9)
+      // Pausa para leer.
+      .to({}, { duration: 0.8 })
+      // 3. Se van la compu y los dispositivos.
+      .addLabel('salida')
+      .to(drops, { y: function (i) { return -window.innerHeight * (1 + i * 0.08); }, rotation: function (i) { return i % 2 ? 22 : -22; }, opacity: 0, duration: 1, stagger: 0.06, ease: 'power2.in' }, 'salida')
+      .to(pops, { scale: 0, opacity: 0, duration: 0.5, ease: 'power2.in' }, 'salida')
+      .to(laptop, { y: function () { return window.innerHeight * 0.7; }, scale: 0.9, opacity: 0, duration: 1, ease: 'power2.in' }, 'salida+=0.15')
+      // El título baja al centro para que no quede un hueco antes de los trabajos.
+      .to(title, { y: function () { return scene.offsetHeight * 0.42; }, duration: 1, ease: 'power2.inOut' }, 'salida+=0.3');
+  })();
   if (!gsap || !ST || reduce || !use3d) {
     // Versión sin animaciones de giro: cambia la pantalla según el capítulo
     // y el contenido avanza con el scroll.

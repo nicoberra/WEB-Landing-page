@@ -32,6 +32,131 @@ function chapter(ch, i) {
     </section>`;
 }
 
+/** Pantalla de un dispositivo: la imagen indicada en config o una maqueta con la marca. */
+function screen(image, kind, i) {
+  if (image?.src) {
+    return `<img src="${esc(image.src)}" alt="${esc(image.alt || '')}" loading="eager" decoding="async">`;
+  }
+  // Maqueta: una grilla de publicaciones con los colores de la marca.
+  const n = kind === 'laptop' ? 21 : kind === 'phone' ? 9 : 12;
+  const tiles = Array.from({ length: n }, (_, k) => `<span class="mock__tile mock__tile--${(k + i * 3) % 7}"></span>`).join('');
+  if (kind === 'laptop') {
+    return `<div class="mock mock--laptop"><div class="mock__bar"><span>✦ Editor</span><span class="mock__pill">Seleccionar todo</span></div><div class="mock__grid">${tiles}</div></div>`;
+  }
+  if (kind === 'phone') {
+    return `<div class="mock mock--phone"><div class="mock__profile"><span class="mock__avatar"></span><span class="mock__lines"><i></i><i></i></span></div><div class="mock__grid">${tiles}</div></div>`;
+  }
+  return `<div class="mock mock--tablet"><div class="mock__grid">${tiles}</div></div>`;
+}
+
+/**
+ * Apertura: primero la compu sola; al bajar caen los dispositivos desde
+ * arriba, después aparecen el título y los botones, y al final se van los
+ * dispositivos. Sin animaciones se ve directamente la composición final.
+ */
+function intro(config) {
+  const it = config.intro;
+  const devices = it.devices
+    .map(
+      (d, i) => `<div class="dev dev--${esc(d.type)} dev--${i + 1}"><div class="dev__drop" data-drop><div class="dev__body"><div class="dev__screen">${screen(d.image, d.type, i)}</div></div></div></div>`
+    )
+    .join('\n        ');
+  return `<section class="intro" id="inicio" aria-labelledby="inicio-titulo" data-intro>
+    <div class="intro__in">
+      <div class="intro__title" data-intro-title>
+        <p class="eyebrow">${esc(it.eyebrow)}</p>
+        <h1 id="inicio-titulo">${rich(it.title)}</h1>
+        <p class="lead">${rich(it.text)}</p>
+        <div class="ctas ctas--center">
+          ${button(it.primaryCta, config, 'btn--accent')}
+          ${button(it.secondaryCta, config, 'btn--ghost')}
+        </div>
+      </div>
+      <div class="scene" data-scene aria-hidden="true">
+        ${devices}
+        <div class="laptop" data-laptop>
+          <div class="laptop__lid"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div></div>
+          <div class="laptop__base"></div>
+        </div>
+        <div class="badge" ><div class="pop" data-pop>${wordmark(config, 'wordmark--badge')}</div></div>
+        <div class="folder"><div class="pop" data-pop><div class="folder__body"><span>${rich(it.folder)}</span></div>
+          <svg class="folder__cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.5L16 20l-3 1.4-3.2-7.4L5 18z" fill="#fff" stroke="#1d1416" stroke-width="1.4" stroke-linejoin="round"/></svg></div></div>
+      </div>
+      <p class="intro__hint" data-intro-hint><i aria-hidden="true"></i>Bajá para ver más</p>
+    </div>
+  </section>`;
+}
+
+/**
+ * Trabajos publicados: dos filas de tarjetas levemente torcidas que se mueven
+ * en sentidos opuestos. Cada fila se repite dos veces para que el movimiento
+ * no tenga cortes.
+ */
+function gallery(config) {
+  const g = config.gallery;
+  if (!g) return '';
+  const card = (item, k) => {
+    const inner = item?.src
+      ? `<img src="${esc(item.src)}" alt="${esc(item.alt || '')}" loading="lazy" decoding="async">`
+      : `<div class="work__mock work__mock--${k % 6}"><span>${esc(g.placeholderLabel)}</span></div>`;
+    return `<li class="work" style="--tilt:${[-3, 2.5, -1.5, 3, -2.5, 1.5][k % 6]}deg">${inner}</li>`;
+  };
+  const row = (items, dir) => {
+    const list = items.map(card).join('');
+    return `<div class="works__row works__row--${dir}"><ul class="works__track" role="list">${list}</ul><ul class="works__track" role="list" aria-hidden="true">${list}</ul></div>`;
+  };
+  return `<section class="works" id="${esc(g.id)}" aria-labelledby="${esc(g.id)}-titulo">
+    <div class="wrap works__head">
+      <p class="eyebrow">${esc(g.eyebrow)}</p>
+      <h2 id="${esc(g.id)}-titulo">${rich(g.title)}</h2>
+    </div>
+    ${row(g.rowA, 'right')}
+    ${row(g.rowB, 'left')}
+  </section>`;
+}
+
+/**
+ * Feed + panel de servicios: el feed baja con el scroll y el panel de la
+ * derecha queda fijo (position: sticky) hasta que el feed termina.
+ */
+function showcase(config) {
+  const s = config.showcase;
+  if (!s) return '';
+  const wa = config.contact.whatsapp?.number;
+  const waLink = (msg) => (wa ? `https://wa.me/${wa}?text=${encodeURIComponent(msg)}` : config.contact.instagramDm || config.instagramUrl);
+  const tile = (item, k) =>
+    item?.src
+      ? `<li class="feed__item${k === 0 ? ' feed__item--cover' : ''}"><img src="${esc(item.src)}" alt="${esc(item.alt || '')}" loading="lazy" decoding="async"></li>`
+      : `<li class="feed__item${k === 0 ? ' feed__item--cover' : ''} feed__mock feed__mock--${k % 6}">${
+          k === 0 ? `<span class="feed__cover-tag">${esc(s.feedLabel)}</span><span class="feed__cover-title">${rich(s.coverTitle)}</span>` : ''
+        }</li>`;
+  return `<section class="showcase" id="${esc(s.id)}" aria-labelledby="${esc(s.id)}-titulo">
+    <div class="showcase__in">
+      <ul class="feed" role="list" aria-label="${esc(s.feedLabel)}">
+        ${s.feed.map(tile).join('\n        ')}
+      </ul>
+      <aside class="pricing">
+        <h2 id="${esc(s.id)}-titulo">${rich(s.title)}</h2>
+        <p class="pricing__price">${esc(s.price || 'Consultá tu presupuesto')}</p>
+        <ul class="pricing__chips" role="list">${s.chips.map((c, i) => `<li class="pricing__chip pricing__chip--${i}">${i === 0 ? '★ ' : ''}${esc(c)}</li>`).join('')}</ul>
+        <a class="btn btn--accent pricing__cta" ${linkAttrs(waLink('Hola Sofi! Quiero pedir presupuesto para mi marca.'))}>${esc(s.ctaLabel)}</a>
+        <h3 class="pricing__list-title">${esc(s.listTitle)}</h3>
+        <ul class="pricing__list" role="list">
+          ${s.services
+            .map(
+              (sv, i) => `<li class="pricing__row">
+            <span class="pricing__thumb feed__mock--${(i + 1) % 6}" aria-hidden="true"></span>
+            <span class="pricing__name">${esc(sv.title)}<span class="pricing__row-price">${esc(sv.price || 'Consultar')}</span></span>
+            <a class="pricing__add" ${linkAttrs(waLink(`Hola Sofi! Quiero pedir presupuesto para ${sv.title.toLowerCase()}.`))}>+ consultar<span class="visually-hidden"> por ${esc(sv.title)}</span></a>
+          </li>`
+            )
+            .join('\n          ')}
+        </ul>
+      </aside>
+    </div>
+  </section>`;
+}
+
 /** Bloques de venta: problemas, antes y después, servicios, cinta y para quién es. */
 function salesSections(config) {
   const { pains, contrast, offer, marquee, forYou } = config;
@@ -153,7 +278,13 @@ ${headHtml}
 </header>
 
 <main id="contenido" tabindex="-1">
-  <div class="story" id="inicio">
+  ${intro(config)}
+
+  ${gallery(config)}
+
+  ${showcase(config)}
+
+  <div class="story" id="recorrido">
     <div class="stage" aria-hidden="true">
       <div class="drape"></div>
       <div class="glow" data-glow-layer></div>
@@ -167,10 +298,10 @@ ${headHtml}
     </div>
 
     <div class="chapters">
-      <section class="ch ch--hero" data-screen="${esc(h.screen)}" data-text="left" data-act="${esc(config.brand.wordmark)}" data-glow="179 22 79" aria-labelledby="inicio-titulo">
+      <section class="ch ch--hero" data-screen="${esc(h.screen)}" data-text="left" data-act="${esc(config.brand.wordmark)}" data-glow="179 22 79" aria-labelledby="recorrido-titulo">
         <div class="copy">
           <p class="eyebrow">${esc(h.eyebrow)}</p>
-          <h1 id="inicio-titulo">${rich(h.title)}</h1>
+          <h2 class="ch__title" id="recorrido-titulo">${rich(h.title)}</h2>
           <p class="lead">${rich(h.text)}</p>
           <div class="ctas">
             ${button(h.primaryCta, config, 'btn--accent')}

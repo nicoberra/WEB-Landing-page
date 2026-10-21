@@ -73,13 +73,74 @@ export default {
   //   (perfil, contenido, carrusel, video, logo, identidad).
   // side: de qué lado va el texto ('left' o 'right'); el celular va del otro.
   // card: true muestra además la tarjeta de marca en 3D.
+  // --- Apertura: compu + dispositivos que caen desde arriba ----------------------
+  // Pantallas: image null muestra una maqueta con los colores de la marca.
+  // PENDIENTE: contenido de cada pantalla, ej.:
+  // laptop: { image: { src: 'assets/compu.webp', alt: '' } }
+  // devices[i].image: { src: 'assets/tablet-1.webp', alt: '' }
+  // Medidas sugeridas: compu 1600 × 1000 px, tablets 900 × 1200 px, celular 900 × 1950 px.
+  intro: {
+    eyebrow: 'Diseño contenido que conecta ✦',
+    title: 'Identidad visual para *potenciar* tu marca.',
+    text: 'Diseño de contenido para redes, edición de videos, carruseles y logotipos.',
+    primaryCta: { label: 'Quiero mi propuesta', href: '#contacto' },
+    secondaryCta: { label: 'Ver servicios', href: '#servicios' },
+    folder: 'Tu contenido, *listo para publicar*',
+    laptop: { image: null },
+    devices: [
+      { type: 'tablet', image: null },
+      { type: 'tablet', image: null },
+      { type: 'tablet', image: null },
+      { type: 'tablet', image: null },
+      { type: 'phone', image: null },
+    ],
+  },
+
+  // --- Trabajos publicados (dos filas que se mueven en sentidos opuestos) -----------
+  // PENDIENTE: imágenes de trabajos ya publicados. null muestra un bloque de
+  // reemplazo. Ej.: { src: 'assets/trabajo-1.webp', alt: 'Carrusel para ...' }
+  // Medida sugerida: cuadradas o 4:5, 800 px de ancho.
+  gallery: {
+    id: 'trabajos',
+    eyebrow: 'Trabajos publicados',
+    title: 'Contenido que ya está *en redes*',
+    placeholderLabel: 'TRABAJO PUBLICADO',
+    rowA: [null, null, null, null, null, null, null],
+    rowB: [null, null, null, null, null, null, null],
+  },
+
+  // --- Feed + servicios con precios -------------------------------------------------
+  // A la izquierda, el feed de un trabajo (baja con el scroll). A la derecha, el
+  // panel de servicios y precios, que queda fijo hasta que termina el feed.
+  // PENDIENTE: imágenes del feed y precios de cada servicio.
+  showcase: {
+    id: 'precios',
+    // feed[0] es la imagen grande. null muestra un bloque de reemplazo.
+    // Ej.: { src: 'assets/feed-1.webp', alt: 'Publicación para ...' }
+    // 20 imágenes: la grande + 19 que completan filas en computadora y en celular.
+    feed: Array.from({ length: 20 }, () => null),
+    feedLabel: 'Feed de una clienta',
+    coverTitle: 'Tu marca, *en tu feed*',
+    title: 'Servicios de diseño para tu marca',
+    price: '', // PENDIENTE: ej. 'Desde $ 00.000'. Vacío = "Consultá tu presupuesto".
+    chips: ['Hecho a medida', 'Con tu estética', 'Listo para publicar'],
+    ctaLabel: 'Pedir presupuesto por WhatsApp',
+    listTitle: 'Servicios',
+    // price vacío = "Consultar".
+    services: [
+      { title: 'Diseño de contenido', price: '' },
+      { title: 'Carruseles', price: '' },
+      { title: 'Edición de videos', price: '' },
+      { title: 'Logotipos', price: '' },
+      { title: 'Identidad visual', price: '' },
+    ],
+  },
+
   story: {
     hero: {
-      eyebrow: 'Diseño contenido que conecta ✦',
-      title: 'Identidad visual para *potenciar* tu marca.',
-      text: 'Diseño de contenido para redes, edición de videos, carruseles y logotipos. Bajá y mirá cómo puede verse tu marca.',
-      primaryCta: { label: 'Quiero mi propuesta', href: '#contacto' },
-      secondaryCta: { label: 'Ver servicios', href: '#servicios' },
+      eyebrow: 'Tu perfil',
+      title: 'Así puede verse *tu marca*.',
+      text: 'Bajá y recorré cada servicio en el celular: contenido, carruseles, reels, logotipos e identidad.',
       hint: 'Bajá para recorrer',
       screen: 'perfil',
     },
