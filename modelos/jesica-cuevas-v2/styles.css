@@ -308,6 +308,25 @@ main:focus {
   justify-self: end;
 }
 
+/* Con movimiento, los botones del menú arrancan como burbujas que flotan
+   alrededor de la foto (main.js) y se vuelven texto al llegar arriba. */
+.top__nav.is-bubbles a {
+  isolation: isolate;
+  opacity: 0;
+  will-change: transform;
+}
+
+.top__nav.is-bubbles a::before {
+  content: '';
+  position: absolute;
+  inset: -11px -18px;
+  z-index: -1;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 14px 30px -14px rgb(31 45 37 / 0.55), inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 22%, transparent);
+  opacity: var(--bub, 0);
+}
+
 .top__nav a {
   position: relative;
   font-family: var(--font-display);
@@ -1359,6 +1378,23 @@ main:focus {
 @media (max-width: 900px) {
   .top__nav {
     display: none;
+  }
+
+  /* En celular el menú solo existe como burbujas sobre la portada */
+  .top__nav.is-bubbles {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    gap: 16px;
+    pointer-events: none;
+  }
+
+  .top__nav.is-bubbles a {
+    font-size: 12px;
+    pointer-events: auto;
   }
 
   /* Sin menú: marca a la izquierda y "Turnos" a la derecha */

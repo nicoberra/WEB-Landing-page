@@ -160,6 +160,57 @@
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 },
     });
   });
+  // ---------- Menú en burbujas alrededor de la foto ----------
+  // Al cargar, los botones del menú aparecen como burbujas a los costados de
+  // la foto y flotan. Al bajar se juntan en el medio del encabezado y quedan
+  // alineados (en celular, donde no hay menú arriba, se desvanecen).
+  var nav = document.querySelector('.top__nav');
+  var links = nav ? [].slice.call(nav.querySelectorAll('a')) : [];
+  var small = window.matchMedia('(max-width: 900px)');
+  // Lugar de cada burbuja: lado (-1 izquierda, 1 derecha) y altura respecto de la foto.
+  var spots = [[-1, -0.24], [1, -0.3], [-1, 0.28], [1, 0.24]];
+  // En celular no hay lugar a los costados: van arriba y abajo del aro.
+  var spotsSmall = [[-1, -0.47], [1, -0.47], [-1, 0.47], [1, 0.47]];
+  var pops = links.map(function () { return { v: 0 }; });
+  if (links.length) {
+    nav.classList.add('is-bubbles');
+    heroIn.to(pops, { v: 1, duration: 1.1, ease: 'elastic.out(1, 0.55)', stagger: 0.14 }, 0.35);
+  }
+  function updateBubbles(h, startY, e) {
+    if (!links.length) return;
+    var t = gsap.ticker.time;
+    var bar = top.getBoundingClientRect();
+    var cx = h.left + h.width / 2, cy = startY + h.height / 2;
+    var mobile = small.matches;
+    links.forEach(function (a, i) {
+      var sp = (mobile ? spotsSmall : spots)[i % spots.length], pop = pops[i].v;
+      var w = a.offsetWidth, hh = a.offsetHeight;
+      // Dónde está en el menú (en pantalla; offsetLeft no cuenta el transform)
+      var ox = 0, oy = 0, el = a;
+      while (el && el !== top) { ox += el.offsetLeft; oy += el.offsetTop; el = el.offsetParent; }
+      var nx = bar.left + ox + w / 2;
+      var ny = bar.top - view.off + oy + hh / 2;
+      // Dónde flota, a un costado del aro de la foto, sin salirse de la pantalla
+      var ring = Math.sqrt(Math.max(0, 0.56 * 0.56 - sp[1] * sp[1])) * h.width;
+      var bx = cx + sp[0] * (ring + w / 2 + (mobile ? 8 : 26));
+      bx = Math.max(w / 2 + 22, Math.min(window.innerWidth - w / 2 - 22, bx));
+      var by = cy + sp[1] * h.height;
+      // Aparece desde el centro de la foto, como una burbuja
+      var sx = cx + (bx - cx) * pop, sy = cy + (by - cy) * pop;
+      var f = 1 - e;
+      var bob = f * pop;
+      var dx = (sx - nx) * f + Math.sin(t * 1.1 + i * 1.9) * 9 * bob;
+      var dy = (sy - ny) * f + Math.cos(t * 0.9 + i * 1.3) * 12 * bob;
+      var sc = pop + (1 - pop) * e;
+      a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
+      a.style.setProperty('--bub', f.toFixed(3));
+      var op = Math.min(1, pop * 1.5 + e);
+      if (mobile) op *= Math.max(0, 1 - e * 1.6);
+      a.style.opacity = op.toFixed(3);
+      a.style.pointerEvents = op < 0.2 ? 'none' : '';
+    });
+  }
+
   // ---------- La foto vuela al lugar del logo mientras se baja ----------
   // Va desde su lugar en la portada hasta el encabezado, achicándose, con el
   // texto que gira y las hojas. Al volver a subir hace el camino inverso.
@@ -194,6 +245,7 @@
       fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
       // El ícono de la manzana se desvanece justo cuando llega la foto.
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
+      updateBubbles(h, startY, e);
     };
     updateFly();
     gsap.ticker.add(updateFly);
