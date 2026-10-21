@@ -36,6 +36,10 @@ function chapter(ch, i) {
 function salesSections(config) {
   const { pains, contrast, offer, marquee, forYou } = config;
   const dm = config.contact.instagramDm || config.instagramUrl;
+  // Con WhatsApp, cada botón abre el chat con un mensaje que nombra el servicio.
+  const wa = config.contact.whatsapp?.number;
+  const quote = (service) =>
+    wa ? `https://wa.me/${wa}?text=${encodeURIComponent(`Hola Sofi! Quiero pedir presupuesto para ${service}.`)}` : dm;
   const ticker = (marquee || []).map((m) => `<span>${esc(m)}</span><span aria-hidden="true">✦</span>`).join('');
   return `${
     pains
@@ -77,7 +81,7 @@ function salesSections(config) {
           <h3>${esc(it.title)}</h3>
           <p>${rich(it.text)}</p>
           <ul class="offer__includes">${it.includes.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-          <a class="btn btn--ghost btn--small" ${linkAttrs(dm)}>${esc(offer.ctaLabel)}<span class="visually-hidden">: ${esc(it.title)}</span></a>
+          <a class="btn btn--ghost btn--small" ${linkAttrs(quote(it.title.toLowerCase()))}>${esc(offer.ctaLabel)}<span class="visually-hidden">: ${esc(it.title)}</span></a>
         </li>`
           )
           .join('\n        ')}
@@ -100,7 +104,7 @@ function salesSections(config) {
       <ul class="foryou__list" role="list">
         ${forYou.items.map((it) => `<li class="rv">${star('foryou__star')}<div><h3>${esc(it.title)}</h3><p>${rich(it.text)}</p></div></li>`).join('\n        ')}
       </ul>
-      <div class="ctas rv"><a class="btn btn--accent" ${linkAttrs(dm)}>Quiero mi propuesta</a></div>
+      <div class="ctas rv"><a class="btn btn--accent" ${linkAttrs(quote('mi marca'))}>Quiero mi propuesta</a></div>
     </div>
   </section>`
       : ''

@@ -237,7 +237,7 @@ export default {
     title: 'Hablemos de *tu marca*',
     intro: 'Escribime y armamos juntas la propuesta para tu marca.',
     instagramDm: 'https://ig.me/m/digitalbysofia_',
-    whatsapp: { number: '', display: '', message: 'Hola Sofi! Vi tu página y quiero consultarte por un diseño.' }, // PENDIENTE
+    whatsapp: { number: '5491151640472', display: '+54 9 11 5164-0472', message: 'Hola Sofi! Vi tu página y quiero consultarte por un diseño.' },
     email: '', // PENDIENTE
   },
 
