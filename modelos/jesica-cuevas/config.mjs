@@ -1,5 +1,5 @@
 // ============================================================================
-//  CONFIGURACIÓN DEL SITIO · Jesica Cuevas, nutricionista (@nutricionista.cj)
+//  MODELO: Jesica Cuevas, nutricionista (@nutricionista.cj)
 //  Este es el ÚNICO archivo que hace falta editar para adaptar la página:
 //  datos, textos, colores, fotos, servicios, recetarios, turnos, redes y
 //  contacto. Después de editarlo, ejecutá `npm run build` (o `npm run dev`).
@@ -10,7 +10,7 @@
 //  Convenciones:
 //  - Los textos son texto plano. Para resaltar una palabra en cursiva con la
 //    tipografía de acento, rodeala con asteriscos: "comer *rico*".
-//  - Las fotos van en /public/assets/ y se referencian como "assets/archivo.jpg".
+//  - Las fotos van en modelos/jesica-cuevas/assets/ y se referencian como "assets/archivo.jpg".
 //    Si una foto queda en null, se muestra un bloque de reemplazo rotulado.
 //  - Para quitar una sección, sacala de la lista `sections`.
 //  - Atajos para enlaces: 'whatsapp', 'email', 'booking' (turnero) e
@@ -30,7 +30,7 @@ export default {
     title: 'Jesica Cuevas · Lic. en Nutrición · Nutrición deportiva',
     description:
       'Licenciada en Nutrición especialista en nutrición deportiva, antropometría y nutrición hormonal. Consultas en Castelar y online.',
-    ogImage: 'assets/og-image.png', // 1200×630 px
+    ogImage: 'assets/og-jesica-cuevas.png', // 1200×630 px
     themeColor: '#3E5B47',
     structuredData: true,
   },

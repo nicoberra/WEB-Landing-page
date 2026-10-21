@@ -11,7 +11,7 @@ import { promisify } from 'node:util';
 // viejos de src/sections/ que tenga en caché.
 const run = promisify(execFile);
 const build = async () => {
-  const { stdout } = await run(process.execPath, [path.join(root, 'scripts/build.mjs')], { cwd: root, env: process.env });
+  const { stdout } = await run(process.execPath, [path.join(root, 'scripts/build.mjs'), ...process.argv.slice(2)], { cwd: root, env: process.env });
   return stdout;
 };
 
@@ -70,7 +70,7 @@ createServer(async (req, res) => {
 });
 
 let timer;
-for (const target of ['site.config.mjs', 'examples', 'src', 'public']) {
+for (const target of ['modelo-activo.mjs', 'modelos', 'src']) {
   watch(path.join(root, target), { recursive: true }, () => {
     clearTimeout(timer);
     timer = setTimeout(async () => {

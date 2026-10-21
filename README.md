@@ -4,10 +4,17 @@ Landing page informativa para presentar a un profesional independiente: quién e
 
 La configuración actual es la de **Jesica Cuevas, Licenciada en Nutrición (M.N. 12233)**, [@nutricionista.cj](https://www.instagram.com/nutricionista.cj/). La identidad sale de su Instagram: verdes salvia y bosque, fondo crema, títulos con serif condensada, acentos manuscritos y su forma de hablar. La matrícula, las especialidades y la formación las cargó la persona que encargó la página; los recetarios, sus precios y el turnero todavía son provisorios (ver [sección 8](#8-qué-está-pendiente)).
 
-También queda un segundo ejemplo, ficticio, en [`examples/disenadora-grafica.config.mjs`](examples/disenadora-grafica.config.mjs) (_Martina López, diseñadora gráfica_), para mostrar cómo la misma plantilla sirve para otra profesión.
+**Cada web es un modelo y vive en su propia carpeta** dentro de [`modelos/`](modelos/), con su configuración y sus imágenes. Hoy hay dos:
+
+| Modelo | Carpeta | Qué es |
+| --- | --- | --- |
+| Jesica Cuevas, nutricionista | [`modelos/jesica-cuevas/`](modelos/jesica-cuevas/) | Página real en preparación (es la que se publica hoy). |
+| Martina López, diseñadora gráfica | [`modelos/disenadora-grafica-demo/`](modelos/disenadora-grafica-demo/) | Demo ficticia para mostrar la plantilla con otra profesión. |
+
+Crear un modelo nuevo nunca modifica los anteriores (ver [sección 4](#4-crear-un-modelo-nuevo)).
 
 - **Sin dependencias.** HTML, CSS y JavaScript sin frameworks. Solo hace falta Node.js 20 o superior para generar el sitio.
-- **Un solo archivo para personalizar:** [`site.config.mjs`](site.config.mjs).
+- **Un archivo por modelo:** todo lo que cambia de una web a otra está en `modelos/<nombre>/config.mjs`, y sus fotos en `modelos/<nombre>/assets/`.
 - **Con movimiento:** el nombre entra palabra por palabra, las secciones aparecen al hacer scroll, hay una cinta de frases en movimiento, efecto de profundidad (parallax), barra de progreso de lectura y tarjetas que se inclinan con el mouse. Todo se apaga si la persona tiene activado "reducir movimiento" en su dispositivo.
 - **Resultado estático** en `dist/`: se publica solo en GitHub Pages con cada cambio, o se sube a cualquier hosting.
 
@@ -18,7 +25,7 @@ También queda un segundo ejemplo, ficticio, en [`examples/disenadora-grafica.co
 1. [Ejecutar en tu computadora](#1-ejecutar-en-tu-computadora)
 2. [Estructura del proyecto](#2-estructura-del-proyecto)
 3. [Personalizar para un cliente](#3-personalizar-para-un-cliente)
-4. [Duplicar la plantilla para un cliente nuevo](#4-duplicar-la-plantilla-para-un-cliente-nuevo)
+4. [Crear un modelo nuevo](#4-crear-un-modelo-nuevo)
 5. [Publicar en GitHub Pages](#5-publicar-en-github-pages)
 6. [Ficha de información para pedirle al profesional](#6-ficha-de-información-para-pedirle-al-profesional)
 7. [Proceso de adaptación](#7-proceso-de-adaptación)
@@ -36,10 +43,12 @@ npm run build   # genera el sitio final en dist/
 npm run check   # genera el sitio y revisa contraste, encabezados, enlaces y datos pendientes
 ```
 
-Para ver o generar el ejemplo de la diseñadora gráfica (u otro archivo de configuración):
+Sin indicar nada, se usa el modelo de [`modelo-activo.mjs`](modelo-activo.mjs). Para trabajar con otro modelo:
 
 ```bash
-SITE_CONFIG=examples/disenadora-grafica.config.mjs npm run dev
+npm run dev   -- --modelo disenadora-grafica-demo
+npm run check -- --modelo disenadora-grafica-demo
+npm run build -- --modelo disenadora-grafica-demo
 ```
 
 No hace falta `npm install`: el proyecto no tiene dependencias.
@@ -52,10 +61,13 @@ No hace falta `npm install`: el proyecto no tiene dependencias.
 ## 2. Estructura del proyecto
 
 ```
-site.config.mjs        ← TODOS los datos editables (textos, colores, fotos, contacto…)
-examples/              ← otras configuraciones de ejemplo (diseñadora gráfica)
-public/                ← archivos que se copian tal cual (fotos, logo, imagen para redes)
-  assets/og-image.png  ← imagen que se ve al compartir el enlace (1200×630)
+modelos/               ← una carpeta por web
+  jesica-cuevas/
+    config.mjs         ← TODOS los datos editables de esa web (textos, colores, contacto…)
+    assets/            ← sus fotos, logo e imagen para redes (se publican en /assets)
+  disenadora-grafica-demo/
+    config.mjs
+modelo-activo.mjs      ← qué modelo se publica y se usa por defecto
 src/
   render.mjs           ← arma la página y el <head> (SEO, metadatos sociales, tema)
   helpers.mjs          ← utilidades: escapado de textos, fotos/bloques de reemplazo, íconos
@@ -67,7 +79,8 @@ src/
   main.js              ← menú móvil, animaciones al hacer scroll, filtro de proyectos,
                          copiar email, validación del formulario
 scripts/
-  build.mjs            ← genera dist/
+  build.mjs            ← genera dist/ (acepta --modelo <nombre>)
+  config-path.mjs      ← resuelve qué modelo usar
   dev.mjs              ← servidor local con recarga automática
   check.mjs            ← revisión de calidad y datos pendientes
   og-image.mjs         ← (opcional) genera la imagen para redes desde el config
@@ -77,7 +90,7 @@ scripts/
 
 ## 3. Personalizar para un cliente
 
-Todo se edita en **`site.config.mjs`**. Cada bloque tiene comentarios. Lo principal:
+Todo se edita en el **`config.mjs` del modelo** (por ejemplo `modelos/jesica-cuevas/config.mjs`). Cada bloque tiene comentarios. Lo principal:
 
 | Qué | Dónde en el config |
 | --- | --- |
@@ -106,7 +119,7 @@ Texto plano. Para resaltar una palabra con la tipografía cursiva de acento, rod
 
 ### Fotos
 
-1. Guardá la imagen en `public/assets/` (JPG o WebP, comprimida; idealmente menos de 300 KB).
+1. Guardá la imagen en `modelos/<nombre>/assets/` (JPG o WebP, comprimida; idealmente menos de 300 KB).
 2. Referenciala en el config:
 
 ```js
@@ -163,7 +176,7 @@ Cada paleta tiene diez colores con su uso comentado. Después de cambiarlos corr
 ### Logo
 
 - Iniciales: `logo: { type: 'monogram', text: 'ml' }`. El favicon se genera solo con las mismas iniciales y colores.
-- Archivo: `logo: { type: 'image', src: 'assets/logo.svg', alt: '', width: 120, height: 40 }`. Si querés otro favicon, poné `public/favicon.svg` y reemplaza al generado.
+- Archivo: `logo: { type: 'image', src: 'assets/logo.svg', alt: '', width: 120, height: 40 }`. Si querés otro favicon, poné `favicon.svg` en la carpeta `assets/` del modelo y reemplaza al generado.
 
 ### Formulario
 
@@ -185,29 +198,32 @@ Si el cliente necesita recibir los mensajes en un servidor, hay que sumar un ser
 
 ### Imagen para redes
 
-`public/assets/og-image.png` está generada con el nombre, la matrícula y los colores del config actual. Reemplazala por una imagen propia de 1200×630, o regenerala desde el config:
+La imagen que indica `site.ogImage` (en Jesica, `modelos/jesica-cuevas/assets/og-jesica-cuevas.png`) está generada con el nombre, la matrícula y los colores del modelo. Reemplazala por una imagen propia de 1200×630, o regenerala desde el config (acepta `--modelo <nombre>`):
 
 ```bash
 npm install --no-save playwright && npx playwright install chromium
 node scripts/og-image.mjs
 ```
 
-## 4. Duplicar la plantilla para un cliente nuevo
+## 4. Crear un modelo nuevo
 
-La forma recomendada es usar este repositorio como **plantilla de GitHub**:
+1. Copiá la carpeta del modelo más parecido dentro de `modelos/` y renombrala (por ejemplo `modelos/odontologa-ana-perez/`). Borrá las fotos que no correspondan de su `assets/`.
+2. Completá la [ficha](#6-ficha-de-información-para-pedirle-al-profesional) con el cliente y editá el `config.mjs` de la carpeta nueva.
+3. Poné las fotos en `assets/` de esa carpeta.
+4. Probalo con `npm run dev -- --modelo odontologa-ana-perez` y `npm run check -- --modelo odontologa-ana-perez`.
+5. Si querés publicarlo en GitHub Pages en lugar del actual, cambiá el nombre en `modelo-activo.mjs`.
+
+Los demás modelos no se tocan.
+
+### Repositorio propio para un cliente
+
+Para entregarle a un cliente su web en un repositorio aparte:
 
 1. Una sola vez, en este repositorio: _Settings → General_ → marcá **Template repository**.
-2. Para cada cliente: botón **Use this template → Create a new repository** (por ejemplo `landing-nombre-cliente`). El repositorio nuevo arranca con todos los archivos, sin el historial de la plantilla.
-3. Activá GitHub Pages en el repositorio nuevo (ver [Publicar](#5-publicar-en-github-pages)).
+2. **Use this template → Create a new repository** (por ejemplo `landing-nombre-cliente`).
+3. En el repositorio nuevo, dejá solo la carpeta de su modelo, apuntá `modelo-activo.mjs` a ella, poné `demo: false` y activá GitHub Pages (ver [Publicar](#5-publicar-en-github-pages)).
 
-Después:
-
-1. Completá la [ficha](#6-ficha-de-información-para-pedirle-al-profesional) con el cliente.
-2. Editá `site.config.mjs` y poné `demo: false`. Se puede editar directo en GitHub con el lápiz (_Edit this file_).
-3. Subí fotos, logo e imagen para redes a `public/assets/` (_Add file → Upload files_).
-4. Guardá los cambios (_Commit changes_). GitHub revisa y publica solo; si `npm run check` encuentra un error, la publicación se frena y el error aparece en la pestaña **Actions**.
-
-Si preferís trabajar en tu computadora: `git clone`, editá, `npm run dev` para ver los cambios y `git push` para publicar.
+Desde la web de GitHub se puede editar el `config.mjs` con el lápiz (_Edit this file_) y subir fotos con _Add file → Upload files_. Al guardar (_Commit changes_), GitHub revisa y publica solo; si `npm run check` encuentra un error, la publicación se frena y el error aparece en la pestaña **Actions**.
 
 ## 5. Publicar en GitHub Pages
 
@@ -310,19 +326,19 @@ Al adaptar la plantilla para un profesional:
 
 ## 8. Qué está pendiente
 
-**Página de Jesica Cuevas (`site.config.mjs`).** `npm run check` lista todo lo pendiente. Hoy:
+**Página de Jesica Cuevas (`modelos/jesica-cuevas/`).** `npm run check` lista todo lo pendiente. Hoy:
 
 - **Turnero:** falta el enlace (`booking.url`). Mientras tanto, la sección de turnos indica reservar escribiendo a [@nm.trainingcenter](https://www.instagram.com/nm.trainingcenter/), como dice su placa de servicios.
 - **Panel de pacientes:** falta el enlace (`portal.url`).
 - **Recetarios:** los tres títulos, descripciones y formatos son provisorios, inspirados en temas de su Instagram. Faltan precios, tapas y enlaces de compra.
-- **Fotos:** están el retrato de la presentación y el de "Sobre mí" (`public/assets/jesica-*.webp`). Faltan las tapas de los recetarios (3:4) y fotos de publicaciones para el bloque de Instagram (1:1).
+- **Fotos:** están el retrato de la presentación y el de "Sobre mí" (`modelos/jesica-cuevas/assets/jesica-*.webp`). Faltan las tapas de los recetarios (3:4) y fotos de publicaciones para el bloque de Instagram (1:1).
 - **Textos a validar con ella:** descripciones de cada plan, pasos del proceso y respuestas de preguntas frecuentes.
 - **Dominio:** `site.url` sigue siendo el de ejemplo (en GitHub Pages se usa la dirección de Pages automáticamente).
 - **Publicación:** con `demo: true`, la página muestra un aviso de versión en preparación y no se indexa.
 
 Fuentes de los datos: su placa de servicios (los seis planes, que son el eje de la página), su CV (matrícula, experiencia, formación y email), su Instagram (colores, tipografías, tono, Castelar y modalidad online/presencial) y el WhatsApp +54 9 11 6407-2673 indicado por quien encargó la página. El CV trae otro teléfono (11 3797-8217) que no se usa. Por pedido, no se menciona Espacio SilRagolia ni se publica la fecha de nacimiento.
 
-**Ejemplo de la diseñadora (`examples/disenadora-grafica.config.mjs`).** Todo es ficticio: la persona, los textos, los proyectos, el email `hola@example.com` y el WhatsApp `+54 9 000 000-0000`.
+**Ejemplo de la diseñadora (`modelos/disenadora-grafica-demo/`).** Todo es ficticio: la persona, los textos, los proyectos, el email `hola@example.com` y el WhatsApp `+54 9 000 000-0000`.
 
 ## 9. Qué necesita configuración externa
 
@@ -330,7 +346,7 @@ Fuentes de los datos: su placa de servicios (los seis planes, que son el eje de 
 - **Recepción de mensajes del formulario:** con los modos incluidos no hay servidor; el mensaje se envía desde el WhatsApp o el correo del visitante. Para recibirlos en una casilla sin que el visitante use su app hace falta un servicio de formularios (por ejemplo Formspree, Netlify Forms o similar) o un backend propio, con su cuenta y configuración. En ese caso conviene sumar una política de privacidad provista por el cliente.
 - **Analítica** (Google Analytics, Plausible, etc.): no incluida. Si se agrega, puede requerir aviso de cookies según la jurisdicción.
 - **Search Console / indexación:** con `demo: false`, cargá el dominio en Google Search Console y enviá `sitemap.xml`.
-- **Fuentes:** se cargan desde Google Fonts (requiere conexión). Si el cliente prefiere no depender de Google, se pueden descargar y servir desde `public/`.
+- **Fuentes:** se cargan desde Google Fonts (requiere conexión). Si el cliente prefiere no depender de Google, se pueden descargar y servir desde la carpeta `assets/` del modelo.
 
 ## 10. Recursos y licencias
 

@@ -1,11 +1,14 @@
 // Revisión automática antes de publicar. Uso: npm run check
 // Errores (✖) cortan la ejecución; avisos (!) son cosas para revisar a mano.
 import { readFile } from 'node:fs/promises';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { root } from './config-path.mjs';
+import { build } from './build.mjs';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { default: config } = await import(pathToFileURL(path.join(root, process.env.SITE_CONFIG || 'site.config.mjs')).href);
+// Genera el sitio con el mismo modelo y después lo revisa.
+const { config, model } = await build();
+console.log(`Modelo: ${model.name}\n`);
 const page = await readFile(path.join(root, 'dist/index.html'), 'utf8');
 
 const errors = [];
@@ -92,7 +95,7 @@ const title = page.match(/<title>([^<]*)<\/title>/)?.[1] || '';
 if (title.length > 65) warnings.push(`El título tiene ${title.length} caracteres (ideal: hasta 60).`);
 
 if (config.demo) warnings.push('Modo demostración activo (demo: true): avisos visibles y la página no se indexa.');
-if (/example\.(com|org)/.test(process.env.SITE_URL || config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
+if (/example\.(com|org)/.test(config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
 if (config.contact.email && /example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
 if (/^\d+0{6,}$/.test(config.contact.whatsapp.number)) warnings.push('El número de WhatsApp es de ejemplo.');
 if (config.sections.includes('booking') && !config.booking?.url) warnings.push('Falta el enlace al turnero (booking.url).');

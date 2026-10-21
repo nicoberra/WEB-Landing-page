@@ -1,10 +1,13 @@
-# Publica el sitio en GitHub Pages cada vez que hay cambios en la rama main.
-# Requisito (una sola vez): Settings → Pages → Source: "GitHub Actions".
-name: Publicar en GitHub Pages
+# Revisa el sitio en cada cambio y lo publica en GitHub Pages cuando el cambio
+# llega a la rama principal del repositorio (la "default branch").
+# Publica el modelo indicado en modelo-activo.mjs.
+# Requisito (una sola vez): Settings → Pages → Build and deployment →
+# Source: "GitHub Actions".
+name: Revisar y publicar
 
 on:
   push:
-    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -13,33 +16,41 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PUBLISH: ${{ github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - id: pages
+        if: env.PUBLISH == 'true'
         uses: actions/configure-pages@v5
-      # Si definiste un dominio propio en site.config.mjs (site.url) se usa ese;
-      # si sigue el de ejemplo, se usa la dirección que asigna GitHub Pages.
+
+      # Si el site.url del modelo sigue siendo el de ejemplo, se usa la
+      # dirección que asigna GitHub Pages. Con un dominio propio, se usa ese.
       - name: Generar y revisar el sitio
-        run: |
-          if grep -q "url: 'https://www.example.com'" site.config.mjs; then
-            export SITE_URL="${{ steps.pages.outputs.base_url }}"
-          fi
-          npm run check
-      - uses: actions/upload-pages-artifact@v3
+        env:
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+        run: npm run check
+
+      - if: env.PUBLISH == 'true'
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     environment:
       name: github-pages

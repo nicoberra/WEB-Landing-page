@@ -1,14 +1,20 @@
-// OPCIONAL. Genera public/assets/og-image.png (1200×630), la imagen que se ve
+// OPCIONAL. Genera la imagen de site.ogImage (1200×630, en la carpeta del modelo), la que se ve
 // al compartir el enlace en redes y mensajería. Usa el nombre, la profesión y
 // los colores del config. Requiere Playwright, que NO es dependencia del proyecto:
 //   npm install --no-save playwright && npx playwright install chromium
-//   node scripts/og-image.mjs
+//   node scripts/og-image.mjs                       (modelo activo)
+//   node scripts/og-image.mjs --modelo jesica-cuevas
 // También podés reemplazar ese archivo por una imagen diseñada a mano.
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { root, modelPaths } from './config-path.mjs';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { default: config } = await import(pathToFileURL(path.join(root, process.env.SITE_CONFIG || 'site.config.mjs')).href);
+const model = await modelPaths();
+const { default: config } = await import(pathToFileURL(model.config).href);
+if (!config.site.ogImage) {
+  console.error('Definí site.ogImage en el modelo (ej.: assets/og-nombre.png) antes de generar la imagen.');
+  process.exit(1);
+}
 const { esc, rich } = await import(pathToFileURL(path.join(root, 'src/helpers.mjs')).href);
 
 let chromium;
@@ -47,7 +53,7 @@ await page.setContent(html, { waitUntil: 'networkidle' });
 // Fuerza la descarga de cada tipografía antes de la captura.
 await page.evaluate(() => Promise.all([...document.fonts].map((font) => font.load().catch(() => null))));
 await page.evaluate(() => document.fonts.ready);
-const out = path.join(root, 'public/assets/og-image.png');
+const out = path.join(model.dir, config.site.ogImage);
 await page.screenshot({ path: out });
 await browser.close();
 console.log(`✔ Imagen para redes generada en ${path.relative(root, out)}`);

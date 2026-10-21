@@ -7,7 +7,7 @@
 //  Convenciones:
 //  - Los textos son texto plano. Para resaltar una palabra en cursiva con la
 //    tipografía de acento, rodeala con asteriscos: "con *criterio*".
-//  - Las fotos van en /public/assets/ y se referencian como "assets/archivo.jpg".
+//  - Las fotos van en modelos/disenadora-grafica-demo/assets/ y se referencian como "assets/archivo.jpg".
 //    Si una foto queda en null, se muestra un bloque de reemplazo rotulado.
 //  - Para quitar una sección, sacala de la lista `sections`.
 // ============================================================================
@@ -26,7 +26,7 @@ export default {
     title: 'Martina López · Diseñadora gráfica independiente',
     description:
       'Identidad visual, diseño editorial, packaging y piezas para redes para emprendimientos, marcas pequeñas y proyectos culturales.',
-    ogImage: 'assets/og-image.png', // 1200×630 px
+    ogImage: '', // 1200×630 px, ej.: 'assets/og-disenadora.png'. Vacío = sin imagen para redes.
     themeColor: '#2A36C9',
     // Agrega datos estructurados (schema.org/Person) con nombre, profesión y redes.
     structuredData: true,
