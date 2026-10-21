@@ -10,21 +10,80 @@
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
 
+  // ---------- Parte visible de la página ----------
+  // Normalmente es la ventana. Pero algunas vistas previas (por ejemplo, la
+  // app en el celular) muestran la página entera estirada dentro de otra y la
+  // desplazan desde afuera: ahí "fixed" no queda pegado a la pantalla. Para
+  // ese caso se mide qué franja se ve con IntersectionObserver.
+  var started = false;
+  var view = { top: window.scrollY, h: window.innerHeight, off: 0, framed: false };
+  var framedCheck = window.self !== window.top && 'IntersectionObserver' in window;
+  if (framedCheck) {
+    var STEP = 30;
+    var seen = new Map();
+    var layer = document.createElement('div');
+    layer.setAttribute('aria-hidden', 'true');
+    layer.style.cssText = 'position:absolute;left:0;top:0;width:1px;height:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(layer);
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) seen.set(e.target, e.intersectionRect); else seen.delete(e.target);
+      });
+      var a = Infinity, b = -Infinity;
+      seen.forEach(function (r) { a = Math.min(a, r.top); b = Math.max(b, r.bottom); });
+      if (a === Infinity) return;
+      // Si se ve menos que la ventana, la página está estirada y se desplaza desde afuera.
+      view.framed = a > 2 || b - a < window.innerHeight - 4;
+      view.vis = { a: a, b: b };
+      measure();
+      if (!started && typeof ready === 'function') { started = true; ready(); }
+    }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] });
+    var built = 0;
+    var build = function () {
+      var hgt = root.scrollHeight;
+      if (Math.abs(hgt - built) < STEP) return;
+      built = hgt;
+      io.disconnect(); seen.clear(); layer.textContent = '';
+      for (var y = 0; y < hgt; y += STEP) {
+        var d = document.createElement('div');
+        d.style.cssText = 'position:absolute;left:0;width:1px;height:' + STEP + 'px;top:' + y + 'px';
+        layer.appendChild(d); io.observe(d);
+      }
+    };
+    build();
+    if ('ResizeObserver' in window) new ResizeObserver(build).observe(document.body);
+  }
+  function measure() {
+    var y = window.scrollY;
+    if (view.framed && view.vis) {
+      view.top = y + view.vis.a;
+      view.h = view.vis.b - view.vis.a;
+      view.off = view.vis.a;
+      root.style.setProperty('--screen', Math.round(view.h) + 'px');
+    } else {
+      view.top = y; view.h = window.innerHeight; view.off = 0;
+    }
+    onScroll();
+  }
+
   // ---------- Encabezado y barra de progreso ----------
   var top = document.querySelector('[data-top]');
   var bar = document.querySelector('[data-progress]');
-  var lastY = window.scrollY;
+  var barBox = bar && bar.parentElement;
   function onScroll() {
-    var y = window.scrollY, max = root.scrollHeight - window.innerHeight;
+    var y = view.top, max = root.scrollHeight - view.h;
     if (bar) bar.style.setProperty('--p', max > 0 ? Math.min(1, y / max) : 0);
+    var shift = view.off ? 'translate3d(0,' + view.off.toFixed(1) + 'px,0)' : '';
     if (top) {
       // El encabezado no se esconde: ahí queda la foto como logo.
       top.classList.toggle('is-solid', y > 30);
+      top.style.transition = view.off ? 'none' : '';
+      top.style.transform = shift;
     }
-    lastY = y;
+    if (barBox) barBox.style.transform = shift;
   }
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  measure();
+  window.addEventListener('scroll', measure, { passive: true });
 
   window.__motionReady = true;
   var gsap = window.gsap, ST = window.ScrollTrigger;
@@ -33,6 +92,24 @@
     return;
   }
   gsap.registerPlugin(ST);
+  // En una vista estirada, ScrollTrigger lee la parte visible en lugar del
+  // scroll de la ventana (que ahí siempre vale 0).
+  var ready = function () {
+    if (view.framed) {
+      var scroller = document.body;
+      ST.scrollerProxy(scroller, {
+        scrollTop: function () { return view.top; },
+        getBoundingClientRect: function () { return { top: view.off, left: 0, width: window.innerWidth, height: view.h }; },
+        pinType: 'transform',
+      });
+      ST.defaults({ scroller: scroller });
+      gsap.ticker.add(function () { measure(); ST.update(); });
+    }
+    start();
+  };
+  if (!framedCheck) ready(); else { started = false; setTimeout(function () { if (!started) { started = true; ready(); } }, 600); }
+
+  function start() {
 
   // ---------- Portada: frase gigante (arranca al terminar la apertura) ----------
   var lines = gsap.utils.toArray('[data-hl] .hl__in');
@@ -56,6 +133,8 @@
       heroIn.play();
       ST.refresh();
     };
+    // En una vista estirada, la apertura ocupa solo la parte visible.
+    if (view.framed) { loader.style.bottom = 'auto'; loader.style.height = view.h + 'px'; loader.style.top = view.off + 'px'; }
     var open = gsap.timeline({ onComplete: finish });
     open
       .from('[data-loader-logo]', { scale: 0.7, opacity: 0, filter: 'blur(8px)', duration: 0.8, ease: 'expo.out' })
@@ -98,24 +177,27 @@
       fly.style.width = h.width + 'px';
       fly.style.height = h.height + 'px';
       // Recorrido: más o menos la mitad de la pantalla de scroll.
-      var p = Math.min(1, Math.max(0, window.scrollY / Math.max(240, window.innerHeight * 0.55)));
+      var p = Math.min(1, Math.max(0, view.top / Math.max(240, view.h * 0.55)));
       var e = smooth(p);
       // Tamaño final: el círculo con su texto entra en el lugar del logo.
       var kEnd = (s.width * 0.95) / (h.width * 1.12);
       var k = 1 + (kEnd - 1) * e;
+      // Todo se calcula en coordenadas de la parte visible (view.off es 0
+      // en un navegador común) y al final se vuelve a sumar ese corrimiento.
       var endX = s.left + s.width / 2 - (h.width * kEnd) / 2;
-      var endY = s.top + s.height / 2 - (h.height * kEnd) / 2;
+      var endY = s.top - view.off + s.height / 2 - (h.height * kEnd) / 2;
       // Sale desde donde se ve al principio (sin arrastrarse con el scroll),
       // así nunca se va por arriba de la pantalla en el celular.
       var startY = h.top + window.scrollY;
       var x = h.left + (endX - h.left) * e;
-      var y = startY + (endY - startY) * e;
+      var y = startY + (endY - startY) * e + view.off;
       fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
       // El ícono de la manzana se desvanece justo cuando llega la foto.
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
     };
     updateFly();
     gsap.ticker.add(updateFly);
+
   }
 
   // ---------- Cinta: se mueve sola y acelera con el scroll ----------
@@ -208,6 +290,9 @@
       });
       el.addEventListener('pointerleave', function () { xTo(0); yTo(0); });
     });
+  }
+
+  ST.refresh();
   }
 
   window.addEventListener('load', function () { ST.refresh(); });
