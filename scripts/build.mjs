@@ -33,14 +33,25 @@ export async function build(model) {
     await cp(model.assets, path.join(dist, 'assets'), { recursive: true });
   }
 
+  // Un modelo puede traer su propia plantilla (page.mjs, styles.css, main.js en
+  // su carpeta). Si no, usa la plantilla general de /src.
+  const own = (file) => (existsSync(path.join(model.dir, file)) ? path.join(model.dir, file) : null);
+  const page = own('page.mjs');
+  const html = page
+    ? (await import(`${pathToFileURL(page).href}?t=${Date.now()}`)).renderPage(config)
+    : renderPage(config);
+  const modelFavicon = path.join(model.assets, 'favicon.svg');
+
   const url = config.site.url;
   await Promise.all([
-    writeFile(path.join(dist, 'index.html'), renderPage(config)),
-    copyFile(path.join(root, 'src/styles.css'), path.join(dist, 'styles.css')),
-    copyFile(path.join(root, 'src/main.js'), path.join(dist, 'main.js')),
-    existsSync(path.join(model.assets, 'favicon.svg')) || existsSync(path.join(root, 'public/favicon.svg'))
-      ? null
-      : writeFile(path.join(dist, 'favicon.svg'), faviconSvg(config)),
+    writeFile(path.join(dist, 'index.html'), html),
+    copyFile((page && own('styles.css')) || path.join(root, 'src/styles.css'), path.join(dist, 'styles.css')),
+    copyFile((page && own('main.js')) || path.join(root, 'src/main.js'), path.join(dist, 'main.js')),
+    existsSync(modelFavicon)
+      ? copyFile(modelFavicon, path.join(dist, 'favicon.svg'))
+      : existsSync(path.join(root, 'public/favicon.svg'))
+        ? null
+        : writeFile(path.join(dist, 'favicon.svg'), faviconSvg(config)),
     writeFile(
       path.join(dist, 'robots.txt'),
       config.demo ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${url}/sitemap.xml\n`

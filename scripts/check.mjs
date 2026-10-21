@@ -96,11 +96,12 @@ if (title.length > 65) warnings.push(`El título tiene ${title.length} caractere
 
 if (config.demo) warnings.push('Modo demostración activo (demo: true): avisos visibles y la página no se indexa.');
 if (/example\.(com|org)/.test(config.site.url)) warnings.push('El dominio (site.url) sigue siendo de ejemplo.');
-if (config.contact.email && /example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
-if (/^\d+0{6,}$/.test(config.contact.whatsapp.number)) warnings.push('El número de WhatsApp es de ejemplo.');
-if (config.sections.includes('booking') && !config.booking?.url) warnings.push('Falta el enlace al turnero (booking.url).');
+if (config.contact?.email && /example\.(com|org)/.test(config.contact.email)) warnings.push('El email de contacto es de ejemplo.');
+if (/^\d+0{6,}$/.test(config.contact?.whatsapp?.number || '')) warnings.push('El número de WhatsApp es de ejemplo.');
+const sections = config.sections || [];
+if (sections.includes('booking') && !config.booking?.url) warnings.push('Falta el enlace al turnero (booking.url).');
 if (config.portal && !config.portal.url) warnings.push('Falta el enlace al panel de pacientes (portal.url): el acceso no se muestra.');
-if (config.sections.includes('products')) {
+if (sections.includes('products')) {
   const items = config.products.items;
   const noPrice = items.filter((p) => !p.price).length;
   const noLink = items.filter((p) => !p.href).length;
@@ -109,16 +110,16 @@ if (config.sections.includes('products')) {
   if (noLink) warnings.push(`${noLink} recetario(s) sin enlace de compra (abren WhatsApp).`);
   if (noCover) warnings.push(`${noCover} recetario(s) sin tapa (se muestran bloques de reemplazo).`);
 }
-if (config.sections.includes('instagram') && !(config.instagram.images || []).length)
+if (sections.includes('instagram') && !(config.instagram?.images || []).length)
   warnings.push('Instagram sin fotos de publicaciones (se muestran bloques de reemplazo).');
-if (!config.person.photo) warnings.push('Falta la foto del profesional (se muestra el bloque de reemplazo).');
-if (config.sections.includes('projects')) {
+if (!config.person?.photo) warnings.push('Falta la foto del profesional (se muestra el bloque de reemplazo).');
+if (sections.includes('projects')) {
   const noImage = config.projects.items.filter((p) => !p.image).length;
   if (noImage) warnings.push(`${noImage} proyecto(s) sin imagen (se muestran bloques de reemplazo).`);
 }
-const rootSocial = config.social.filter((s) => s.url && new URL(s.url).pathname.replace(/\/$/, '') === '');
+const rootSocial = (config.social || []).filter((s) => s.url && new URL(s.url).pathname.replace(/\/$/, '') === '');
 if (rootSocial.length) warnings.push(`Redes con enlace genérico, sin perfil: ${rootSocial.map((s) => s.label).join(', ')}.`);
-if (config.contact.form.enabled && config.contact.form.mode === 'demo' && !config.demo)
+if (config.contact?.form?.enabled && config.contact.form.mode === 'demo' && !config.demo)
   warnings.push('El formulario está en modo "demo" en un sitio real: cambialo a "whatsapp" o "email", o desactivalo.');
 
 // ---------- Resultado ----------

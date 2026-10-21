@@ -10,6 +10,9 @@ La configuración actual es la de **Jesica Cuevas, Licenciada en Nutrición (M.N
 | --- | --- | --- |
 | Jesica Cuevas, nutricionista | [`modelos/jesica-cuevas/`](modelos/jesica-cuevas/) | Página real en preparación (es la que se publica hoy). |
 | Martina López, diseñadora gráfica | [`modelos/disenadora-grafica-demo/`](modelos/disenadora-grafica-demo/) | Demo ficticia para mostrar la plantilla con otra profesión. |
+| digitalbysofia_ (Sofía Lencina) | [`modelos/digitalbysofia/`](modelos/digitalbysofia/) | Diseño de contenido. Tiene plantilla propia: recorrido con un celular en 3D y bloques de venta. |
+
+Un modelo puede usar la plantilla general de `src/` o traer **su propia plantilla**: si su carpeta tiene `page.mjs`, se usan ese archivo, su `styles.css` y su `main.js` (como `modelos/digitalbysofia/`). Así un diseño muy distinto no cambia a los demás.
 
 Crear un modelo nuevo nunca modifica los anteriores (ver [sección 4](#4-crear-un-modelo-nuevo)).
 
