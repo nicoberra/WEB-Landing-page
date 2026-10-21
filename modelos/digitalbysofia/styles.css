@@ -1479,44 +1479,187 @@ main:focus {
 .laptop {
   position: absolute;
   left: 26%;
-  top: 27%;
+  top: 22%;
   width: 49%;
   z-index: 4;
+  /* Las medidas internas van en cqw (ancho de la compu) para usarlas en 3D */
+  container-type: inline-size;
+  transform-style: preserve-3d;
 }
 
-.laptop__lid {
-  padding: 2.2% 2.2% 3%;
-  border-radius: 3.5% / 5.5%;
-  background: #1c1416;
-  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.1);
+.scene {
+  perspective: 1800px;
 }
 
-.laptop__screen {
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 1.2% / 2%;
-  background: #fff;
-}
+/* ---------- MacBook en 3D ---------- */
 
-/* Base: del mismo ancho que la pantalla, sin sobresalir */
-.laptop__base {
+.mac {
   position: relative;
-  height: 0;
-  padding-bottom: 3.6%;
-  border-radius: 0 0 12% 12% / 0 0 100% 100%;
-  background: linear-gradient(#e9e4e5, #b8b0b2);
-  box-shadow: 0 30px 40px -24px rgb(59 15 31 / 0.5);
+  transform-style: preserve-3d;
+  /* Vista final: un poco desde arriba, como una foto de producto */
+  transform: rotateX(-5deg);
 }
 
-.laptop__base::before {
+/* Tapa: bisagra abajo, abierta y de frente. */
+.mac__lid {
+  position: relative;
+  width: 100cqw;
+  height: 65cqw;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+  transform: rotateX(5deg);
+}
+
+.mac__face,
+.mac__back {
+  position: absolute;
+  inset: 0;
+  border-radius: 3.6cqw 3.6cqw 1.2cqw 1.2cqw;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Pantalla: borde negro finito, muesca arriba */
+.mac__face {
+  padding: 2.4cqw 2.4cqw 3.2cqw;
+  background: #0d0c0e;
+  box-shadow: inset 0 0 0 0.35cqw #2a2a2e, inset 0 0 0 0.6cqw #0d0c0e, inset 0 0 0 0.75cqw #8f8f95;
+}
+
+.mac__face .laptop__screen {
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 1cqw;
+}
+
+.mac__notch {
+  position: absolute;
+  left: 50%;
+  top: 2.3cqw;
+  width: 15cqw;
+  height: 2.2cqw;
+  transform: translateX(-50%);
+  border-radius: 0 0 1cqw 1cqw;
+  background: #0d0c0e;
+}
+
+/* Parte de atrás de la tapa: aluminio plateado con la estrella de Sofía */
+.mac__back {
+  display: grid;
+  place-items: center;
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(120% 90% at 30% 20%, rgb(255 255 255 / 0.55), transparent 60%),
+    linear-gradient(160deg, #e7e8ec, #c9cbd1 55%, #b7b9bf);
+  box-shadow: inset 0 0 0 0.4cqw rgb(0 0 0 / 0.08);
+}
+
+.mac__back svg {
+  width: 9cqw;
+  fill: var(--accent);
+  opacity: 0.9;
+}
+
+/* Base: apoyada horizontal desde la bisagra hacia adelante */
+.mac__deck {
+  position: absolute;
+  top: 100%;
+  /* Se ve del mismo ancho que la pantalla, sin sobresalir (el borde de
+     adelante se ve un poco más grande por la profundidad, por eso es 95) */
+  left: 2.5cqw;
+  width: 95cqw;
+  height: 62cqw;
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+  transform-style: preserve-3d;
+  border-radius: 1cqw 1cqw 4cqw 4cqw;
+  background: linear-gradient(#dcdde2, #c8cad0);
+  box-shadow: inset 0 0 0 0.4cqw rgb(0 0 0 / 0.06);
+}
+
+/* Teclado: hueco un poco más oscuro y teclas negras redondeadas (SVG) */
+.mac__keys {
+  position: absolute;
+  left: 14.5%;
+  right: 14.5%;
+  top: 7%;
+  height: 43%;
+  padding: 0.6cqw;
+  border-radius: 1.2cqw;
+  background: linear-gradient(#b4b6bc, #bfc1c7);
+  box-shadow: inset 0 0.2cqw 0.4cqw rgb(0 0 0 / 0.18);
+}
+
+.mac__kb {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mac__kb rect {
+  fill: #1f1f22;
+  stroke: rgb(255 255 255 / 0.07);
+  stroke-width: 0.5;
+}
+
+.mac__kb rect.tid {
+  fill: #2e2e33;
+  stroke: #6d6f75;
+}
+
+/* Rejillas de los parlantes a los costados del teclado */
+.mac__grille {
+  position: absolute;
+  top: 7%;
+  height: 43%;
+  width: 5.5%;
+  background: radial-gradient(circle, rgb(0 0 0 / 0.35) 0.18cqw, transparent 0.24cqw) 0 0 / 0.75cqw 0.75cqw;
+  opacity: 0.8;
+}
+
+.mac__grille--l { left: 7%; }
+.mac__grille--r { right: 7%; }
+
+/* Trackpad grande */
+.mac__pad {
+  position: absolute;
+  left: 32%;
+  right: 32%;
+  top: 56%;
+  height: 34%;
+  border-radius: 1.6cqw;
+  background: linear-gradient(#d3d5da, #c4c6cc);
+  box-shadow: inset 0 0 0 0.25cqw rgb(0 0 0 / 0.08);
+}
+
+/* Borde de adelante de la base, con la ranura para abrirla */
+.mac__lip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 2.6cqw;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  border-radius: 0 0 2cqw 2cqw;
+  background: linear-gradient(#bfc1c7, #9fa1a8);
+  box-shadow: 0 3cqw 5cqw -2cqw rgb(59 15 31 / 0.45);
+}
+
+.mac__lip::before {
   content: '';
   position: absolute;
   left: 42%;
   right: 42%;
   top: 0;
-  height: 30%;
-  border-radius: 0 0 8px 8px;
-  background: #cfc7c9;
+  height: 45%;
+  border-radius: 0 0 1cqw 1cqw;
+  background: #8e9097;
+}
+
+.laptop__screen {
+  overflow: hidden;
+  background: #fff;
 }
 
 .badge {
