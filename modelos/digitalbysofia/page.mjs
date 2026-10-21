@@ -54,47 +54,6 @@ function screen(image, kind, i) {
  * arriba, después aparecen el título y los botones, y al final se van los
  * dispositivos. Sin animaciones se ve directamente la composición final.
  */
-/**
- * Teclado de MacBook en SVG: filas con las medidas reales (unidades de tecla),
- * teclas redondeadas y separadas, Touch ID arriba a la derecha y flechas.
- */
-function macKeyboard() {
-  const u = 20, gap = 1.8, rowH = 17;
-  const rows = [
-    { h: 8.5, keys: Array(14).fill(1) },
-    { keys: [...Array(13).fill(1), 2] },
-    { keys: [1.5, ...Array(12).fill(1), 1.5] },
-    { keys: [1.75, ...Array(11).fill(1), 2.25] },
-    { keys: [2.25, ...Array(10).fill(1), 2.75] },
-    { keys: [1, 1, 1, 1.25, 5.5, 1.25, 1, 'arrows'] },
-  ];
-  let y = 0;
-  const rects = [];
-  const key = (x, ky, w, h, extra = '') => rects.push(`<rect x="${x.toFixed(1)}" y="${ky.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="2.2"${extra}/>`);
-  rows.forEach((r, ri) => {
-    const h = r.h || rowH;
-    let x = 0;
-    r.keys.forEach((k, ki) => {
-      if (k === 'arrows') {
-        // ← (↑ sobre ↓) →, como en la Mac
-        const w = u - gap, half = (h - gap) / 2;
-        key(x, y + half + gap, w, half);
-        key(x + u, y, w, half);
-        key(x + u, y + half + gap, w, half);
-        key(x + 2 * u, y + half + gap, w, half);
-        x += 3 * u;
-        return;
-      }
-      const w = k * u - gap;
-      // Touch ID: última tecla de la fila de funciones
-      key(x, y, w, h, ri === 0 && ki === r.keys.length - 1 ? ' class="tid"' : '');
-      x += k * u;
-    });
-    y += h + gap;
-  });
-  return `<svg class="mac__kb" viewBox="-3 -3 ${15 * u + 4} ${(y + 4).toFixed(1)}" preserveAspectRatio="none">${rects.join('')}</svg>`;
-}
-
 function intro(config) {
   const it = config.intro;
   const devices = it.devices
@@ -116,14 +75,8 @@ function intro(config) {
       <div class="scene" data-scene aria-hidden="true">
         ${devices}
         <div class="laptop" data-laptop>
-          <!-- MacBook en 3D: tapa (pantalla adelante, aluminio atrás) y base con teclado -->
-          <div class="mac">
-            <div class="mac__lid" data-lid>
-              <div class="mac__face"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div><i class="mac__notch"></i></div>
-              <div class="mac__back"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></div>
-            </div>
-            <div class="mac__deck"><i class="mac__grille mac__grille--l"></i><i class="mac__keys">${macKeyboard()}</i><i class="mac__grille mac__grille--r"></i><i class="mac__pad"></i><i class="mac__lip"></i></div>
-          </div>
+          <div class="laptop__lid"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div></div>
+          <div class="laptop__base"></div>
         </div>
         <div class="badge" ><div class="pop" data-pop>${wordmark(config, 'wordmark--badge')}</div></div>
         <div class="folder"><div class="pop" data-pop><div class="folder__body"><span>${rich(it.folder)}</span></div>
