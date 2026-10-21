@@ -43,7 +43,6 @@ ${headHtml}
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 <div class="loader" data-loader aria-hidden="true">
-  <div class="loader__strip" data-loader-strip><span>${esc(p.name)}</span></div>
   <div class="loader__card" data-loader-card>
     <img class="loader__logo" data-loader-logo src="${esc(config.logo.full.src)}" alt="" width="${config.logo.full.width}" height="${config.logo.full.height}" fetchpriority="high">
   </div>

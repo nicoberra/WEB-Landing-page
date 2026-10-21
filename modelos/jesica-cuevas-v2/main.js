@@ -40,12 +40,13 @@
   var heroIn = gsap.timeline({ paused: true });
   heroIn
     .fromTo(lines,
-      { yPercent: 110, '--wdth': 62, '--wght': 300 },
-      { yPercent: 0, '--wdth': function (i) { return i === 3 ? 100 : 78; }, '--wght': 900, duration: 1.3, stagger: 0.12, ease: 'expo.out' }, 0)
+      { yPercent: 110, opacity: 0, '--wdth': 62, '--wght': 300 },
+      { yPercent: 0, opacity: 1, '--wdth': function (i) { return i === 3 ? 100 : 78; }, '--wght': 900, duration: 1.3, stagger: 0.12, ease: 'expo.out' }, 0)
     .from('[data-blob]', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'expo.out' }, 0.1)
     .from('.hero__text, .hero__ctas, .hero__where, .tag', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'expo.out' }, 0.45)
     .from('[data-sticker]', { scale: 0, rotation: -40, duration: 0.9, ease: 'back.out(2)' }, 0.9);
-  gsap.set(lines, { yPercent: 110 });
+  // Ocultas hasta que entran (si no, los acentos se verían sueltos arriba).
+  gsap.set(lines, { yPercent: 110, opacity: 0 });
 
   // ---------- Apertura: aparece el logo y la tarjeta se abre ----------
   var loader = document.querySelector('[data-loader]');
@@ -60,12 +61,11 @@
     var open = gsap.timeline({ onComplete: finish });
     open
       .from('[data-loader-logo]', { scale: 0.7, opacity: 0, filter: 'blur(8px)', duration: 0.8, ease: 'expo.out' })
-      .from('[data-loader-strip] span', { yPercent: 120, opacity: 0, duration: 0.7, ease: 'expo.out' }, 0.1)
       .to({}, { duration: 0.55 })
-      // La franja se va, la tarjeta ocupa toda la pantalla y el logo se agranda.
-      .to('[data-loader-strip]', { xPercent: -100, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
-      .to(loader, { padding: 0, gridTemplateColumns: '0px 1fr', duration: 0.8, ease: 'expo.inOut' }, 'abrir')
-      .to('[data-loader-card]', { marginLeft: 0, borderRadius: 0, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
+      // La tarjeta ocupa toda la pantalla y el logo se agranda.
+      .addLabel('abrir')
+      .to(loader, { padding: 0, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
+      .to('[data-loader-card]', { borderRadius: 0, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
       .to('[data-loader-logo]', { scale: 1.6, opacity: 0, duration: 0.7, ease: 'power2.in' }, 'abrir+=0.2')
       .to(loader, { opacity: 0, duration: 0.35 }, '-=0.15');
     // Un clic saltea la apertura.
