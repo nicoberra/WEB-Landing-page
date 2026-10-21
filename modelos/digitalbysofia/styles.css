@@ -1496,8 +1496,8 @@ main:focus {
 .mac {
   position: relative;
   transform-style: preserve-3d;
-  /* Vista final: un poco desde arriba, como una foto de producto */
-  transform: rotateX(-5deg);
+  /* De frente, como en la foto */
+  transform: none;
 }
 
 /* Tapa: bisagra abajo, abierta y de frente. */
@@ -1507,7 +1507,6 @@ main:focus {
   height: 65cqw;
   transform-style: preserve-3d;
   transform-origin: 50% 100%;
-  transform: rotateX(5deg);
 }
 
 .mac__face,
@@ -1560,101 +1559,26 @@ main:focus {
   opacity: 0.9;
 }
 
-/* Base: apoyada horizontal desde la bisagra hacia adelante */
-.mac__deck {
-  position: absolute;
-  top: 100%;
-  /* Se ve del mismo ancho que la pantalla, sin sobresalir (el borde de
-     adelante se ve un poco más grande por la profundidad, por eso es 95) */
-  left: 2.5cqw;
-  width: 95cqw;
-  height: 62cqw;
-  transform-origin: 50% 0;
-  transform: rotateX(90deg);
-  transform-style: preserve-3d;
-  border-radius: 1cqw 1cqw 4cqw 4cqw;
-  background: linear-gradient(#dcdde2, #c8cad0);
-  box-shadow: inset 0 0 0 0.4cqw rgb(0 0 0 / 0.06);
+/* Base vista de frente: un borde plateado finito, apenas más ancho que la
+   pantalla, con la ranura para abrirla en el medio (como en la foto) */
+.mac__foot {
+  position: relative;
+  height: 2.8cqw;
+  margin: -0.2cqw -2.4cqw 0;
+  border-radius: 0.6cqw 0.6cqw 2.4cqw 2.4cqw / 0.6cqw 0.6cqw 100% 100%;
+  background: linear-gradient(#f1f1f4 0 18%, #d2d3d8 40%, #b3b5bb 78%, #8f9197);
+  box-shadow: 0 2.4cqw 3.4cqw -1.6cqw rgb(59 15 31 / 0.45);
 }
 
-/* Teclado: hueco un poco más oscuro y teclas negras redondeadas (SVG) */
-.mac__keys {
-  position: absolute;
-  left: 14.5%;
-  right: 14.5%;
-  top: 7%;
-  height: 43%;
-  padding: 0.6cqw;
-  border-radius: 1.2cqw;
-  background: linear-gradient(#b4b6bc, #bfc1c7);
-  box-shadow: inset 0 0.2cqw 0.4cqw rgb(0 0 0 / 0.18);
-}
-
-.mac__kb {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.mac__kb rect {
-  fill: #1f1f22;
-  stroke: rgb(255 255 255 / 0.07);
-  stroke-width: 0.5;
-}
-
-.mac__kb rect.tid {
-  fill: #2e2e33;
-  stroke: #6d6f75;
-}
-
-/* Rejillas de los parlantes a los costados del teclado */
-.mac__grille {
-  position: absolute;
-  top: 7%;
-  height: 43%;
-  width: 5.5%;
-  background: radial-gradient(circle, rgb(0 0 0 / 0.35) 0.18cqw, transparent 0.24cqw) 0 0 / 0.75cqw 0.75cqw;
-  opacity: 0.8;
-}
-
-.mac__grille--l { left: 7%; }
-.mac__grille--r { right: 7%; }
-
-/* Trackpad grande */
-.mac__pad {
-  position: absolute;
-  left: 32%;
-  right: 32%;
-  top: 56%;
-  height: 34%;
-  border-radius: 1.6cqw;
-  background: linear-gradient(#d3d5da, #c4c6cc);
-  box-shadow: inset 0 0 0 0.25cqw rgb(0 0 0 / 0.08);
-}
-
-/* Borde de adelante de la base, con la ranura para abrirla */
-.mac__lip {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  height: 2.6cqw;
-  transform-origin: 50% 0;
-  transform: rotateX(-90deg);
-  border-radius: 0 0 2cqw 2cqw;
-  background: linear-gradient(#bfc1c7, #9fa1a8);
-  box-shadow: 0 3cqw 5cqw -2cqw rgb(59 15 31 / 0.45);
-}
-
-.mac__lip::before {
+.mac__foot::before {
   content: '';
   position: absolute;
-  left: 42%;
-  right: 42%;
+  left: 43%;
+  right: 43%;
   top: 0;
-  height: 45%;
-  border-radius: 0 0 1cqw 1cqw;
-  background: #8e9097;
+  height: 42%;
+  border-radius: 0 0 1.2cqw 1.2cqw;
+  background: linear-gradient(#a7a9af, #c4c6cb);
 }
 
 .laptop__screen {
