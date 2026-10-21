@@ -7,7 +7,12 @@ export default function footer(config) {
   return `<footer class="site-footer">
   <div class="container site-footer__grid">
     <div class="site-footer__brand">
-      <a class="brand" href="#inicio" aria-label="${esc(config.person.name)}, volver al inicio">${logo(config)}<span class="brand__name">${esc(config.person.name)}</span></a>
+      ${
+        // Con logo completo (logo.full) se muestra ese archivo; si no, ícono + nombre.
+        config.logo.full
+          ? `<a class="site-footer__logo" href="#inicio" aria-label="${esc(config.person.name)}, volver al inicio"><img src="${esc(config.logo.full.src)}" alt="${esc(config.logo.full.alt || config.person.name)}" width="${config.logo.full.width}" height="${config.logo.full.height}" loading="lazy" decoding="async"></a>`
+          : `<a class="brand" href="#inicio" aria-label="${esc(config.person.name)}, volver al inicio">${logo(config)}<span class="brand__name">${esc(config.person.name)}</span></a>`
+      }
       <p>${rich(config.footer.note)}</p>
     </div>
     <nav aria-label="Secciones">

@@ -54,7 +54,15 @@ export default {
   // --- Logo ---------------------------------------------------------------------
   // 'monogram' dibuja las iniciales; 'image' usa un archivo:
   // { type: 'image', src: 'assets/logo.svg', alt: '', width: 120, height: 40 }
-  logo: { type: 'monogram', text: 'JC' },
+  // Su logo: la manzana con la J en el encabezado y el logo completo en el pie.
+  logo: {
+    type: 'image',
+    src: 'assets/isotipo-jesica.webp',
+    alt: '',
+    width: 34,
+    height: 42,
+    full: { src: 'assets/logo-jesica.webp', alt: 'Cuevas Jesica nutrición', width: 600, height: 643 },
+  },
 
   // --- Colores: tomados de su Instagram (verdes salvia y bosque, fondo crema) ------
   // `npm run check` avisa si algún par no llega al contraste mínimo (WCAG AA).
@@ -70,7 +78,7 @@ export default {
       accent: '#3E5B47', // verde bosque (botones, enlaces)
       accentInk: '#FFFFFF', // texto sobre el verde
       accentSoft: '#D9E4CF', // salvia suave
-      highlight: '#A7BC8F', // salvia (formas decorativas)
+      highlight: '#6BB012', // verde manzana de su logo (formas decorativas)
     },
   },
 

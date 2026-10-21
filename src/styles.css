@@ -1575,6 +1575,16 @@ main:focus {
   color: var(--muted);
 }
 
+.site-footer__logo {
+  display: inline-block;
+  width: clamp(120px, 14vw, 160px);
+}
+
+.site-footer__logo img {
+  width: 100%;
+  height: auto;
+}
+
 .site-footer__title {
   margin-bottom: 14px;
   font-size: 0.75rem;
