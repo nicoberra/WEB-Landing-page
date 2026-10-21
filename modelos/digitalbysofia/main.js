@@ -603,7 +603,10 @@
      ===================================================================== */
   (function initIntro() {
     var intro = document.querySelector('[data-intro]');
-    if (!intro || !gsap || !ST || reduce) return;
+    if (!intro || !gsap || !ST || reduce) {
+      if (gsap) gsap.set('[data-lines] path', { strokeDashoffset: 0 });
+      return;
+    }
     gsap.registerPlugin(ST);
     var scene = intro.querySelector('[data-scene]');
     var title = intro.querySelector('[data-intro-title]');
@@ -624,11 +627,41 @@
     // En celular la escena es chica: al principio la compu se muestra más grande.
     gsap.set(scene, { y: startY, scale: function () { return mobile() ? 1.5 : 1.12; } });
 
+    // Al abrir la página: el nombre aparece en el medio y viaja a su lugar
+    // arriba a la izquierda; a la vez entra la compu de costado y cerrada,
+    // gira de frente y se abre.
+    var brand = document.querySelector('.top__brand');
+    var lid = laptop.querySelector('[data-lid]');
+    if (brand && lid && window.scrollY < 10) {
+      var r = brand.getBoundingClientRect();
+      var big = Math.min(3, (window.innerWidth * (mobile() ? 0.8 : 0.42)) / r.width);
+      gsap.set(brand, { x: window.innerWidth / 2 - (r.left + r.width / 2), y: window.innerHeight * 0.45 - (r.top + r.height / 2), scale: big, opacity: 0, transformOrigin: '50% 50%' });
+      // De costado y cerrada (la tapa acostada sobre la base, se ve el aluminio)
+      gsap.set(laptop, { xPercent: 120, rotationY: -64, rotationX: -14, opacity: 0 });
+      gsap.set(lid, { rotationX: -90, transformOrigin: '50% 100%' });
+      gsap.set(hint, { opacity: 0 });
+      gsap.timeline({ delay: 0.15 })
+        .to(brand, { opacity: 1, duration: 0.6, ease: 'power2.out' })
+        .to(brand, { x: 0, y: 0, scale: 1, duration: 1.1, ease: 'power3.inOut' }, '+=0.45')
+        // Entra de costado y cerrada…
+        .to(laptop, { xPercent: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, '<')
+        // …y a la vez se dibujan las líneas de fondo, que quedan fijas…
+        .to('[data-lines] path', { strokeDashoffset: 0, duration: 1.8, stagger: 0.12, ease: 'power2.inOut' }, '<+0.1')
+        // …gira hasta quedar de frente…
+        .to(laptop, { rotationY: 0, rotationX: 0, duration: 1, ease: 'power2.inOut' }, '-=0.25')
+        // …y se abre la tapa (queda apenas inclinada hacia atrás, como una Mac).
+        .to(lid, { rotationX: 5, duration: 1.2, ease: 'power2.inOut' }, '-=0.2')
+        .to(hint, { opacity: 1, duration: 0.5 }, '-=0.3');
+    } else {
+      // Si la página se abre ya bajada, las líneas aparecen dibujadas.
+      gsap.set('[data-lines] path', { strokeDashoffset: 0 });
+    }
+
     var tl = gsap.timeline({
       defaults: { ease: 'power2.out' },
       scrollTrigger: { trigger: intro, start: 'top top', end: '+=280%', scrub: 0.8, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
     });
-    tl.to(hint, { opacity: 0, duration: 0.3 }, 0)
+    tl.fromTo(hint, { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, 0)
       // 1. Caen los dispositivos desde arriba y se acomodan.
       .to(drops, { y: 0, rotation: 0, duration: 1.2, stagger: 0.14, ease: 'power3.out' }, 0.1)
       .to(pops, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.12, ease: 'back.out(1.8)' }, 0.9)

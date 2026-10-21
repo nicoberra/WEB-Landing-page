@@ -75,8 +75,14 @@ function intro(config) {
       <div class="scene" data-scene aria-hidden="true">
         ${devices}
         <div class="laptop" data-laptop>
-          <div class="laptop__lid"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div></div>
-          <div class="laptop__base"></div>
+          <!-- MacBook en 3D: tapa (pantalla adelante, aluminio atrás) y base con teclado -->
+          <div class="mac">
+            <div class="mac__lid" data-lid>
+              <div class="mac__face"><div class="laptop__screen">${screen(it.laptop?.image, 'laptop', 0)}</div><i class="mac__notch"></i></div>
+              <div class="mac__back"><svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg></div>
+            </div>
+            <div class="mac__deck"><i class="mac__keys"></i><i class="mac__pad"></i><i class="mac__lip"></i></div>
+          </div>
         </div>
         <div class="badge" ><div class="pop" data-pop>${wordmark(config, 'wordmark--badge')}</div></div>
         <div class="folder"><div class="pop" data-pop><div class="folder__body"><span>${rich(it.folder)}</span></div>
@@ -267,6 +273,15 @@ ${headHtml}
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
+<svg class="lines" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true" data-lines>
+  <path pathLength="1" d="M-20 170C110 90 210 40 300 -20"/>
+  <path pathLength="1" d="M-20 225C130 150 240 90 370 -20"/>
+  <path pathLength="1" d="M1020 330C890 380 800 470 820 570s150 120 200 100"/>
+  <path pathLength="1" d="M1020 380C920 410 850 490 870 570s120 100 150 80"/>
+  <path pathLength="1" d="M-20 700C80 640 190 650 225 735s-10 200 -110 260"/>
+  <path pathLength="1" d="M-20 745C60 700 150 710 180 780s-15 180 -90 230"/>
+  <path pathLength="1" d="M600 1020C650 900 760 840 880 850s140 70 160 100"/>
+</svg>
 <header class="top" data-header>
   <a class="top__brand" href="#inicio" aria-label="${esc(config.brand.wordmark)}, ir al inicio">${wordmark(config, 'wordmark--small')}</a>
   <nav class="top__nav" aria-label="Principal">
