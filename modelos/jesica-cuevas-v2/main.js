@@ -206,6 +206,8 @@
   var nav = document.querySelector('[data-hero-nav]');
   var links = nav ? [].slice.call(nav.querySelectorAll('a')) : [];
   var small = window.matchMedia('(max-width: 900px)');
+  var wide = window.matchMedia('(min-width: 1100px)');
+  var turnos = document.querySelector('.top__cta .btn');
   // Lugar de cada burbuja: lado (-1 izquierda, 1 derecha), altura respecto de
   // la foto y un corrimiento extra hacia afuera (Planes, lejos de la hoja).
   var spots = [[-1, -0.08, 34], [1, -0.3, 0], [-1, 0.3, 0], [1, 0.24, 0]];
@@ -224,8 +226,21 @@
     var cx = h.left + h.width / 2, cy = startY + h.height / 2;
     var mobile = small.matches;
     var f = 1 - e;
-    // Mientras flotan van por encima de la foto; ya alineadas, por debajo del encabezado.
-    nav.style.zIndex = e < 1 ? '' : '40';
+    // Cuando la fila está por esconderse bajo la línea de la barra, los botones
+    // se corren a la derecha y quedan en columna debajo de "Turnos" (en compu).
+    var d = 0, dockRight = 0, dockTop = 0;
+    if (wide.matches && turnos) {
+      var bar = top.getBoundingClientRect();
+      var tb = turnos.getBoundingClientRect();
+      var lineY = bar.bottom - view.off + 16;
+      var rowTop = nav.getBoundingClientRect().top - view.off;
+      d = smooth(Math.max(0, Math.min(1, (lineY + 90 - rowTop) / 140)));
+      dockRight = tb.right;
+      dockTop = lineY + 14;
+    }
+    // Flotando o yendo a la columna: por encima de la foto. En la fila: por debajo de la barra.
+    nav.style.zIndex = e < 1 || d > 0 ? '' : '40';
+    var stackY = dockTop;
     links.forEach(function (a, i) {
       var sp = (mobile ? spotsSmall : spots)[i % spots.length], pop = pops[i].v;
       var w = a.offsetWidth, hh = a.offsetHeight;
@@ -243,6 +258,13 @@
       var bob = f * pop;
       var dx = (sx - nx) * f + Math.sin(t * 1.1 + i * 1.9) * 9 * bob;
       var dy = (sy - ny) * f + Math.cos(t * 0.9 + i * 1.3) * 12 * bob;
+      if (d > 0) {
+        // Lugar en la columna: borde derecho alineado con "Turnos", uno debajo del otro
+        var tx = dockRight - w / 2, ty = stackY + hh / 2 + view.top;
+        stackY += hh + 10;
+        dx += (tx - nx - dx) * d;
+        dy += (ty - ny - dy) * d;
+      }
       var sc = pop + (1 - pop) * e;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
       var op = Math.min(1, pop * 1.5 + e);
@@ -386,7 +408,7 @@
       ease: 'none',
       scrollTrigger: { trigger: plans, start: 'top top', end: function () { return '+=' + dist(); }, scrub: 0.8, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
     });
-    gsap.from(track.children, { y: 80, opacity: 0, rotation: 4, stagger: 0.08, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: plans, start: 'top 70%' } });
+    gsap.from(track.children, { y: 80, opacity: 0, rotation: 4, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: plans, start: 'top 90%', end: 'top 25%', scrub: 0.6 } });
   }
 
   // ---------- Títulos que se estiran ----------
@@ -399,9 +421,9 @@
   if (line) {
     gsap.fromTo(line, { '--draw': 100 }, { '--draw': 0, ease: 'none', scrollTrigger: { trigger: '.timeline', start: 'top 75%', end: 'bottom 60%', scrub: 0.5 } });
   }
-  ST.batch('[data-rise]', {
-    start: 'top 88%',
-    onEnter: function (els) { gsap.fromTo(els, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.07, ease: 'expo.out', overwrite: true }); },
+  // Todo aparece a la par del scroll (si se sube, vuelve a esconderse)
+  gsap.utils.toArray('[data-rise]').forEach(function (el) {
+    gsap.fromTo(el, { y: 50, opacity: 0 }, { y: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 70%', scrub: 0.6 } });
   });
 
   // ---------- Recetarios: de un mazo a un abanico ----------
@@ -418,7 +440,7 @@
   var circle = document.querySelector('[data-circle]');
   if (circle) {
     gsap.fromTo(circle, { '--s': 0.02 }, { '--s': 1, ease: 'power2.inOut', scrollTrigger: { trigger: '[data-booking]', start: 'top 85%', end: 'center 55%', scrub: 0.6 } });
-    gsap.from('[data-booking] .booking__in > *', { y: 40, opacity: 0, stagger: 0.08, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: '[data-booking]', start: 'top 35%' } });
+    gsap.from('[data-booking] .booking__in > *', { y: 40, opacity: 0, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: '[data-booking]', start: 'top 55%', end: 'top 15%', scrub: 0.6 } });
   }
 
   // ---------- Botones "magnéticos" (solo con mouse) ----------

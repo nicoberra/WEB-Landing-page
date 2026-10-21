@@ -98,7 +98,6 @@ ${headHtml}
       </h1>
       <p class="hero__text">${rich(v.heroText)}</p>
       <div class="hero__ctas">
-        <a class="btn btn--solid" data-magnetic ${linkAttrs(book.href)}>${esc(book.label)}${arrow}</a>
         <a class="btn btn--line" data-magnetic href="#planes">Ver planes</a>
       </div>
       <p class="hero__where">${esc(p.location)}</p>

@@ -408,6 +408,10 @@ main:focus {
 
 .hero {
   position: relative;
+  /* Recorta a los costados pero no abajo: los botones del menú salen de la
+     portada hacia la columna de la derecha */
+  overflow: hidden;
+  overflow: clip visible;
   display: grid;
   /* Al entrar, la foto queda en el medio; el texto sigue debajo */
   grid-template-columns: minmax(0, 1fr);
@@ -416,7 +420,6 @@ main:focus {
   gap: clamp(28px, 4vw, 56px);
   min-height: var(--screen);
   padding: calc(env(safe-area-inset-top, 0px) + 100px) var(--gutter) 60px;
-  overflow: hidden;
 }
 
 /* Formas orgánicas de fondo, como en los posteos (ola salvia + piedra).
@@ -426,6 +429,7 @@ main:focus {
   position: absolute;
   inset: 0;
   z-index: -1;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -802,15 +806,24 @@ main section[id] {
   }
 
   /* Debajo de la portada, el contenido deja libre el costado de la columna */
-  .motion main > :not(.hero):not(.plans):not(.pin-spacer),
+  /* Los fondos van de punta a punta; solo el contenido deja libre el lugar
+     de las columnas (izquierda: formación; derecha: botones del menú).
+     La cinta y Planes quedan a lo ancho completo. */
+  .motion main > :not(.hero):not(.plans):not(.pin-spacer):not(.tick-band),
   .motion .foot {
-    margin-left: calc(190px + var(--gutter));
+    padding-left: calc(190px + var(--gutter) * 1.5) !important;
+    padding-right: calc(150px + var(--gutter) * 1.5) !important;
   }
 
   /* Planes queda fijo a pantalla completa mientras se desliza: el lugar de
      la columna se deja por dentro */
   .motion .plans {
     padding-left: calc(190px + var(--gutter));
+  }
+
+  /* Con las dos columnas el espacio del medio es más angosto: título arriba */
+  .motion .faq__grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
