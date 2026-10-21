@@ -285,8 +285,8 @@ main:focus {
 .top__slot {
   display: inline-grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   flex: none;
 }
 
@@ -1397,8 +1397,8 @@ main:focus {
   }
 
   .top__slot {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
   }
 
   .hl:nth-child(4) {
@@ -1417,8 +1417,8 @@ main:focus {
   }
 
   .top__slot {
-    width: 42px;
-    height: 42px;
+    width: 52px;
+    height: 52px;
   }
 }
 
