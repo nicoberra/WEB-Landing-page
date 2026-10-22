@@ -1048,6 +1048,13 @@ main section[id] {
   mask-image: radial-gradient(circle var(--rr, 0px) at var(--mx, 50%) var(--my, 50%), #000 calc(100% - 3px), transparent 100%);
 }
 
+/* Dentro del círculo se esconde la foto de abajo, así no asoman sus bordes
+   por los costados de la otra */
+.manifesto__cutout:not(.manifesto__cutout--alt):has(~ .manifesto__cutout--alt) {
+  -webkit-mask-image: radial-gradient(circle var(--rr, 0px) at var(--mx, 50%) var(--my, 50%), transparent calc(100% - 3px), #000 100%);
+  mask-image: radial-gradient(circle var(--rr, 0px) at var(--mx, 50%) var(--my, 50%), transparent calc(100% - 3px), #000 100%);
+}
+
 /* Sello circular que gira con el scroll */
 .manifesto__badge {
   position: absolute;

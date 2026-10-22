@@ -102,9 +102,9 @@
     (function loop() {
       var ease = reduce ? 1 : 0.14;
       rv.x += (rv.tx - rv.x) * ease; rv.y += (rv.ty - rv.y) * ease; rv.r += (rv.tr - rv.r) * (reduce ? 1 : 0.12);
-      reveal.style.setProperty('--mx', (rv.x * 100).toFixed(2) + '%');
-      reveal.style.setProperty('--my', (rv.y * 100).toFixed(2) + '%');
-      reveal.style.setProperty('--rr', rv.r.toFixed(1) + 'px');
+      fig.style.setProperty('--mx', (rv.x * 100).toFixed(2) + '%');
+      fig.style.setProperty('--my', (rv.y * 100).toFixed(2) + '%');
+      fig.style.setProperty('--rr', rv.r.toFixed(1) + 'px');
       requestAnimationFrame(loop);
     })();
   }
