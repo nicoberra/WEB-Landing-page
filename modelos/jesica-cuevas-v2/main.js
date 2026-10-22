@@ -304,21 +304,18 @@
     tagEl.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0)';
   }
 
-  // ---------- Las columnas se apartan cuando pasa la cinta ----------
-  // Mientras la cinta oscura cruza la zona de las columnas, estas se salen
-  // hacia los costados (a la par del scroll) y después vuelven a entrar.
+  // ---------- Las columnas se van cuando pasa la cinta ----------
+  // Cuando la cinta llega a la zona de las columnas, estas se salen hacia los
+  // costados (a la par del scroll) y quedan afuera el resto de la página.
   var band = document.querySelector('.tick-band');
   function bandOut() {
     if (!band) return 0;
     var r = band.getBoundingClientRect();
-    var t = r.top - view.off, b = r.bottom - view.off;
+    var t = r.top - view.off;
     // Se quedan a la vista hasta que la cinta llega a la altura de su parte
-    // de abajo; recién ahí se van, y quedan afuera mientras pasa por arriba.
+    // de abajo; ahí se van y ya no vuelven (solo si se sube otra vez).
     var leaveFrom = view.h * 0.58, goneAt = view.h * 0.2;
-    var out = (leaveFrom - t) / (leaveFrom - goneAt);
-    // Cuando la cinta termina de pasar por arriba, vuelven a entrar.
-    var back = (b - 60) / 180;
-    var o = Math.max(0, Math.min(1, Math.min(out, back)));
+    var o = Math.max(0, Math.min(1, (leaveFrom - t) / (leaveFrom - goneAt)));
     return o * o * (3 - 2 * o);
   }
 
