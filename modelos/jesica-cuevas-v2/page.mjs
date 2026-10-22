@@ -157,8 +157,8 @@ ${headHtml}
         ${hasAlt ? `<!-- Tarjeta para rascar: abajo está la foto con saco blanco; al rascar
              (mouse o dedo) se va borrando de a partes la foto de arriba (main.js) -->
         <div class="manifesto__people" data-cutout data-scratch>
-          <img class="manifesto__cutout manifesto__cutout--alt" src="${ALT_PHOTO}" alt="" width="900" height="1207" loading="lazy" aria-hidden="true">
-          <img class="manifesto__cutout" data-scratch-top src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">
+          <img class="manifesto__cutout manifesto__cutout--alt" src="${ALT_PHOTO}" alt="" width="900" height="1207" aria-hidden="true">
+          <img class="manifesto__cutout" data-scratch-top src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207">
         </div>
         <p class="manifesto__hint" data-scratch-hint aria-hidden="true">Rascá la foto ✦</p>` : `<img class="manifesto__cutout" data-cutout src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">`}
         <svg class="manifesto__badge" data-badge viewBox="0 0 200 200" aria-hidden="true">

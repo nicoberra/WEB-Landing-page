@@ -1061,6 +1061,8 @@ main section[id] {
   cursor: grab;
 }
 
+/* La foto del saco nunca se ve sola: solo a través de lo rascado en el lienzo */
+.manifesto__people .manifesto__cutout--alt,
 .manifesto__people.is-scratch .manifesto__cutout {
   visibility: hidden;
 }
