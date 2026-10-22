@@ -154,13 +154,9 @@ ${headHtml}
            Con el scroll: el arco crece, ella sube y el sello gira (main.js). -->
       <figure class="manifesto__figure" data-figure>
         <div class="manifesto__arch" data-arch aria-hidden="true"></div>
-        ${hasAlt ? `<!-- Tarjeta para rascar: abajo está la foto con saco blanco; al rascar
-             (mouse o dedo) se va borrando de a partes la foto de arriba (main.js) -->
-        <div class="manifesto__people" data-cutout data-scratch>
-          <img class="manifesto__cutout manifesto__cutout--alt" src="${ALT_PHOTO}" alt="" width="900" height="1207" aria-hidden="true">
-          <img class="manifesto__cutout" data-scratch-top src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207">
-        </div>
-        <p class="manifesto__hint" data-scratch-hint aria-hidden="true">Rascá la foto ✦</p>` : `<img class="manifesto__cutout" data-cutout src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">`}
+        <img class="manifesto__cutout" data-cutout src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">
+        ${hasAlt ? `<!-- Al pasar el mouse (o el dedo), dentro de un círculo aparece la otra foto (con saco blanco) -->
+        <img class="manifesto__cutout manifesto__cutout--alt" data-cutout data-reveal src="${ALT_PHOTO}" alt="" width="900" height="1207" loading="lazy" aria-hidden="true">` : ''}
         <svg class="manifesto__badge" data-badge viewBox="0 0 200 200" aria-hidden="true">
           <defs><path id="badge-path" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
           <circle cx="100" cy="100" r="98" class="manifesto__badge-bg"/>
