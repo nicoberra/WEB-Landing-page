@@ -444,7 +444,7 @@
 
   // ---------- Títulos que se estiran ----------
   gsap.utils.toArray('[data-stretch]').forEach(function (el) {
-    gsap.fromTo(el, { '--wdth': 62 }, { '--wdth': +(el.dataset.stretchMax || 118), ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'bottom 25%', scrub: 0.5 } });
+    gsap.fromTo(el, { '--wdth': 62 }, { '--wdth': +(el.dataset.stretchMax || 104), ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'bottom 25%', scrub: 0.5 } });
   });
 
   // ---------- Trayectoria: la línea se dibuja ----------
