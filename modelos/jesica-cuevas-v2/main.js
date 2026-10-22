@@ -45,6 +45,53 @@
     go.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   });
 
+  // ---------- Carruseles de los posts (funcionan aunque no haya animaciones) ----------
+  // Pasan solos; se pueden deslizar con el dedo o con las flechas. En compu,
+  // mientras la sección queda fija, la ruedita del mouse los va cambiando (main
+  // más abajo pone "scrollDriven" y los maneja).
+  var carousels = [].slice.call(document.querySelectorAll('[data-slides]')).map(function (box, ci) {
+    var track = box.querySelector('[data-slides-track]');
+    var dots = [].slice.call(box.querySelectorAll('.slides__dots i'));
+    var n = track.children.length;
+    var c = { box: box, n: n, index: 0, pausedUntil: 0, visible: false };
+    var current = function () { return Math.round(track.scrollLeft / Math.max(1, track.clientWidth)); };
+    c.go = function (i, instant) {
+      c.index = (i + n) % n;
+      track.scrollTo({ left: c.index * track.clientWidth, behavior: instant || reduce ? 'auto' : 'smooth' });
+      mark(c.index);
+    };
+    var mark = function (i) { dots.forEach(function (d, k) { d.classList.toggle('is-on', k === i); }); };
+    mark(0);
+    track.addEventListener('scroll', function () { var i = current(); if (i !== c.index) { c.index = i; mark(i); } }, { passive: true });
+    var hold = function () { c.pausedUntil = Date.now() + 9000; };
+    ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) { track.addEventListener(ev, hold, { passive: true }); });
+    box.querySelector('[data-slides-prev]').addEventListener('click', function () { hold(); c.go(c.index - 1); });
+    box.querySelector('[data-slides-next]').addEventListener('click', function () { hold(); c.go(c.index + 1); });
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { hold(); c.go(c.index + 1); e.preventDefault(); }
+      if (e.key === 'ArrowLeft') { hold(); c.go(c.index - 1); e.preventDefault(); }
+    });
+    // Solo pasan solos cuando se ven en pantalla
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { c.visible = es[0].isIntersecting; }, { threshold: 0.4 }).observe(box);
+    } else { c.visible = true; }
+    c.offset = ci * 900; // que no cambien los tres a la vez
+    return c;
+  });
+  var scrollDriven = false;
+  if (carousels.length && !reduce) {
+    var started0 = Date.now();
+    setInterval(function () {
+      if (scrollDriven) return;
+      var now = Date.now();
+      carousels.forEach(function (c) {
+        if (!c.visible || now < c.pausedUntil) return;
+        if (!c.last) c.last = started0 + c.offset;
+        if (now - c.last >= 3600) { c.last = now; c.go(c.index + 1); }
+      });
+    }, 300);
+  }
+
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
 
@@ -490,6 +537,31 @@
       { '--x': function (i) { return (mid - i) * 340 + 'px'; }, '--r': '0deg', '--ty': '120px', opacity: 0.4 },
       { '--x': '0px', '--r': function (i) { return ((i - mid) * 7) + 'deg'; }, '--ty': function (i) { return (i === mid ? -10 : 18) + 'px'; }, opacity: 1, ease: 'power2.out',
         scrollTrigger: { trigger: '[data-fan]', start: 'top 70%', end: 'center 55%', scrub: 0.8 } });
+  }
+
+  // ---------- Compu: con la ruedita cambian las fotos de los posts ----------
+  // Cuando los posts se ven completos, la sección queda fija y cada tramo de
+  // scroll pasa a la imagen siguiente (en los tres a la vez). Al terminar,
+  // la página sigue bajando. En celular se deslizan con el dedo y pasan solos.
+  var fanList = document.querySelector('.fan');
+  if (fanList && carousels.length && window.matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)').matches) {
+    var steps = Math.max.apply(null, carousels.map(function (c) { return c.n; })) - 1;
+    var lastStep = -1;
+    ST.create({
+      trigger: fanList,
+      start: 'center 55%',
+      end: function () { return '+=' + Math.round(steps * window.innerHeight * 0.32); },
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onToggle: function (self) { scrollDriven = self.isActive; },
+      onUpdate: function (self) {
+        var k = Math.min(steps, Math.floor(self.progress * (steps + 1)));
+        if (k === lastStep) return;
+        lastStep = k;
+        carousels.forEach(function (c) { c.go(Math.min(k, c.n - 1)); });
+      },
+    });
   }
 
   // ---------- Turnos: el círculo verde crece hasta llenar la pantalla ----------

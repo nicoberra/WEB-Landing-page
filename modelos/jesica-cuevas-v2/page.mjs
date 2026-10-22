@@ -228,7 +228,14 @@ ${headHtml}
       ${(v.posts || [])
         .map(
           (it, i) => `<li class="card card--${i} card--post" data-card>
-        <a class="card__cover card__cover--img" ${linkAttrs(it.url)} tabindex="-1" aria-hidden="true"><img src="${esc(it.image)}" alt="" width="720" height="900" loading="lazy"></a>
+        <div class="slides" data-slides aria-roledescription="carrusel" aria-label="${esc(it.title)}">
+          <div class="slides__track" data-slides-track tabindex="0">
+            ${it.images.map((src, k) => `<img src="${esc(src)}" alt="${esc(it.title)}: imagen ${k + 1} de ${it.images.length}" width="640" height="800" loading="lazy">`).join('')}
+          </div>
+          <button class="slides__btn slides__btn--prev" type="button" data-slides-prev aria-label="Imagen anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <button class="slides__btn slides__btn--next" type="button" data-slides-next aria-label="Imagen siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="slides__dots" aria-hidden="true">${it.images.map(() => '<i></i>').join('')}</div>
+        </div>
         <h3>${esc(it.title)}</h3>
         <p>${esc(it.summary)}</p>
         <div class="card__foot">

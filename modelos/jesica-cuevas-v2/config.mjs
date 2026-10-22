@@ -110,25 +110,26 @@ export default {
     productsEyebrow: 'Recetarios',
     productsTitle: 'Recetas rapiditas para tu semana',
     // Por ahora, en lugar de los recetarios se muestran 3 posts de ejemplo de
-    // su Instagram (imagen de portada, título y un resumen muy corto).
+    // su Instagram, con todas sus imágenes en un carrusel (título y resumen corto).
+    // Las de "5 ideas" van a los costados y el menú semanal en el medio.
     posts: [
       {
-        title: 'La nutrición necesita bajarse de su privilegio',
-        summary: 'Comer saludable no tiene que ser caro: hay opciones accesibles para nutrirte bien.',
-        image: 'assets/post-1.webp',
-        url: 'https://www.instagram.com/p/DeP2dO6D6tW/',
+        title: '5 ideas de tartas caseras',
+        summary: 'Cinco rellenos fáciles para variar almuerzos y cenas.',
+        images: ['assets/post-tartas-1.webp', 'assets/post-tartas-2.webp', 'assets/post-tartas-3.webp', 'assets/post-tartas-4.webp', 'assets/post-tartas-5.webp', 'assets/post-tartas-6.webp', 'assets/post-tartas-7.webp'],
+        url: 'https://www.instagram.com/p/Deu6wMTjhid/',
       },
       {
-        title: 'Green flags de nutrición',
-        summary: 'Una alimentación con lugar para la variedad, el disfrute y la flexibilidad.',
-        image: 'assets/post-2.webp',
-        url: 'https://www.instagram.com/p/DeAcUTbj9Sb/',
+        title: 'Menú semanal para cambiar hábitos',
+        summary: 'Ideas de almuerzos y cenas para organizar tu semana.',
+        images: ['assets/post-semana-1.webp', 'assets/post-semana-2.webp', 'assets/post-semana-3.webp', 'assets/post-semana-4.webp', 'assets/post-semana-5.webp', 'assets/post-semana-6.webp', 'assets/post-semana-7.webp'],
+        url: 'https://www.instagram.com/p/DeKyW_MD4fW/',
       },
       {
-        title: 'Comé para nutrirte, no para castigarte',
-        summary: 'No se trata de comer menos ni perfecto, sino de hábitos que puedas sostener.',
-        image: 'assets/post-3.webp',
-        url: 'https://www.instagram.com/p/DdpQJGkj_UG/',
+        title: '5 ideas de rapiditas tipo wrap',
+        summary: 'Rellenos prácticos para armar comidas completas.',
+        images: ['assets/post-wraps-1.webp', 'assets/post-wraps-2.webp', 'assets/post-wraps-3.webp', 'assets/post-wraps-4.webp', 'assets/post-wraps-5.webp', 'assets/post-wraps-6.webp', 'assets/post-wraps-7.webp'],
+        url: 'https://www.instagram.com/p/DdZodYVj9QQ/',
       },
     ],
     // Los recetarios todavía están en preparación: no se venden aún.
