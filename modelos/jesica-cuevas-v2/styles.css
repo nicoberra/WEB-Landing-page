@@ -348,6 +348,10 @@ main:focus {
   transition: opacity 0.25s;
 }
 
+.top__menu {
+  display: none;
+}
+
 .top__cta {
   grid-column: 3;
   justify-self: end;
@@ -1960,13 +1964,52 @@ main section[id] {
 
   /* El fondo y la línea de la barra bajan lo justo para que la fila del menú
      quede adentro y no tape el texto de la página */
-  .top::before {
+  /* Con la fila del menú a la vista, el fondo y la línea bajan un poco */
+  .top.has-menu::before {
     inset: 0 0 -54px;
   }
 
-  .top__line {
+  .top.has-menu .top__line {
     inset: 0 0 -54px;
     height: calc(100% + 54px);
+  }
+
+  .top__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 8px 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.4s var(--ease);
+  }
+
+  .top.has-menu .top__menu {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .top__menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 10px 22px -14px rgb(31 45 37 / 0.55), inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 22%, transparent);
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink);
   }
 
   .top__tag {
@@ -2018,19 +2061,22 @@ main section[id] {
 
   /* Celular: la foto ocupa menos alto para que el título, el texto y el
      botón principal aparezcan antes */
-  /* La portada ocupa toda la pantalla del celular: arriba la foto, abajo el
-     título, el texto y los botones, repartidos en todo el alto */
+  /* La portada del celular: primero la foto (llena la pantalla) y, al bajar,
+     el título, el texto y los botones */
   .hero {
     gap: 14px;
     min-height: var(--screen);
-    align-content: space-between;
+    align-content: start;
     padding-top: calc(env(safe-area-inset-top, 0px) + 88px);
     padding-bottom: 28px;
   }
 
+  /* Lo primero que se ve es Jesi: grande y en el medio de la pantalla */
   .hero__visual {
-    width: clamp(190px, calc((var(--screen) - 500px) / 1.1), 76vw);
+    width: min(84vw, 380px, calc(var(--screen) - 300px));
     min-width: 0;
+    margin-top: max(0px, calc((var(--screen) - 100px - min(84vw, 380px) * 1.12) / 2 - 60px));
+    margin-bottom: 26px;
   }
 
   .hero__copy {

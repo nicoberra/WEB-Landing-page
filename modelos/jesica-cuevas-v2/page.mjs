@@ -66,6 +66,14 @@ ${headHtml}
   </a>
   <!-- Lugar de la matrícula: al bajar, la etiqueta de la portada sube hasta acá (main.js) -->
   <span class="top__tag" data-tag-slot></span>
+  <!-- Celular: fila fija del menú debajo de la barra (aparece cuando los
+       botones de la portada llegan arriba; se va cuando pasa la cinta) -->
+  <nav class="top__menu" aria-label="Secciones" data-top-menu>
+    <a href="#planes">Planes</a>
+    <a href="#trayectoria">Trayectoria</a>
+    <a href="#recetarios">Recetarios</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
   <div class="top__cta">
     <a class="top__icon" ${linkAttrs(config.instagramUrl)} aria-label="Instagram de ${esc(p.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="fill"/></svg></a>
     <a class="top__icon" ${linkAttrs(whatsappUrl(config.contact))} aria-label="WhatsApp de ${esc(p.name)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.6Z"/><path d="M9.2 8.6c.3-.6.8-.6 1-.1l.6 1.4c.1.3 0 .6-.2.8l-.4.4c.5 1 1.3 1.8 2.3 2.3l.4-.4c.2-.2.5-.3.8-.2l1.4.6c.5.2.5.7-.1 1-1 .6-2.4.4-3.9-.7a8.6 8.6 0 0 1-2.6-2.9c-.7-1.4-.6-2.4.7-2.2Z" class="fill"/></svg></a>

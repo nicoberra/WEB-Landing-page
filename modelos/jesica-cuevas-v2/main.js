@@ -260,7 +260,7 @@
   // la foto y un corrimiento extra hacia afuera (Planes, lejos de la hoja).
   var spots = [[-1, -0.08, 34], [1, -0.3, 0], [-1, 0.3, 0], [1, 0.24, 0]];
   // En celular no hay lugar a los costados: van arriba y abajo del aro.
-  var spotsSmall = [[-1, -0.3, 0], [1, -0.38, 0], [-1, 0.4, 0], [1, 0.34, 0]];
+  var spotsSmall = [[-1, -0.44, 0], [1, -0.4, 0], [-1, 0.42, 0], [1, 0.46, 0]];
   var pops = links.map(function () { return { v: 0 }; });
   if (links.length) {
     nav.classList.add('is-bubbles');
@@ -299,6 +299,11 @@
     nav.style.zIndex = e < 1 || d > 0 ? '' : '40';
     var stackY = dockTop;
     var away = d > 0 && !dockRow ? bandOut() : 0;
+    // Celular: la fila fija se muestra al llegar arriba y se va cuando pasa la cinta
+    // (se va cuando la cinta termina de subir hasta la barra)
+    var bandLow = band ? band.getBoundingClientRect().bottom - view.off > 150 : true;
+    if (dockRow) top.classList.toggle('has-menu', d >= 0.98 && bandLow);
+    else top.classList.remove('has-menu');
     // Fila del celular: ancho total para centrarla
     var rowGap = 6, rowW = -rowGap;
     if (dockRow) links.forEach(function (a) { rowW += a.offsetWidth + rowGap; });
@@ -325,7 +330,7 @@
         rowX += w + rowGap;
         dx += (txr - nx - dx) * d;
         dy += (tyr - ny - dy) * d;
-      } else if (d > 0) {
+      } else if (d > 0 && !dockRow) {
         // Lugar en la columna: borde derecho alineado con "Turnos", uno debajo del otro
         var tx = dockRight - w / 2, ty = stackY + hh / 2 + view.top;
         stackY += hh + 10;
@@ -337,6 +342,9 @@
       var sc = pop + (1 - pop) * e;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
       var op = Math.min(1, pop * 1.5 + e);
+      // Celular: al llegar arriba le pasan el lugar a la fila fija de la barra
+      // (así no vibran al scrollear)
+      if (dockRow && d >= 0.98) op = 0;
       a.style.opacity = op.toFixed(3);
       a.style.pointerEvents = op < 0.2 ? 'none' : '';
     });
