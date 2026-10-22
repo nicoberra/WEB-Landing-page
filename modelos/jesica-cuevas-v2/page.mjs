@@ -128,14 +128,28 @@ ${headHtml}
   </section>
 
   <section class="manifesto" aria-labelledby="manifiesto-titulo">
-    <p class="eyebrow">${esc(v.manifestoEyebrow)}</p>
-    <h2 class="visually-hidden" id="manifiesto-titulo">${esc(v.manifestoEyebrow)}</h2>
-    <p class="manifesto__text" data-words>${esc(v.manifesto)}</p>
-    <div class="manifesto__foot">
-      ${media({ image: config.about.photo, label: 'FOTO', hint: '', ratio: '4/5', alt: config.about.photo?.alt || p.name, className: 'manifesto__photo' })}
-      <div>
-        <p class="manifesto__sign">${rich(config.about.title)}</p>
-        <p class="manifesto__name">${esc(v.signature)}</p>
+    <div class="manifesto__grid">
+      <!-- Jesi recortada, parada sobre un arco verde; la cabeza sobresale del arco.
+           Con el scroll: el arco crece, ella sube y el sello gira (main.js). -->
+      <figure class="manifesto__figure" data-figure>
+        <div class="manifesto__arch" data-arch aria-hidden="true"></div>
+        <img class="manifesto__cutout" data-cutout src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">
+        <svg class="manifesto__badge" data-badge viewBox="0 0 200 200" aria-hidden="true">
+          <defs><path id="badge-path" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
+          <circle cx="100" cy="100" r="98" class="manifesto__badge-bg"/>
+          <text><textPath href="#badge-path" textLength="462" lengthAdjust="spacing">${esc(`Lic. en Nutrición ✦ ${p.license} ✦ `)}</textPath></text>
+        </svg>
+        ${leaf('manifesto__leaf manifesto__leaf--1')}
+        ${leaf('manifesto__leaf manifesto__leaf--2')}
+      </figure>
+      <div class="manifesto__copy">
+        <p class="eyebrow">${esc(v.manifestoEyebrow)}</p>
+        <h2 class="visually-hidden" id="manifiesto-titulo">${esc(v.manifestoEyebrow)}</h2>
+        <p class="manifesto__text" data-words>${esc(v.manifesto)}</p>
+        <div class="manifesto__foot">
+          <p class="manifesto__sign">${rich(config.about.title)}</p>
+          <p class="manifesto__name">${esc(v.signature)}</p>
+        </div>
       </div>
     </div>
   </section>

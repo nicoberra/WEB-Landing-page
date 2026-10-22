@@ -404,6 +404,17 @@
     void tickST;
   }
 
+  // ---------- Jesi sobre el arco: crece, sube y el sello gira (con el scroll) ----------
+  var figure = document.querySelector('[data-figure]');
+  if (figure) {
+    var figTl = gsap.timeline({ scrollTrigger: { trigger: figure, start: 'top 90%', end: 'center 45%', scrub: 0.7 } });
+    figTl
+      .fromTo('[data-arch]', { scaleY: 0.45, scaleX: 0.8, opacity: 0.6 }, { scaleY: 1, scaleX: 1, opacity: 1, ease: 'none' }, 0)
+      .fromTo('[data-cutout]', { yPercent: 18, opacity: 0 }, { yPercent: 0, opacity: 1, ease: 'none' }, 0.1)
+      .fromTo(figure.querySelectorAll('.manifesto__leaf'), { scale: 0, rotation: -60 }, { scale: 1, rotation: 0, ease: 'none', stagger: 0.1 }, 0.3);
+    gsap.fromTo('[data-badge]', { rotation: -120, scale: 0.6 }, { rotation: 140, scale: 1, ease: 'none', scrollTrigger: { trigger: figure, start: 'top 90%', end: 'bottom top', scrub: 0.5 } });
+  }
+
   // ---------- Manifiesto: se enciende palabra por palabra ----------
   var mText = document.querySelector('[data-words]');
   if (mText) {
