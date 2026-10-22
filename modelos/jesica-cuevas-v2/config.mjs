@@ -102,16 +102,39 @@ export default {
     // Debajo de la foto del manifiesto.
     signature: 'Lic. Jesica Cuevas · M.N. 12233',
     stepsEyebrow: 'Tu primera consulta',
-    stepsTitle: 'Así arrancamos, sin vueltas',
+    stepsTitle: 'Cómo trabajo con vos',
     plansEyebrow: 'Planes 100% personalizados',
     plansTitle: 'Elegí tu objetivo',
     careerEyebrow: 'Trayectoria',
     careerTitle: 'Formación que se nota en cada plan',
     productsEyebrow: 'Recetarios',
     productsTitle: 'Recetas rapiditas para tu semana',
+    // Por ahora, en lugar de los recetarios se muestran 3 posts de ejemplo de
+    // su Instagram (imagen de portada, título y un resumen muy corto).
+    posts: [
+      {
+        title: 'La nutrición necesita bajarse de su privilegio',
+        summary: 'Comer saludable no tiene que ser caro: hay opciones accesibles para nutrirte bien.',
+        image: 'assets/post-1.webp',
+        url: 'https://www.instagram.com/p/DeP2dO6D6tW/',
+      },
+      {
+        title: 'Green flags de nutrición',
+        summary: 'Una alimentación con lugar para la variedad, el disfrute y la flexibilidad.',
+        image: 'assets/post-2.webp',
+        url: 'https://www.instagram.com/p/DeAcUTbj9Sb/',
+      },
+      {
+        title: 'Comé para nutrirte, no para castigarte',
+        summary: 'No se trata de comer menos ni perfecto, sino de hábitos que puedas sostener.',
+        image: 'assets/post-3.webp',
+        url: 'https://www.instagram.com/p/DdpQJGkj_UG/',
+      },
+    ],
     // Los recetarios todavía están en preparación: no se venden aún.
     productsSoonTag: 'Próximamente',
     productsSoonText: 'Disponible próximamente',
+    contactText: 'Escribime y coordinamos tu consulta, online o presencial en Castelar.',
     bookingTitle: 'No hace falta hacerlo perfecto para empezar.',
     bookingText: 'Reservá tu primera consulta, online o presencial en Castelar.',
   },

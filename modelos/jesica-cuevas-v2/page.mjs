@@ -8,6 +8,12 @@ import { head } from '../../src/render.mjs';
 const leaf = (cls = '') =>
   `<svg class="leaf ${cls}" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34C6 18 16 6 36 4c-1 19-12 30-30 30Z" fill="currentColor"/><path d="M8 32 28 12" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
 
+const icons = {
+  instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="fill"/></svg>',
+  whatsapp: '<svg viewBox="0 0 24 24"><path d="M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.6Z"/><path d="M9.2 8.6c.3-.6.8-.6 1-.1l.6 1.4c.1.3 0 .6-.2.8l-.4.4c.5 1 1.3 1.8 2.3 2.3l.4-.4c.2-.2.5-.3.8-.2l1.4.6c.5.2.5.7-.1 1-1 .6-2.4.4-3.9-.7a8.6 8.6 0 0 1-2.6-2.9c-.7-1.4-.6-2.4.7-2.2Z" class="fill"/></svg>',
+  email: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>',
+};
+
 const arrow = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
 /** Turnos: por ahora todos llevan al WhatsApp de contacto (no hay turnero). */
@@ -178,7 +184,7 @@ ${headHtml}
   <section class="steps" aria-labelledby="pasos-titulo">
     <div class="wrap">
       <p class="eyebrow">${esc(v.stepsEyebrow)}</p>
-      <h2 class="big-title" id="pasos-titulo" data-stretch>${esc(v.stepsTitle)}</h2>
+      <h2 class="big-title" id="pasos-titulo" data-rise-words>${esc(v.stepsTitle)}</h2>
       <ol class="steps__list">
         ${config.process.steps.map((s, i) => `<li class="step" data-rise><span class="step__n">${i + 1}</span><h3>${esc(s.title)}</h3><p>${rich(s.text)}</p></li>`).join('\n        ')}
       </ol>
@@ -188,7 +194,7 @@ ${headHtml}
   <section class="career" id="trayectoria" aria-labelledby="trayectoria-titulo">
     <div class="wrap">
       <p class="eyebrow">${esc(v.careerEyebrow)}</p>
-      <h2 class="big-title" id="trayectoria-titulo" data-stretch>${esc(v.careerTitle)}</h2>
+      <h2 class="big-title" id="trayectoria-titulo" data-rise-words>${esc(v.careerTitle)}</h2>
       <div class="career__grid">
         <div class="career__exp">
           <h3 class="career__label">${esc(cred.experienceTitle || 'Experiencia')}</h3>
@@ -216,17 +222,17 @@ ${headHtml}
   <section class="recipes" id="recetarios" aria-labelledby="recetarios-titulo" data-fan>
     <div class="wrap recipes__head">
       <p class="eyebrow">${esc(v.productsEyebrow)}</p>
-      <h2 class="big-title" id="recetarios-titulo" data-stretch>${esc(v.productsTitle)}</h2>
+      <h2 class="big-title recipes__title" id="recetarios-titulo" data-gather>${esc(v.productsTitle)}</h2>
     </div>
     <ul class="fan" role="list">
-      ${products.items
+      ${(v.posts || [])
         .map(
-          (it, i) => `<li class="card card--${i}" data-card>
-        <div class="card__cover">${leaf('card__leaf')}<span>${esc(it.format)}</span><em class="card__soon-tag">${esc(v.productsSoonTag)}</em></div>
+          (it, i) => `<li class="card card--${i} card--post" data-card>
+        <a class="card__cover card__cover--img" ${linkAttrs(it.url)} tabindex="-1" aria-hidden="true"><img src="${esc(it.image)}" alt="" width="720" height="900" loading="lazy"></a>
         <h3>${esc(it.title)}</h3>
-        <p>${rich(it.description)}</p>
+        <p>${esc(it.summary)}</p>
         <div class="card__foot">
-          <span class="card__soon">${esc(v.productsSoonText)}</span>
+          <a class="card__link" ${linkAttrs(it.url)}>Ver en Instagram${arrow}<span class="visually-hidden">: ${esc(it.title)}</span></a>
         </div>
       </li>`
         )
@@ -254,12 +260,16 @@ ${headHtml}
   </section>
 
   <section class="contact" id="contacto" aria-labelledby="contacto-titulo">
-    <div class="wrap contact__in">
-      <h2 class="contact__title" id="contacto-titulo" data-stretch data-stretch-max="100">Hablemos</h2>
+    <div class="contact__card">
+      <div class="contact__intro">
+        <p class="eyebrow">Contacto</p>
+        <h2 class="contact__title" id="contacto-titulo">Hablemos</h2>
+        <p class="contact__text">${esc(v.contactText)}</p>
+      </div>
       <div class="contact__links">
-        <a class="contact__link" data-magnetic ${linkAttrs(wa)}><span>WhatsApp</span><strong>${esc(config.contact.whatsapp.display)}</strong>${arrow}</a>
-        <a class="contact__link" data-magnetic ${linkAttrs(config.instagramUrl)}><span>Instagram</span><strong>${esc(config.instagram.handle)}</strong>${arrow}</a>
-        ${config.contact.email ? `<a class="contact__link" data-magnetic href="mailto:${esc(config.contact.email)}"><span>Email</span><strong>${esc(config.contact.email)}</strong>${arrow}</a>` : ''}
+        <a class="contact__link" data-magnetic ${linkAttrs(wa)}><i class="contact__icon" aria-hidden="true">${icons.whatsapp}</i><span>WhatsApp</span><strong>${esc(config.contact.whatsapp.display)}</strong></a>
+        <a class="contact__link" data-magnetic ${linkAttrs(config.instagramUrl)}><i class="contact__icon" aria-hidden="true">${icons.instagram}</i><span>Instagram</span><strong>${esc(config.instagram.handle)}</strong></a>
+        ${config.contact.email ? `<a class="contact__link" data-magnetic href="mailto:${esc(config.contact.email)}"><i class="contact__icon" aria-hidden="true">${icons.email}</i><span>Email</span><strong>${esc(config.contact.email)}</strong></a>` : ''}
       </div>
     </div>
   </section>

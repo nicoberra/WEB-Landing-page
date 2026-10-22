@@ -1466,6 +1466,44 @@ main section[id] {
   font-size: 22px;
 }
 
+/* Posts de Instagram: la imagen del post como portada */
+.card__cover--img {
+  display: block;
+  padding: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--placeholder, #dfe5d6);
+}
+
+.card__cover--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.card--post:hover .card__cover--img img {
+  transform: scale(1.04);
+}
+
+.card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.card__link:hover {
+  color: var(--ink);
+}
+
 /* Recetarios en preparación: etiqueta y aviso sin enlace (no se venden aún) */
 .card__cover {
   position: relative;
@@ -1629,55 +1667,143 @@ main section[id] {
 /* ---------- Contacto ---------- */
 
 .contact {
-  padding-block: clamp(60px, calc(var(--screen) * 0.1), 120px);
-  background: var(--apple);
-  overflow: hidden;
+  padding: clamp(56px, calc(var(--screen) * 0.1), 110px) var(--gutter);
+}
+
+/* Tarjeta verde con el título a la izquierda y los contactos a la derecha */
+.contact__card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: clamp(28px, 4.5vw, 56px);
+  border-radius: 32px;
+  background:
+    radial-gradient(90% 120% at 0% 0%, color-mix(in srgb, var(--apple) 35%, transparent), transparent 60%),
+    var(--accent);
+  color: var(--bg);
+  box-shadow: 0 40px 70px -45px rgb(31 45 37 / 0.8);
+}
+
+.contact__intro {
+  display: grid;
+  gap: 12px;
+}
+
+.contact__intro .eyebrow {
+  color: color-mix(in srgb, var(--bg) 75%, transparent);
 }
 
 .contact__title {
-  font-size: clamp(48px, 9vw, 140px);
-  line-height: 0.8;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 0.95;
   text-transform: uppercase;
-  font-variation-settings: 'wdth' var(--wdth, 75);
-  letter-spacing: -0.04em;
+  font-variation-settings: 'wdth' 85;
+  letter-spacing: -0.02em;
+}
+
+.contact__text {
+  max-width: 34ch;
+  color: color-mix(in srgb, var(--bg) 85%, transparent);
 }
 
 .contact__links {
   display: grid;
-  margin-top: 36px;
-  border-top: 2px solid var(--ink);
+  gap: 12px;
 }
 
 .contact__link {
   display: grid;
-  grid-template-columns: minmax(0, 0.4fr) minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 14px;
   align-items: center;
-  gap: 16px;
-  padding-block: 22px;
-  border-bottom: 2px solid var(--ink);
+  min-height: 64px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background: var(--bg);
+  color: var(--ink);
   text-decoration: none;
-  transition: padding 0.4s var(--ease), background-color 0.3s;
+  transition: transform 0.3s var(--ease), background-color 0.3s;
+}
+
+.contact__link:hover {
+  background: color-mix(in srgb, var(--bg) 85%, var(--apple));
+}
+
+.contact__icon {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.contact__icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+
+.contact__icon svg .fill {
+  fill: currentColor;
+  stroke: none;
 }
 
 .contact__link span {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  color: var(--muted);
 }
 
 .contact__link strong {
   font-family: var(--font-display);
-  font-size: clamp(20px, 3vw, 40px);
+  font-size: clamp(16px, 1.6vw, 20px);
   font-weight: 800;
-  font-variation-settings: 'wdth' 85;
   overflow-wrap: anywhere;
 }
 
-.contact__link:hover {
-  padding-inline: 18px;
-  background: color-mix(in srgb, var(--ink) 10%, transparent);
+@media (max-width: 760px) {
+  .contact__card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact__link strong {
+    font-size: 14.5px;
+  }
+}
+
+/* Títulos que aparecen palabra por palabra (Cómo trabajo con vos, Trayectoria) */
+.rw {
+  display: inline-block;
+  overflow: hidden;
+  padding-top: 0.12em;
+  margin-top: -0.12em;
+  vertical-align: top;
+}
+
+.rw > span {
+  display: inline-block;
+}
+
+/* Recetarios: las palabras arrancan separadas y se juntan en el centro */
+.recipes__head {
+  text-align: center;
+}
+
+.recipes__title .gw {
+  display: inline-block;
 }
 
 /* ---------- Pie ---------- */
@@ -1774,14 +1900,6 @@ main section[id] {
   .career__grid,
   .faq__grid {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .contact__link {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .contact__link span {
-    grid-column: 1 / -1;
   }
 }
 

@@ -442,6 +442,31 @@
     gsap.from(track.children, { y: 80, opacity: 0, rotation: 4, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: plans, start: 'top 90%', end: 'top 25%', scrub: 0.6 } });
   }
 
+  // ---------- Títulos que suben palabra por palabra (a la par del scroll) ----------
+  gsap.utils.toArray('[data-rise-words]').forEach(function (el) {
+    el.innerHTML = el.textContent.trim().split(/\s+/).map(function (w) { return '<span class="rw"><span>' + w.replace(/[&<>]/g, '') + '</span></span>'; }).join(' ');
+    gsap.fromTo(el.querySelectorAll('.rw > span'), { yPercent: 110, rotation: 4 }, { yPercent: 0, rotation: 0, stagger: 0.12, ease: 'none', scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 55%', scrub: 0.6 } });
+  });
+
+  // ---------- Recetarios: palabras separadas que se juntan en el medio ----------
+  // El título queda fijo en el centro de la pantalla mientras las palabras,
+  // que arrancan desparramadas, se acercan hasta formar la frase.
+  var gather = document.querySelector('[data-gather]');
+  if (gather) {
+    gather.innerHTML = gather.textContent.trim().split(/\s+/).map(function (w) { return '<span class="gw">' + w.replace(/[&<>]/g, '') + '</span>'; }).join(' ');
+    var gws = gather.querySelectorAll('.gw');
+    // Cada palabra arranca hacia su propio lado (según dónde queda en la frase),
+    // así se acercan sin cruzarse.
+    var spread = function (i, el) {
+      // offsetLeft no cuenta el corrimiento que ya tiene la palabra
+      var dx = (el.offsetLeft + el.offsetWidth / 2) - (gather.offsetLeft + gather.offsetWidth / 2);
+      var dir = dx >= 0 ? 1 : -1;
+      return dx * 1.4 + dir * window.innerWidth * 0.1;
+    };
+    gsap.timeline({ scrollTrigger: { trigger: gather.parentNode, start: 'center center', end: '+=' + Math.round(window.innerHeight * 0.7), scrub: 0.7, pin: true, anticipatePin: 1, invalidateOnRefresh: true } })
+      .fromTo(gws, { x: spread, y: function (i) { return (i % 2 ? -1 : 1) * 30; }, rotation: function (i) { return i % 2 ? 6 : -6; }, opacity: 0.25 }, { x: 0, y: 0, rotation: 0, opacity: 1, ease: 'power2.out' });
+  }
+
   // ---------- Títulos que se estiran ----------
   gsap.utils.toArray('[data-stretch]').forEach(function (el) {
     gsap.fromTo(el, { '--wdth': 62 }, { '--wdth': +(el.dataset.stretchMax || 104), ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'bottom 25%', scrub: 0.5 } });
