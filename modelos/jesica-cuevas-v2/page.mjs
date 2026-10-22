@@ -9,6 +9,8 @@ import { existsSync } from 'node:fs';
 // Foto que aparece dentro del círculo al pasar el mouse (si está cargada).
 const ALT_PHOTO = 'assets/jesica-saco.webp';
 const hasAlt = existsSync(new URL('./' + ALT_PHOTO, import.meta.url));
+const CONTACT_PHOTO = 'assets/jesica-saco-chica.webp';
+const hasContactPhoto = existsSync(new URL('./' + CONTACT_PHOTO, import.meta.url));
 
 const leaf = (cls = '') =>
   `<svg class="leaf ${cls}" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34C6 18 16 6 36 4c-1 19-12 30-30 30Z" fill="currentColor"/><path d="M8 32 28 12" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
@@ -298,7 +300,8 @@ ${headHtml}
   </section>
 
   <section class="contact" id="contacto" aria-labelledby="contacto-titulo">
-    <div class="contact__card">
+    <div class="contact__card${hasContactPhoto ? ' has-photo' : ''}">
+      ${hasContactPhoto ? `<img class="contact__photo" src="${CONTACT_PHOTO}" alt="" width="560" height="747" loading="lazy" aria-hidden="true">` : ''}
       <div class="contact__intro">
         <p class="eyebrow">Contacto</p>
         <h2 class="contact__title" id="contacto-titulo">Hablemos</h2>
