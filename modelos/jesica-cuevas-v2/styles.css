@@ -1991,18 +1991,19 @@ main section[id] {
   background: var(--bg);
 }
 
+/* Pie centrado: al final, la foto de Jesi baja al medio (donde está el logo) */
 .foot__in {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 18px 32px;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  text-align: center;
 }
 
 .foot__logo {
   position: relative;
   transform-origin: 50% 50%;
   will-change: transform;
-  width: 130px;
+  width: clamp(170px, 18vw, 220px);
 }
 
 .foot__in p {

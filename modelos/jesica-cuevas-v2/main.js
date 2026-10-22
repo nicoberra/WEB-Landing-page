@@ -458,18 +458,26 @@
         var q = Math.max(0, Math.min(1, (view.top - qStart) / Math.max(1, qEnd - qStart)));
         q = smooth(q);
         if (q > 0) {
-          var size = Math.min(lw, lh) * 1.05;
+          // La foto llega grande al medio del pie; en el camino se agranda un
+          // poco más (y el logo gira) para que el cruce se note.
+          var size = Math.max(lw, lh) * 1.25;
           var kF = size / (h.width * 1.12);
-          var fx = lx + lw / 2 - (h.width * kF) / 2, fy = ly + lh / 2 - (h.height * kF) / 2;
-          x += (fx - x) * q;
-          y += (fy + view.off - y) * q;
-          k += (kF - k) * q;
+          var bump = 1 + Math.sin(q * Math.PI) * 0.35;
+          var kNow = (k + (kF - k) * q) * bump;
+          var fcx = lx + lw / 2, fcy = ly + lh / 2;
+          // centro de la foto en vuelo: de donde estaba al centro del logo
+          var ccx = x + (h.width * k) / 2, ccy = y - view.off + (h.height * k) / 2;
+          ccx += (fcx - ccx) * q; ccy += (fcy - ccy) * q;
+          k = kNow;
+          x = ccx - (h.width * k) / 2;
+          y = ccy - (h.height * k) / 2 + view.off;
           // El logo del pie sube hasta el lugar de la foto en la barra
           var sTop = s.top - view.off;
           var ls = (s.height * 0.95) / lh;
           var tdx = (s.left + s.width / 2) - (lx + lw / 2);
           var tdy = (sTop + s.height / 2) - (ly + lh / 2);
-          footLogo.style.transform = 'translate3d(' + (tdx * q).toFixed(1) + 'px,' + (tdy * q).toFixed(1) + 'px,0) scale(' + (1 + (ls - 1) * q).toFixed(4) + ')';
+          var spin = Math.sin(q * Math.PI) * -18;
+          footLogo.style.transform = 'translate3d(' + (tdx * q).toFixed(1) + 'px,' + (tdy * q).toFixed(1) + 'px,0) rotate(' + spin.toFixed(2) + 'deg) scale(' + ((1 + (ls - 1) * q) * (1 + Math.sin(q * Math.PI) * 0.2)).toFixed(4) + ')';
           footLogo.style.zIndex = '60';
         } else if (footLogo.style.transform) {
           footLogo.style.transform = '';
