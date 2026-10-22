@@ -572,6 +572,11 @@
     gsap.from(track.children, { y: 80, opacity: 0, rotation: 4, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: plans, start: 'top 90%', end: 'top 25%', scrub: 0.6 } });
   }
 
+  // ---------- Preguntas tipo chat: los globitos entran a la par del scroll ----------
+  gsap.utils.toArray('[data-chat]').forEach(function (el) {
+    gsap.fromTo(el.querySelector('.chat__q'), { x: 60, opacity: 0 }, { x: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 96%', end: 'top 75%', scrub: 0.5 } });
+  });
+
   // ---------- Pasos: entran de derecha a izquierda, uno detrás del otro ----------
   gsap.utils.toArray('[data-step]').forEach(function (el, i) {
     gsap.fromTo(el, { xPercent: 110, rotation: 5, opacity: 0 }, { xPercent: 0, rotation: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 98%', end: 'top 62%', scrub: 0.6 } });
@@ -619,7 +624,8 @@
 
   // ---------- Recetarios: de un mazo a un abanico ----------
   var cards = gsap.utils.toArray('[data-card]');
-  if (cards.length) {
+  // En celular quedan quietos (solo se mueven las imágenes con el dedo)
+  if (cards.length && !window.matchMedia('(max-width: 900px)').matches) {
     var mid = (cards.length - 1) / 2;
     gsap.fromTo(cards,
       { '--x': function (i) { return (mid - i) * 340 + 'px'; }, '--r': '0deg', '--ty': '120px', opacity: 0.4 },

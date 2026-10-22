@@ -267,9 +267,25 @@ ${headHtml}
 
   <section class="faq" id="preguntas" aria-labelledby="preguntas-titulo">
     <div class="wrap faq__grid">
-      <h2 class="big-title" id="preguntas-titulo">Preguntas</h2>
-      <div class="faq__list">
-        ${config.faq.items.map((f) => `<details class="qa" data-rise><summary>${esc(f.q)}<span class="qa__icon" aria-hidden="true"></span></summary><p>${rich(f.a)}</p></details>`).join('\n        ')}
+      <div class="faq__intro">
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2 class="big-title" id="preguntas-titulo">¿Tenés dudas?</h2>
+        <p class="faq__text">Estas son las más comunes antes de la primera consulta. Tocá una y te respondo.</p>
+        <a class="btn btn--solid faq__wa" data-magnetic ${linkAttrs(wa)}>¿Otra duda? Escribime${arrow}</a>
+      </div>
+      <!-- Como un chat: la pregunta es un globito tuyo y la respuesta, uno de Jesi -->
+      <div class="chat">
+        ${config.faq.items
+          .map(
+            (f) => `<details class="chat__qa" data-chat>
+          <summary class="chat__q">${esc(f.q)}<span class="chat__plus" aria-hidden="true"></span></summary>
+          <div class="chat__a">
+            <img class="chat__avatar" src="${esc(p.photo.src)}" alt="" width="40" height="40" loading="lazy">
+            <p class="chat__bubble">${rich(f.a)}</p>
+          </div>
+        </details>`
+          )
+          .join('\n        ')}
       </div>
     </div>
   </section>
