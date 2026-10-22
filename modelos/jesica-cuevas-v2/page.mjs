@@ -84,6 +84,13 @@ ${headHtml}
       <svg class="blob-stone" viewBox="0 0 500 500"><path d="M120 0h380v430c-40 50-120 70-176 36-70-42-60-140-130-190C130 236 40 250 12 196-18 136 50 56 120 0Z"/></svg>
       <svg class="blob-sage" viewBox="0 0 200 200"><path d="M150 20c34 24 52 74 36 116s-64 66-108 56S2 140 6 96 46 14 86 6s40-10 64 14Z"/></svg>
     </div>
+    <!-- Cinta que se mueve: cruza la portada en diagonal, por detrás del texto -->
+    <div class="tick-band">
+      <div class="tick" role="presentation">
+        <p class="visually-hidden">${v.ticker.map(esc).join(', ')}</p>
+        <div class="tick__track" data-tick aria-hidden="true"><div class="tick__row">${tick}</div><div class="tick__row">${tick}</div></div>
+      </div>
+    </div>
     <div class="hero__copy">
       <p class="tag" data-tag><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
       <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
@@ -119,13 +126,6 @@ ${headHtml}
       </div>
     </div>
   </section>
-
-  <div class="tick-band">
-    <div class="tick" role="presentation">
-      <p class="visually-hidden">${v.ticker.map(esc).join(', ')}</p>
-      <div class="tick__track" data-tick aria-hidden="true"><div class="tick__row">${tick}</div><div class="tick__row">${tick}</div></div>
-    </div>
-  </div>
 
   <section class="manifesto" aria-labelledby="manifiesto-titulo">
     <p class="eyebrow">${esc(v.manifestoEyebrow)}</p>

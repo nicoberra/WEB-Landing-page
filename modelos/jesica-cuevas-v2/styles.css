@@ -631,6 +631,19 @@ main:focus {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+  /* Fondo claro: se lee bien aunque la cinta pase por detrás */
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+/* "Ver planes" con fondo, por la misma razón */
+.hero__ctas .btn--line {
+  background: var(--bg);
+}
+
+.hero__ctas .btn--line:hover {
+  background: var(--ink);
 }
 
 .hero__visual {
@@ -931,6 +944,23 @@ main section[id] {
   background: var(--ink);
   color: var(--bg);
   transform: rotate(-2.5deg) scale(1.04);
+}
+
+/* En la portada: atrás del texto, cruzando en diagonal hacia arriba a la derecha */
+.hero .tick-band {
+  position: absolute;
+  z-index: -1;
+  left: -12%;
+  right: -12%;
+  /* Cruza a la altura de "Castelar · Online y presencial" */
+  bottom: 18px;
+  padding: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero .tick {
+  transform: rotate(-8deg);
 }
 
 .tick__track {
