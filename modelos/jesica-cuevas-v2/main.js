@@ -80,33 +80,67 @@
   });
   var scrollDriven = false;
 
-  // ---------- Foto de "Mi forma de trabajar": revelar la otra foto ----------
-  // Como en la página de Lando Norris: un círculo sigue al mouse (con un poco
-  // de demora) y adentro se ve la foto con saco blanco. En celular, con el dedo.
-  var reveal = document.querySelector('[data-reveal]');
-  if (reveal) {
-    var fig = reveal.parentNode;
-    var rv = { x: 0.5, y: 0.4, tx: 0.5, ty: 0.4, r: 0, tr: 0 };
-    var RADIUS = function () { return Math.max(70, fig.offsetWidth * 0.26); };
-    var move = function (cx, cy) {
-      var b = reveal.getBoundingClientRect();
-      rv.tx = (cx - b.left) / b.width; rv.ty = (cy - b.top) / b.height;
-      rv.tr = RADIUS();
+  // ---------- Foto de "Mi forma de trabajar": tarjeta para rascar ----------
+  // Las dos fotos se dibujan en un lienzo. Una máscara guarda lo rascado:
+  // fuera de la máscara se ve la foto de remera blanca y adentro la del saco,
+  // así no asoman partes de la otra foto por los costados.
+  var scratch = document.querySelector('[data-scratch]');
+  if (scratch) {
+    var topImg = scratch.querySelector('[data-scratch-top]');
+    var altImg = scratch.querySelector('.manifesto__cutout--alt');
+    var hint = document.querySelector('[data-scratch-hint]');
+    var cv = document.createElement('canvas');
+    cv.className = 'manifesto__scratch';
+    cv.setAttribute('aria-hidden', 'true');
+    var mask = document.createElement('canvas'), layer = document.createElement('canvas');
+    var ctx = cv.getContext('2d'), mctx = mask.getContext('2d'), lctx = layer.getContext('2d');
+    var cvW = 0, last = null, queued = false;
+    var render = function () {
+      queued = false;
+      var w = cv.width, h = cv.height;
+      // Foto del saco recortada a lo rascado
+      lctx.globalCompositeOperation = 'source-over';
+      lctx.clearRect(0, 0, w, h); lctx.drawImage(mask, 0, 0);
+      lctx.globalCompositeOperation = 'source-in'; lctx.drawImage(altImg, 0, 0, w, h);
+      // Foto de arriba con el agujero de lo rascado, y encima el saco
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, w, h); ctx.drawImage(topImg, 0, 0, w, h);
+      ctx.globalCompositeOperation = 'destination-out'; ctx.drawImage(mask, 0, 0);
+      ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(layer, 0, 0);
     };
-    fig.addEventListener('pointermove', function (e) { move(e.clientX, e.clientY); });
-    fig.addEventListener('pointerenter', function (e) { rv.x = rv.tx; rv.y = rv.ty; move(e.clientX, e.clientY); });
-    fig.addEventListener('pointerleave', function () { rv.tr = 0; });
-    fig.addEventListener('touchstart', function (e) { var t = e.touches[0]; move(t.clientX, t.clientY); rv.x = rv.tx; rv.y = rv.ty; }, { passive: true });
-    fig.addEventListener('touchmove', function (e) { var t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
-    fig.addEventListener('touchend', function () { setTimeout(function () { rv.tr = 0; }, 600); }, { passive: true });
-    (function loop() {
-      var ease = reduce ? 1 : 0.14;
-      rv.x += (rv.tx - rv.x) * ease; rv.y += (rv.ty - rv.y) * ease; rv.r += (rv.tr - rv.r) * (reduce ? 1 : 0.12);
-      fig.style.setProperty('--mx', (rv.x * 100).toFixed(2) + '%');
-      fig.style.setProperty('--my', (rv.y * 100).toFixed(2) + '%');
-      fig.style.setProperty('--rr', rv.r.toFixed(1) + 'px');
-      requestAnimationFrame(loop);
-    })();
+    var paint = function () {
+      var w = scratch.offsetWidth;
+      if (!w || w === cvW) return; // solo se vuelve a armar si cambia el ancho
+      cvW = w;
+      var d = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = mask.width = layer.width = Math.round(w * d);
+      cv.height = mask.height = layer.height = Math.round(scratch.offsetHeight * d);
+      render();
+    };
+    var loaded = function (img) {
+      return img.complete && img.naturalWidth ? Promise.resolve() : new Promise(function (ok) { img.addEventListener('load', ok, { once: true }); });
+    };
+    Promise.all([loaded(topImg), loaded(altImg)]).then(function () {
+      scratch.appendChild(cv); paint(); scratch.classList.add('is-scratch');
+    });
+    window.addEventListener('resize', paint);
+    var at = function (e) {
+      var b = cv.getBoundingClientRect();
+      return { x: (e.clientX - b.left) / b.width * cv.width, y: (e.clientY - b.top) / b.height * cv.height };
+    };
+    var rub = function (e) {
+      var pt = at(e), from = last || pt;
+      mctx.lineCap = mctx.lineJoin = 'round';
+      mctx.lineWidth = cv.width * 0.12;
+      mctx.beginPath(); mctx.moveTo(from.x, from.y); mctx.lineTo(pt.x + 0.01, pt.y); mctx.stroke();
+      last = pt;
+      if (!queued) { queued = true; requestAnimationFrame(render); }
+      if (hint) { hint.classList.add('is-gone'); hint = null; }
+    };
+    cv.addEventListener('pointerdown', function (e) { last = null; rub(e); });
+    cv.addEventListener('pointermove', rub);
+    cv.addEventListener('pointerleave', function () { last = null; });
+    cv.addEventListener('pointerup', function () { last = null; });
   }
   if (carousels.length && !reduce) {
     var started0 = Date.now();
