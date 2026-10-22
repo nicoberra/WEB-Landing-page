@@ -102,11 +102,11 @@ export default {
     // Debajo de la foto del manifiesto.
     signature: 'Lic. Jesica Cuevas · M.N. 12233',
     stepsEyebrow: 'Tu primera consulta',
-    stepsTitle: 'Cómo trabajo con vos',
+    stepsTitle: 'Cómo trabajo con mis pacientes',
     plansEyebrow: 'Planes 100% personalizados',
     plansTitle: 'Elegí tu objetivo',
     careerEyebrow: 'Trayectoria',
-    careerTitle: 'Formación que se nota en cada plan',
+    careerTitle: 'Mi formación como profesional',
     productsEyebrow: 'Recetarios',
     productsTitle: 'Recetas rapiditas para tu semana',
     // Por ahora, en lugar de los recetarios se muestran 3 posts de ejemplo de

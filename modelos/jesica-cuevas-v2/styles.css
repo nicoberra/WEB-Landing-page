@@ -854,6 +854,8 @@ main section[id] {
 
 .steps {
   padding-block: clamp(80px, calc(var(--screen) * 0.12), 140px);
+  /* Los pasos entran desde la derecha: no deben ensanchar la página */
+  overflow-x: clip;
 }
 
 .steps .big-title {
@@ -940,8 +942,8 @@ main section[id] {
   z-index: -1;
   left: -12%;
   right: -12%;
-  /* Cruza a la altura de "Castelar · Online y presencial" */
-  bottom: 18px;
+  /* Más abajo: cruza el borde entre la portada y la sección siguiente */
+  bottom: calc(-1 * clamp(70px, 8vw, 120px));
   padding: 0;
   overflow: visible;
   pointer-events: none;
@@ -1905,6 +1907,9 @@ main section[id] {
 }
 
 .foot__logo {
+  position: relative;
+  transform-origin: 50% 50%;
+  will-change: transform;
   width: 130px;
 }
 
@@ -1953,15 +1958,15 @@ main section[id] {
     height: 17px;
   }
 
-  /* El fondo y la línea de la barra bajan un poco más para que la matrícula
+  /* El fondo y la línea de la barra bajan lo justo para que la fila del menú
      quede adentro y no tape el texto de la página */
   .top::before {
-    inset: 0 0 -72px;
+    inset: 0 0 -54px;
   }
 
   .top__line {
-    inset: 0 0 -72px;
-    height: calc(100% + 72px);
+    inset: 0 0 -54px;
+    height: calc(100% + 54px);
   }
 
   .top__tag {
@@ -2013,13 +2018,18 @@ main section[id] {
 
   /* Celular: la foto ocupa menos alto para que el título, el texto y el
      botón principal aparezcan antes */
+  /* La portada ocupa toda la pantalla del celular: arriba la foto, abajo el
+     título, el texto y los botones, repartidos en todo el alto */
   .hero {
-    gap: 18px;
-    padding-bottom: 48px;
+    gap: 14px;
+    min-height: var(--screen);
+    align-content: space-between;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 88px);
+    padding-bottom: 28px;
   }
 
   .hero__visual {
-    width: min(58vw, 230px);
+    width: clamp(190px, calc((var(--screen) - 500px) / 1.1), 76vw);
     min-width: 0;
   }
 

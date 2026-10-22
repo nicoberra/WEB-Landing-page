@@ -186,7 +186,7 @@ ${headHtml}
       <p class="eyebrow">${esc(v.stepsEyebrow)}</p>
       <h2 class="big-title" id="pasos-titulo" data-rise-words>${esc(v.stepsTitle)}</h2>
       <ol class="steps__list">
-        ${config.process.steps.map((s, i) => `<li class="step" data-rise><span class="step__n">${i + 1}</span><h3>${esc(s.title)}</h3><p>${rich(s.text)}</p></li>`).join('\n        ')}
+        ${config.process.steps.map((s, i) => `<li class="step" data-step><span class="step__n">${i + 1}</span><h3>${esc(s.title)}</h3><p>${rich(s.text)}</p></li>`).join('\n        ')}
       </ol>
     </div>
   </section>

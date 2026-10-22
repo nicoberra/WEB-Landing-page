@@ -260,7 +260,7 @@
   // la foto y un corrimiento extra hacia afuera (Planes, lejos de la hoja).
   var spots = [[-1, -0.08, 34], [1, -0.3, 0], [-1, 0.3, 0], [1, 0.24, 0]];
   // En celular no hay lugar a los costados: van arriba y abajo del aro.
-  var spotsSmall = [[-1, -0.3, 0], [1, -0.47, 0], [-1, 0.47, 0], [1, 0.47, 0]];
+  var spotsSmall = [[-1, -0.3, 0], [1, -0.38, 0], [-1, 0.4, 0], [1, 0.34, 0]];
   var pops = links.map(function () { return { v: 0 }; });
   if (links.length) {
     nav.classList.add('is-bubbles');
@@ -276,8 +276,17 @@
     var f = 1 - e;
     // Cuando la fila está por esconderse bajo la línea de la barra, los botones
     // se corren a la derecha y quedan en columna debajo de "Turnos" (en compu).
-    var d = 0, dockRight = 0, dockTop = 0;
-    if (wide.matches && turnos) {
+    var d = 0, dockRight = 0, dockTop = 0, dockRow = false;
+    if (mobile) {
+      // Celular: cuando la fila llega arriba, queda fija en una fila centrada
+      // debajo de la barra (el menú siempre a mano).
+      var barM = top.getBoundingClientRect();
+      var rowTopM = nav.getBoundingClientRect().top - view.off;
+      var lineM = barM.bottom - view.off;
+      d = smooth(Math.max(0, Math.min(1, (lineM + 120 - rowTopM) / 120)));
+      dockTop = lineM + 4;
+      dockRow = true;
+    } else if (wide.matches && turnos) {
       var bar = top.getBoundingClientRect();
       var tb = turnos.getBoundingClientRect();
       var lineY = bar.bottom - view.off + 16;
@@ -289,7 +298,11 @@
     // Flotando o yendo a la columna: por encima de la foto. En la fila: por debajo de la barra.
     nav.style.zIndex = e < 1 || d > 0 ? '' : '40';
     var stackY = dockTop;
-    var away = d > 0 ? bandOut() : 0;
+    var away = d > 0 && !dockRow ? bandOut() : 0;
+    // Fila del celular: ancho total para centrarla
+    var rowGap = 6, rowW = -rowGap;
+    if (dockRow) links.forEach(function (a) { rowW += a.offsetWidth + rowGap; });
+    var rowX = (window.innerWidth - rowW) / 2;
     links.forEach(function (a, i) {
       var sp = (mobile ? spotsSmall : spots)[i % spots.length], pop = pops[i].v;
       var w = a.offsetWidth, hh = a.offsetHeight;
@@ -307,7 +320,12 @@
       var bob = f * pop;
       var dx = (sx - nx) * f + Math.sin(t * 1.1 + i * 1.9) * 9 * bob;
       var dy = (sy - ny) * f + Math.cos(t * 0.9 + i * 1.3) * 12 * bob;
-      if (d > 0) {
+      if (d > 0 && dockRow) {
+        var txr = rowX + w / 2, tyr = dockTop + hh / 2 + view.top;
+        rowX += w + rowGap;
+        dx += (txr - nx - dx) * d;
+        dy += (tyr - ny - dy) * d;
+      } else if (d > 0) {
         // Lugar en la columna: borde derecho alineado con "Turnos", uno debajo del otro
         var tx = dockRight - w / 2, ty = stackY + hh / 2 + view.top;
         stackY += hh + 10;
@@ -331,7 +349,8 @@
   var tagEl = document.querySelector('[data-tag]');
   var tagSlot = document.querySelector('[data-tag-slot]');
   var tagGhost = null;
-  if (tagEl && tagSlot) {
+  // En celular no sube (ocupa mucho lugar arriba): queda en la portada.
+  if (tagEl && tagSlot && !window.matchMedia('(max-width: 900px)').matches) {
     tagGhost = tagEl.cloneNode(true);
     tagGhost.removeAttribute('data-tag');
     tagGhost.classList.add('tag--ghost');
@@ -393,6 +412,7 @@
   var holder = document.querySelector('[data-hero-visual]');
   var slot = document.querySelector('[data-avatar-slot]');
   var slotLogo = document.querySelector('[data-avatar-logo]');
+  var footLogo = document.querySelector('.foot__logo');
   if (fly && holder && slot) {
     fly.classList.add('is-flying');
     var smooth = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
@@ -418,6 +438,36 @@
       var startY = h.top + window.scrollY;
       var x = h.left + (endX - h.left) * e;
       var y = startY + (endY - startY) * e + view.off;
+      // Al final de la página: la foto baja al lugar del logo del pie y el logo
+      // sube a la barra (uno baja y el otro sube, a la par del scroll).
+      if (footLogo) {
+        var lw = footLogo.offsetWidth, lh = footLogo.offsetHeight;
+        var lox = 0, loy = 0, lel = footLogo;
+        while (lel) { lox += lel.offsetLeft; loy += lel.offsetTop; lel = lel.offsetParent; }
+        var lx = lox - window.scrollX, ly = loy - window.scrollY - view.off; // en pantalla, sin su transform
+        // Avanza desde que el logo asoma abajo hasta el final de la página
+        var qStart = loy - view.h, qEnd = root.scrollHeight - view.h;
+        var q = Math.max(0, Math.min(1, (view.top - qStart) / Math.max(1, qEnd - qStart)));
+        q = smooth(q);
+        if (q > 0) {
+          var size = Math.min(lw, lh) * 1.05;
+          var kF = size / (h.width * 1.12);
+          var fx = lx + lw / 2 - (h.width * kF) / 2, fy = ly + lh / 2 - (h.height * kF) / 2;
+          x += (fx - x) * q;
+          y += (fy + view.off - y) * q;
+          k += (kF - k) * q;
+          // El logo del pie sube hasta el lugar de la foto en la barra
+          var sTop = s.top - view.off;
+          var ls = (s.height * 0.95) / lh;
+          var tdx = (s.left + s.width / 2) - (lx + lw / 2);
+          var tdy = (sTop + s.height / 2) - (ly + lh / 2);
+          footLogo.style.transform = 'translate3d(' + (tdx * q).toFixed(1) + 'px,' + (tdy * q).toFixed(1) + 'px,0) scale(' + (1 + (ls - 1) * q).toFixed(4) + ')';
+          footLogo.style.zIndex = '60';
+        } else if (footLogo.style.transform) {
+          footLogo.style.transform = '';
+          footLogo.style.zIndex = '';
+        }
+      }
       fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
       // El ícono de la manzana se desvanece justo cuando llega la foto.
       if (slotLogo) slotLogo.style.opacity = String(Math.max(0, Math.min(1, (0.85 - e) / 0.2)));
@@ -486,8 +536,38 @@
       ease: 'none',
       scrollTrigger: { trigger: plans, start: 'top top', end: function () { return '+=' + dist(); }, scrub: 0.8, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
     });
+    // Con el dedo también: arrastrar a los costados avanza/retrocede los planes
+    // (mueve el scroll, que es lo que maneja el desplazamiento). Al llegar al
+    // final ya no se mueven más y la página sigue bajando normal.
+    var vp = plans.querySelector('.plans__viewport');
+    if (vp && 'ontouchstart' in window) {
+      var sx0 = 0, sy0 = 0, lastX = 0, horiz = null, vel = 0, raf = 0;
+      var glide = function () {
+        if (Math.abs(vel) < 0.5) return;
+        window.scrollBy(0, vel); vel *= 0.92; raf = requestAnimationFrame(glide);
+      };
+      vp.addEventListener('touchstart', function (e) {
+        cancelAnimationFrame(raf); vel = 0;
+        sx0 = lastX = e.touches[0].clientX; sy0 = e.touches[0].clientY; horiz = null;
+      }, { passive: true });
+      vp.addEventListener('touchmove', function (e) {
+        var x = e.touches[0].clientX, y = e.touches[0].clientY;
+        if (horiz === null && (Math.abs(x - sx0) > 6 || Math.abs(y - sy0) > 6)) horiz = Math.abs(x - sx0) > Math.abs(y - sy0);
+        if (!horiz) return;
+        e.preventDefault();
+        var dx = x - lastX; lastX = x;
+        vel = -dx;
+        window.scrollBy(0, -dx);
+      }, { passive: false });
+      vp.addEventListener('touchend', function () { if (horiz) { vel *= 1.6; raf = requestAnimationFrame(glide); } }, { passive: true });
+    }
     gsap.from(track.children, { y: 80, opacity: 0, rotation: 4, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: plans, start: 'top 90%', end: 'top 25%', scrub: 0.6 } });
   }
+
+  // ---------- Pasos: entran de derecha a izquierda, uno detrás del otro ----------
+  gsap.utils.toArray('[data-step]').forEach(function (el, i) {
+    gsap.fromTo(el, { xPercent: 110, rotation: 5, opacity: 0 }, { xPercent: 0, rotation: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 98%', end: 'top 62%', scrub: 0.6 } });
+  });
 
   // ---------- Títulos que suben palabra por palabra (a la par del scroll) ----------
   gsap.utils.toArray('[data-rise-words]').forEach(function (el) {
