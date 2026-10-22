@@ -2073,14 +2073,12 @@ main section[id] {
     gap: 6px;
     padding: 4px 8px 0;
     opacity: 0;
-    transform: translateY(-10px);
     pointer-events: none;
-    transition: opacity 0.3s, transform 0.4s var(--ease);
+    transition: opacity 0.15s;
   }
 
   .top.has-menu .top__menu {
     opacity: 1;
-    transform: none;
     pointer-events: auto;
   }
 

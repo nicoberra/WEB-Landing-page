@@ -255,6 +255,7 @@
   var links = nav ? [].slice.call(nav.querySelectorAll('a')) : [];
   var small = window.matchMedia('(max-width: 900px)');
   var wide = window.matchMedia('(min-width: 1100px)');
+  var menuLinks = [].slice.call(document.querySelectorAll('[data-top-menu] a'));
   var turnos = document.querySelector('.top__cta .btn');
   // Lugar de cada burbuja: lado (-1 izquierda, 1 derecha), altura respecto de
   // la foto y un corrimiento extra hacia afuera (Planes, lejos de la hoja).
@@ -325,9 +326,20 @@
       var bob = f * pop;
       var dx = (sx - nx) * f + Math.sin(t * 1.1 + i * 1.9) * 9 * bob;
       var dy = (sy - ny) * f + Math.cos(t * 0.9 + i * 1.3) * 12 * bob;
+      var shrink = 1;
       if (d > 0 && dockRow) {
-        var txr = rowX + w / 2, tyr = dockTop + hh / 2 + view.top;
-        rowX += w + rowGap;
+        // Va al lugar exacto de su gemelo en la fila fija de la barra y se
+        // achica hasta su tamaño, así el cambio no se nota.
+        var twin = menuLinks[i];
+        var txr, tyr;
+        if (twin) {
+          var tr = twin.getBoundingClientRect();
+          txr = tr.left + tr.width / 2; tyr = tr.top - view.off + tr.height / 2 + view.top;
+          shrink = 1 + (tr.width / w - 1) * d;
+        } else {
+          txr = rowX + w / 2; tyr = dockTop + hh / 2 + view.top;
+          rowX += w + rowGap;
+        }
         dx += (txr - nx - dx) * d;
         dy += (tyr - ny - dy) * d;
       } else if (d > 0 && !dockRow) {
@@ -339,7 +351,7 @@
         // Se va por la derecha mientras pasa la cinta
         dx += (window.innerWidth - (tx - w / 2) + 30) * away;
       }
-      var sc = pop + (1 - pop) * e;
+      var sc = (pop + (1 - pop) * e) * shrink;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
       var op = Math.min(1, pop * 1.5 + e);
       // Celular: al llegar arriba le pasan el lugar a la fila fija de la barra
