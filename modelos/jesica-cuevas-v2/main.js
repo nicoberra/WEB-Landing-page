@@ -79,6 +79,35 @@
     return c;
   });
   var scrollDriven = false;
+
+  // ---------- Foto de "Mi forma de trabajar": revelar la otra foto ----------
+  // Como en la página de Lando Norris: un círculo sigue al mouse (con un poco
+  // de demora) y adentro se ve la foto con saco blanco. En celular, con el dedo.
+  var reveal = document.querySelector('[data-reveal]');
+  if (reveal) {
+    var fig = reveal.parentNode;
+    var rv = { x: 0.5, y: 0.4, tx: 0.5, ty: 0.4, r: 0, tr: 0 };
+    var RADIUS = function () { return Math.max(70, fig.offsetWidth * 0.26); };
+    var move = function (cx, cy) {
+      var b = reveal.getBoundingClientRect();
+      rv.tx = (cx - b.left) / b.width; rv.ty = (cy - b.top) / b.height;
+      rv.tr = RADIUS();
+    };
+    fig.addEventListener('pointermove', function (e) { move(e.clientX, e.clientY); });
+    fig.addEventListener('pointerenter', function (e) { rv.x = rv.tx; rv.y = rv.ty; move(e.clientX, e.clientY); });
+    fig.addEventListener('pointerleave', function () { rv.tr = 0; });
+    fig.addEventListener('touchstart', function (e) { var t = e.touches[0]; move(t.clientX, t.clientY); rv.x = rv.tx; rv.y = rv.ty; }, { passive: true });
+    fig.addEventListener('touchmove', function (e) { var t = e.touches[0]; move(t.clientX, t.clientY); }, { passive: true });
+    fig.addEventListener('touchend', function () { setTimeout(function () { rv.tr = 0; }, 600); }, { passive: true });
+    (function loop() {
+      var ease = reduce ? 1 : 0.14;
+      rv.x += (rv.tx - rv.x) * ease; rv.y += (rv.ty - rv.y) * ease; rv.r += (rv.tr - rv.r) * (reduce ? 1 : 0.12);
+      reveal.style.setProperty('--mx', (rv.x * 100).toFixed(2) + '%');
+      reveal.style.setProperty('--my', (rv.y * 100).toFixed(2) + '%');
+      reveal.style.setProperty('--rr', rv.r.toFixed(1) + 'px');
+      requestAnimationFrame(loop);
+    })();
+  }
   if (carousels.length && !reduce) {
     var started0 = Date.now();
     setInterval(function () {

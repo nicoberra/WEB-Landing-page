@@ -4,6 +4,11 @@
 // "reducir movimiento" todo se ve igual, quieto y completo.
 import { esc, rich, linkAttrs, media, whatsappUrl } from '../../src/helpers.mjs';
 import { head } from '../../src/render.mjs';
+import { existsSync } from 'node:fs';
+
+// Foto que aparece dentro del círculo al pasar el mouse (si está cargada).
+const ALT_PHOTO = 'assets/jesica-saco.webp';
+const hasAlt = existsSync(new URL('./' + ALT_PHOTO, import.meta.url));
 
 const leaf = (cls = '') =>
   `<svg class="leaf ${cls}" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34C6 18 16 6 36 4c-1 19-12 30-30 30Z" fill="currentColor"/><path d="M8 32 28 12" stroke="rgba(255,255,255,.55)" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
@@ -148,6 +153,8 @@ ${headHtml}
       <figure class="manifesto__figure" data-figure>
         <div class="manifesto__arch" data-arch aria-hidden="true"></div>
         <img class="manifesto__cutout" data-cutout src="assets/jesica-recorte.webp" alt="${esc(p.name)}, licenciada en Nutrición" width="900" height="1207" loading="lazy">
+        ${hasAlt ? `<!-- Al pasar el mouse (o el dedo), dentro de un círculo aparece la otra foto (con saco blanco) -->
+        <img class="manifesto__cutout manifesto__cutout--alt" data-cutout data-reveal src="${ALT_PHOTO}" alt="" width="900" height="1207" loading="lazy" aria-hidden="true">` : ''}
         <svg class="manifesto__badge" data-badge viewBox="0 0 200 200" aria-hidden="true">
           <defs><path id="badge-path" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
           <circle cx="100" cy="100" r="98" class="manifesto__badge-bg"/>

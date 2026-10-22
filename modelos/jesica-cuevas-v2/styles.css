@@ -1039,6 +1039,15 @@ main section[id] {
   filter: drop-shadow(0 18px 24px rgb(31 45 37 / 0.28));
 }
 
+/* Efecto "revelar": la segunda foto solo se ve dentro de un círculo que
+   sigue al mouse (o al dedo). --mx/--my/--rr las mueve main.js. */
+.manifesto__cutout--alt {
+  pointer-events: none;
+  filter: none;
+  -webkit-mask-image: radial-gradient(circle var(--rr, 0px) at var(--mx, 50%) var(--my, 50%), #000 calc(100% - 3px), transparent 100%);
+  mask-image: radial-gradient(circle var(--rr, 0px) at var(--mx, 50%) var(--my, 50%), #000 calc(100% - 3px), transparent 100%);
+}
+
 /* Sello circular que gira con el scroll */
 .manifesto__badge {
   position: absolute;
