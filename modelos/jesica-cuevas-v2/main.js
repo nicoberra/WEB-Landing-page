@@ -311,9 +311,13 @@
     if (!band) return 0;
     var r = band.getBoundingClientRect();
     var t = r.top - view.off, b = r.bottom - view.off;
-    var zoneTop = 110, zoneBottom = Math.min(view.h, 720), RAMP = 220;
-    var o = Math.min((zoneBottom + RAMP - t) / RAMP, (b - zoneTop + RAMP) / RAMP);
-    o = Math.max(0, Math.min(1, o));
+    // Se quedan a la vista hasta que la cinta llega a la altura de su parte
+    // de abajo; recién ahí se van, y quedan afuera mientras pasa por arriba.
+    var leaveFrom = view.h * 0.58, goneAt = view.h * 0.2;
+    var out = (leaveFrom - t) / (leaveFrom - goneAt);
+    // Cuando la cinta termina de pasar por arriba, vuelven a entrar.
+    var back = (b - 60) / 180;
+    var o = Math.max(0, Math.min(1, Math.min(out, back)));
     return o * o * (3 - 2 * o);
   }
 
