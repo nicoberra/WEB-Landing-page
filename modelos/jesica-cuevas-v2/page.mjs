@@ -10,12 +10,11 @@ const leaf = (cls = '') =>
 
 const arrow = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
-/** Enlace del turnero o, mientras no exista, el contacto provisorio (Instagram). */
+/** Turnos: por ahora todos llevan al WhatsApp de contacto (no hay turnero). */
 function bookingLink(config) {
   const b = config.booking || {};
-  // PENDIENTE: definir a dónde lleva (turnero propio). El texto es siempre "Turnos".
+  // PENDIENTE: si más adelante hay turnero propio, se carga en booking.url.
   if (b.url) return { href: b.url, label: 'Turnos' };
-  if (b.interim?.url) return { href: b.interim.url, label: 'Turnos' };
   return { href: whatsappUrl(config.contact), label: 'Turnos' };
 }
 
@@ -105,6 +104,7 @@ ${headHtml}
       </h1>
       <p class="hero__text">${rich(v.heroText)}</p>
       <div class="hero__ctas">
+        <a class="btn btn--solid" data-magnetic ${linkAttrs(book.href)}>${esc(v.heroCta)}${arrow}</a>
         <a class="btn btn--line" data-magnetic href="#planes">Ver planes</a>
       </div>
       <p class="hero__where">${esc(p.location)}</p>
@@ -203,18 +203,16 @@ ${headHtml}
     <div class="wrap recipes__head">
       <p class="eyebrow">${esc(v.productsEyebrow)}</p>
       <h2 class="big-title" id="recetarios-titulo" data-stretch>${esc(v.productsTitle)}</h2>
-      ${config.demo && products.demoNote ? `<p class="note">${esc(products.demoNote)}</p>` : ''}
     </div>
     <ul class="fan" role="list">
       ${products.items
         .map(
           (it, i) => `<li class="card card--${i}" data-card>
-        <div class="card__cover">${leaf('card__leaf')}<span>${esc(it.format)}</span></div>
+        <div class="card__cover">${leaf('card__leaf')}<span>${esc(it.format)}</span><em class="card__soon-tag">${esc(v.productsSoonTag)}</em></div>
         <h3>${esc(it.title)}</h3>
         <p>${rich(it.description)}</p>
         <div class="card__foot">
-          ${it.price ? `<span class="card__price">${esc(it.price)}</span>` : ''}
-          <a class="btn btn--solid btn--small" ${linkAttrs(it.href || `https://wa.me/${config.contact.whatsapp.number}?text=${encodeURIComponent(`Hola Jesi! Quiero el recetario "${it.title}".`)}`)}>${esc(it.ctaLabel || 'Lo quiero')}<span class="visually-hidden">: ${esc(it.title)}</span></a>
+          <span class="card__soon">${esc(v.productsSoonText)}</span>
         </div>
       </li>`
         )
@@ -258,7 +256,7 @@ ${headHtml}
     <img class="foot__logo" src="${esc(config.logo.full.src)}" alt="${esc(config.logo.full.alt)}" width="${config.logo.full.width}" height="${config.logo.full.height}" loading="lazy">
     <p>${rich(config.footer.note)}</p>
   </div>
-  <p class="foot__legal">© <span data-year>${new Date().getFullYear()}</span> ${esc(p.name)}${config.demo ? ` · ${esc(config.footer.demoNotice)}` : ''}</p>
+  <p class="foot__legal">© <span data-year>${new Date().getFullYear()}</span> ${esc(p.name)}</p>
 </footer>
 </body>
 </html>

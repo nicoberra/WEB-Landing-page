@@ -567,8 +567,9 @@ main:focus {
 .hero__title {
   display: grid;
   width: 100%;
-  font-size: clamp(56px, 10.5vw, 176px);
-  line-height: 0.86;
+  /* Título largo: tamaño pensado para que "Una alimentación" entre entera */
+  font-size: clamp(30px, 8.6vw, 132px);
+  line-height: 0.9;
   text-transform: uppercase;
   letter-spacing: -0.035em;
 }
@@ -1410,6 +1411,35 @@ main section[id] {
   font-size: 22px;
 }
 
+/* Recetarios en preparación: etiqueta y aviso sin enlace (no se venden aún) */
+.card__cover {
+  position: relative;
+}
+
+.card__soon-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.card__soon {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
 /* ---------- Turnos: un círculo verde que crece ---------- */
 
 .booking {
@@ -1650,9 +1680,20 @@ main section[id] {
     height: 17px;
   }
 
+  /* El fondo y la línea de la barra bajan un poco más para que la matrícula
+     quede adentro y no tape el texto de la página */
+  .top::before {
+    inset: 0 0 -72px;
+  }
+
+  .top__line {
+    inset: 0 0 -72px;
+    height: calc(100% + 72px);
+  }
+
   .top__tag {
     position: absolute;
-    top: calc(100% + 18px);
+    top: calc(100% + 4px);
     left: 0;
     right: 0;
     padding-inline: 12px;
@@ -1705,9 +1746,43 @@ main section[id] {
     font-size: 0.42em;
   }
 
+  /* Celular: la foto ocupa menos alto para que el título, el texto y el
+     botón principal aparezcan antes */
+  .hero {
+    gap: 18px;
+    padding-bottom: 48px;
+  }
+
+  .hero__visual {
+    width: min(58vw, 230px);
+    min-width: 0;
+  }
+
+  .hero__copy {
+    gap: 16px;
+  }
+
+  .hero__text {
+    font-size: 16px;
+  }
+
+  /* Botones del menú más compactos (una fila si entra), cómodos para tocar */
+  .hero__nav {
+    gap: 6px;
+    max-width: 100%;
+  }
+
   .hero__nav a {
-    padding: 9px 14px;
-    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 10px;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+  }
+
+  .hero__ctas .btn {
+    min-height: 48px;
   }
 
   .tag {

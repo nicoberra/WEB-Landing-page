@@ -193,8 +193,9 @@
   // Al bajar, las líneas se corren hacia lados opuestos y se ensanchan.
   lines.forEach(function (el, i) {
     gsap.to(el, {
-      x: (i % 2 ? -1 : 1) * window.innerWidth * 0.12,
-      '--wdth': i === 3 ? 125 : 112,
+      // Corrimiento y estirado suaves: las líneas son largas y no deben cortarse
+      x: (i % 2 ? -1 : 1) * window.innerWidth * 0.03,
+      '--wdth': 86,
       ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 },
     });
