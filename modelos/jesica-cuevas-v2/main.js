@@ -333,6 +333,7 @@
     nav.classList.add('is-bubbles');
     heroIn.to(pops, { v: 1, duration: 1.1, ease: 'elastic.out(1, 0.55)', stagger: 0.14 }, 0.35);
   }
+  var bubbleCur = [], bubbleClose = false;
   function updateBubbles(h, startY, p) {
     if (!links.length) return;
     // Se acomodan antes que la foto, así la fila ya está lista al leer el título.
@@ -369,8 +370,15 @@
     // Celular: la fila fija se muestra al llegar arriba y se va cuando pasa la cinta
     // (se va cuando la cinta termina de subir hasta la barra)
     var bandLow = band ? band.getBoundingClientRect().bottom - view.off > 150 : true;
-    if (dockRow) top.classList.toggle('has-menu', d >= 0.98 && bandLow);
+    // El cambio a la fila fija se hace recién cuando los botones llegaron
+    // (como se deslizan con un poco de demora, puede tardar un instante más)
+    var swap = dockRow && d >= 0.98 && bandLow && bubbleClose;
+    if (dockRow) top.classList.toggle('has-menu', swap);
     else top.classList.remove('has-menu');
+    // Los botones no saltan con cada golpe de la ruedita: se deslizan hacia su
+    // lugar (en coordenadas de la parte visible, así al llegar quedan firmes).
+    var follow = 1 - Math.pow(0.8, gsap.ticker.deltaRatio(60));
+    var closeAll = true;
     // Fila del celular: ancho total para centrarla
     var rowGap = 6, rowW = -rowGap;
     if (dockRow) links.forEach(function (a) { rowW += a.offsetWidth + rowGap; });
@@ -418,14 +426,25 @@
         dx += (window.innerWidth - (tx - w / 2) + 30) * away;
       }
       var sc = (pop + (1 - pop) * e) * shrink;
+      var gx = nx + dx, gy = ny + dy - view.top;
+      var c = bubbleCur[i];
+      if (!c || e < 1 && d === 0 && pop < 1) {
+        // Mientras aparecen en la portada van justo a su lugar
+        c = bubbleCur[i] = { x: gx, y: gy, s: sc };
+      } else {
+        c.x += (gx - c.x) * follow; c.y += (gy - c.y) * follow; c.s += (sc - c.s) * follow;
+      }
+      if (Math.abs(gx - c.x) > 1.5 || Math.abs(gy - c.y) > 1.5) closeAll = false;
+      dx = c.x - nx; dy = c.y + view.top - ny; sc = c.s;
       a.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + Math.max(0, sc).toFixed(3) + ')';
       var op = Math.min(1, pop * 1.5 + e);
       // Celular: al llegar arriba le pasan el lugar a la fila fija de la barra
       // (así no vibran al scrollear)
-      if (dockRow && d >= 0.98) op = 0;
+      if (swap) op = 0;
       a.style.opacity = op.toFixed(3);
       a.style.pointerEvents = op < 0.2 ? 'none' : '';
     });
+    bubbleClose = closeAll;
   }
 
   // ---------- La matrícula sube a la barra de arriba ----------
