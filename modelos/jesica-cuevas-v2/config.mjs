@@ -135,6 +135,24 @@ export default {
     // Los recetarios todavía están en preparación: no se venden aún.
     productsSoonTag: 'Próximamente',
     productsSoonText: 'Disponible próximamente',
+    // --- Tiendita de recetarios (documentos digitales) ---
+    // Toma los recetarios del modelo principal y suma dos basados en sus
+    // posteos (menú semanal y tartas/wraps). PENDIENTE: títulos, precios,
+    // contenido de cada uno y forma de pago. Precio vacío = "a confirmar".
+    // El pedido se manda por WhatsApp con la lista de lo elegido.
+    shop: {
+      eyebrow: 'Tienda',
+      title: 'La tiendita de Jesi',
+      sign: 'Abierto',
+      intro: base.products.intro,
+      soonPrice: 'Precio a confirmar',
+      orderIntro: 'Hola Jesi! Quiero estos recetarios:',
+      items: [
+        ...base.products.items.map((it) => ({ title: it.title, description: it.description, format: it.format, price: it.price })),
+        { title: 'Menú semanal', description: 'Almuerzos y cenas organizados para toda la semana, para cambiar hábitos sin complicarte.', format: 'Recetario digital · PDF', price: '' },
+        { title: 'Tartas y wraps caseros', description: 'Rellenos fáciles para variar almuerzos y cenas, con ideas para toda la familia.', format: 'Recetario digital · PDF', price: '' },
+      ],
+    },
     contactText: 'Escribime y coordinamos tu consulta, online o presencial en Castelar.',
     bookingTitle: 'No hace falta hacerlo perfecto para empezar.',
     bookingText: 'Reservá tu primera consulta, online o presencial en Castelar.',

@@ -145,6 +145,117 @@
     cv.addEventListener('pointerleave', function () { last = null; });
     cv.addEventListener('pointerup', function () { last = null; });
   })();
+  // ---------- Tiendita: elegir recetarios y armar el pedido ----------
+  // Funciona también sin animaciones. El pedido se guarda en este navegador
+  // y se manda por WhatsApp con la lista de lo elegido.
+  (function () {
+    var shop = document.querySelector('[data-shop]');
+    if (!shop) return;
+    var q = function (sel) { return shop.querySelector(sel); };
+    var books = [].slice.call(shop.querySelectorAll('[data-book]'));
+    var soon = shop.getAttribute('data-soon') || '';
+    var intro = shop.getAttribute('data-intro') || '';
+    var wa = shop.getAttribute('data-wa') || '';
+    var pv = { format: q('[data-p-format]'), title: q('[data-p-title]'), text: q('[data-p-text]'), price: q('[data-p-price]') };
+    var preview = q('[data-preview]'), addBtn = q('[data-add]'), countEl = q('[data-count]');
+    var list = q('[data-ticket-list]'), empty = q('[data-ticket-empty]'), totalEl = q('[data-ticket-total]');
+    var send = q('[data-send]'), ticket = q('[data-ticket]'), regTop = q('.register__top');
+    var anim = function () { return window.gsap && !reduce ? window.gsap : null; };
+    var titles = books.map(function (b) { return b.getAttribute('data-title'); });
+    var current = 0, order = [];
+    try {
+      order = JSON.parse(localStorage.getItem('jc-pedido') || '[]').filter(function (t) { return titles.indexOf(t) >= 0; });
+    } catch (err) { order = []; }
+    var save = function () { try { localStorage.setItem('jc-pedido', JSON.stringify(order)); } catch (err) {} };
+    var priceOf = function (t) { return books[titles.indexOf(t)].getAttribute('data-price') || ''; };
+    var amount = function (pr) { var n = pr.replace(/[^\d]/g, ''); return n ? Number(n) : null; };
+
+    var pick = function (i) {
+      current = i;
+      books.forEach(function (b, k) { b.querySelector('[data-pick]').setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
+      var b = books[i];
+      pv.format.textContent = b.getAttribute('data-format');
+      pv.title.textContent = b.getAttribute('data-title');
+      pv.text.textContent = b.getAttribute('data-text');
+      pv.price.textContent = b.getAttribute('data-price') || soon;
+      addBtn.textContent = order.indexOf(titles[i]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
+      var g = anim();
+      if (g) g.fromTo(preview.children, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.05, ease: 'power3.out', overwrite: true });
+    };
+
+    var render = function (fresh) {
+      list.textContent = '';
+      order.forEach(function (t, k) {
+        var li = document.createElement('li');
+        var name = document.createElement('span'); name.className = 'ticket__name'; name.textContent = t;
+        var pr = document.createElement('span'); pr.className = 'ticket__price'; pr.textContent = priceOf(t);
+        var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'ticket__remove';
+        rm.setAttribute('data-remove', String(k)); rm.setAttribute('aria-label', 'Quitar ' + t); rm.textContent = '×';
+        li.appendChild(name); li.appendChild(pr); li.appendChild(rm);
+        list.appendChild(li);
+        if (t === fresh && anim()) anim().from(li, { height: 0, opacity: 0, y: -10, duration: 0.6, ease: 'power3.out' });
+      });
+      empty.hidden = order.length > 0;
+      ticket.classList.toggle('is-empty', !order.length);
+      countEl.textContent = String(order.length);
+      var sum = 0, known = order.length > 0;
+      order.forEach(function (t) { var n = amount(priceOf(t)); if (n === null) known = false; else sum += n; });
+      totalEl.textContent = !order.length ? '—' : known ? '$ ' + sum.toLocaleString('es-AR') : 'A confirmar';
+      var msg = intro + (order.length ? '\n' + order.map(function (t) { return '• ' + t; }).join('\n') : '');
+      send.href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
+      addBtn.textContent = order.indexOf(titles[current]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
+      save();
+    };
+
+    // El librito elegido vuela en arco hasta la caja y se imprime en el ticket
+    var flyIn = function (i, done) {
+      var g = anim();
+      var cover = books[i].querySelector('.book__cover');
+      if (!g || !cover) { done(); return; }
+      var a = cover.getBoundingClientRect(), z = countEl.getBoundingClientRect();
+      var fly = document.createElement('div');
+      fly.className = 'book-fly';
+      fly.style.cssText = 'left:' + a.left + 'px;top:' + a.top + 'px;width:' + a.width + 'px;height:' + a.height + 'px;';
+      var c = cover.cloneNode(true);
+      var cs = getComputedStyle(books[i]);
+      fly.style.setProperty('--c', cs.getPropertyValue('--c'));
+      fly.style.setProperty('--c-ink', cs.getPropertyValue('--c-ink'));
+      fly.appendChild(c);
+      document.body.appendChild(fly);
+      var dx = z.left + z.width / 2 - (a.left + a.width / 2), dy = z.top + z.height / 2 - (a.top + a.height / 2);
+      g.to(fly, { x: dx, duration: 0.85, ease: 'power1.inOut' });
+      g.to(fly, { keyframes: [{ y: Math.min(-80, dy * 0.5 - 140), duration: 0.38, ease: 'power2.out' }, { y: dy, duration: 0.47, ease: 'power2.in' }] });
+      g.to(fly, { scale: 0.12, rotation: 200, duration: 0.85, ease: 'power1.in', onComplete: function () {
+        fly.remove();
+        g.fromTo(regTop, { scaleY: 0.9, scaleX: 1.04 }, { scaleY: 1, scaleX: 1, duration: 0.7, ease: 'elastic.out(1, 0.35)' });
+        g.fromTo(countEl, { scale: 1.8 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
+        done();
+      } });
+    };
+
+    books.forEach(function (b, i) {
+      b.querySelector('[data-pick]').addEventListener('click', function () { pick(i); });
+    });
+    addBtn.addEventListener('click', function () {
+      var t = titles[current];
+      if (order.indexOf(t) >= 0) {
+        var g = anim();
+        if (g) g.fromTo(ticket, { x: -6 }, { x: 0, duration: 0.5, ease: 'elastic.out(1.2, 0.3)' });
+        return;
+      }
+      order.push(t);
+      addBtn.textContent = 'Ya está en tu pedido';
+      flyIn(current, function () { render(t); });
+    });
+    list.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-remove]');
+      if (!btn) return;
+      order.splice(Number(btn.getAttribute('data-remove')), 1);
+      render();
+    });
+    render();
+  })();
+
   if (carousels.length && !reduce) {
     var started0 = Date.now();
     setInterval(function () {
@@ -768,6 +879,17 @@
   if (circle) {
     gsap.fromTo(circle, { '--s': 0.02 }, { '--s': 1, ease: 'power2.inOut', scrollTrigger: { trigger: '[data-booking]', start: 'top 85%', end: 'center 55%', scrub: 0.6 } });
     gsap.from('[data-booking] .booking__in > *', { y: 40, opacity: 0, stagger: 0.08, ease: 'none', scrollTrigger: { trigger: '[data-booking]', start: 'top 55%', end: 'top 15%', scrub: 0.6 } });
+  }
+
+  // ---------- Tiendita: el toldo se despliega, el cartel baja y los libros caen al estante ----------
+  if (document.querySelector('[data-shop]')) {
+    try {
+      gsap.fromTo('[data-awning]', { scaleY: 0.04 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '[data-shop]', start: 'top 95%', end: 'top 35%', scrub: 0.6 } });
+      gsap.fromTo('[data-sign]', { '--drop': '-160px', opacity: 0 }, { '--drop': '0px', opacity: 1, duration: 1.1, ease: 'back.out(1.8)', scrollTrigger: { trigger: '[data-shop]', start: 'top 60%', toggleActions: 'play none none reverse' } });
+      gsap.from('[data-shop] .shop__head > *', { y: 40, opacity: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '[data-shop] .shop__head', start: 'top 80%', toggleActions: 'play none none reverse' } });
+      gsap.from('[data-book]', { y: -300, opacity: 0, rotation: function (i) { return [-14, 10, -8, 12, -10][i % 5]; }, duration: 1.15, stagger: 0.12, ease: 'bounce.out', scrollTrigger: { trigger: '[data-shelf]', start: 'top 82%', toggleActions: 'play none none reverse' } });
+      gsap.from('[data-shop] .counter > *', { y: 70, opacity: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: '[data-shop] .counter', start: 'top 85%', toggleActions: 'play none none reverse' } });
+    } catch (err) {}
   }
 
   // ---------- Botones "magnéticos" (solo con mouse) ----------

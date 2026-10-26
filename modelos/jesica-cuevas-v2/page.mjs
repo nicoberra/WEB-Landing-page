@@ -23,6 +23,83 @@ const icons = {
 
 const arrow = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
+// Dibujitos de línea para las tapas de los recetarios (se repiten en orden)
+const bookIcons = [
+  // batidor
+  '<path d="M12 21v-7"/><path d="M12 14c-4 0-5-6-5-8a5 5 0 0 1 10 0c0 2-1 8-5 8Z"/><path d="M12 14c-2 0-2.5-6-2.5-8M12 14c2 0 2.5-6 2.5-8"/>',
+  // pesa
+  '<path d="M6 8v8M18 8v8M3.5 10v4M20.5 10v4M6 12h12"/>',
+  // vianda
+  '<rect x="3.5" y="9" width="17" height="10" rx="3"/><path d="M5 9c0-2 2-3.5 7-3.5S19 7 19 9M12 9v10"/>',
+  // calendario
+  '<rect x="4" y="5.5" width="16" height="14" rx="3"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4M8 14h2M12 14h2M8 17h2"/>',
+  // porción de tarta
+  '<path d="M4 18h16L12 5.5Z"/><path d="M4 18c0 1.5 1 2 2 2h12c1 0 2-.5 2-2M9 13.5h1.5M12.5 11h1"/>',
+];
+
+/** Tiendita: fachada con toldo, estante con los recetarios y un mostrador
+ *  con caja registradora que imprime el pedido (se manda por WhatsApp). */
+function shopSection(config) {
+  const s = config.v2.shop;
+  if (!s || !s.items || !s.items.length) return '';
+  const first = s.items[0];
+  const send = `https://wa.me/${config.contact.whatsapp.number}?text=${encodeURIComponent(s.orderIntro)}`;
+  return `<section class="shop" id="tienda" aria-labelledby="tienda-titulo" data-shop data-soon="${esc(s.soonPrice)}" data-intro="${esc(s.orderIntro)}" data-wa="${esc(config.contact.whatsapp.number)}">
+    <div class="shop__awning" data-awning aria-hidden="true"><span></span></div>
+    <div class="shop__sign" data-sign aria-hidden="true"><span>${esc(s.sign)}</span></div>
+    <div class="wrap shop__in">
+      <header class="shop__head">
+        <p class="eyebrow">${esc(s.eyebrow)}</p>
+        <h2 class="big-title shop__title" id="tienda-titulo">${esc(s.title)}</h2>
+        <p class="shop__intro">${esc(s.intro)}</p>
+      </header>
+      <div class="shop__grid">
+        <ul class="shelf" role="list" data-shelf>
+          ${s.items
+            .map(
+              (it, i) => `<li class="shelf__item shelf__item--${i % 5}" data-book data-title="${esc(it.title)}" data-text="${esc(it.description)}" data-format="${esc(it.format)}" data-price="${esc(it.price || '')}">
+            <button class="book" type="button" data-pick aria-pressed="${i === 0}" aria-label="Ver ${esc(it.title)}">
+              <span class="book__cover">
+                <span class="book__label">Recetario</span>
+                <span class="book__title">${esc(it.title)}</span>
+                <svg class="book__icon" viewBox="0 0 24 24" aria-hidden="true">${bookIcons[i % bookIcons.length]}</svg>
+                <span class="book__brand">Jesica Cuevas</span>
+              </span>
+            </button>
+            <span class="pricetag" aria-hidden="true">${esc(it.price || 'Pronto')}</span>
+          </li>`
+            )
+            .join('\n          ')}
+        </ul>
+        <aside class="counter" aria-label="Mostrador">
+          <div class="counter__preview" data-preview aria-live="polite">
+            <p class="counter__kicker" data-p-format>${esc(first.format)}</p>
+            <h3 class="counter__title" data-p-title>${esc(first.title)}</h3>
+            <p class="counter__text" data-p-text>${esc(first.description)}</p>
+            <div class="counter__row">
+              <span class="counter__price" data-p-price>${esc(first.price || s.soonPrice)}</span>
+              <button class="counter__add" type="button" data-add>Agregar al pedido</button>
+            </div>
+          </div>
+          <div class="register" data-register>
+            <div class="register__top">
+              <span class="register__screen"><b data-count>0</b> en tu pedido</span>
+              <span class="register__keys" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            </div>
+            <div class="ticket" data-ticket>
+              <p class="ticket__head">Tu pedido</p>
+              <ol class="ticket__list" data-ticket-list></ol>
+              <p class="ticket__empty" data-ticket-empty>Elegí un recetario del estante y sumalo acá.</p>
+              <p class="ticket__total"><span>Total</span><strong data-ticket-total>—</strong></p>
+              <a class="ticket__send" data-send ${linkAttrs(send)}>Pedir por WhatsApp${arrow}</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>`;
+}
+
 /** Turnos: por ahora todos llevan al WhatsApp de contacto (no hay turnero). */
 function bookingLink(config) {
   const b = config.booking || {};
@@ -266,6 +343,8 @@ ${headHtml}
         .join('\n      ')}
     </ul>
   </section>
+
+  ${shopSection(config)}
 
   <section class="booking" id="turnos" aria-labelledby="turnos-titulo" data-booking>
     <div class="booking__circle" data-circle aria-hidden="true"></div>
