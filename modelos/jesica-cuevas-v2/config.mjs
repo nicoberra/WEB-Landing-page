@@ -12,7 +12,7 @@ export default {
 
   site: {
     ...base.site,
-    title: 'Jesica Cuevas | Nutricionista en Castelar y online',
+    title: 'Jesica Cuevas | Nutricionista',
   },
 
   // Turnos: en esta versión todos los botones de turno llevan al WhatsApp de
