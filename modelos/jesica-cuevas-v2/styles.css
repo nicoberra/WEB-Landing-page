@@ -2856,6 +2856,81 @@ main section[id] {
   opacity: 0.45;
 }
 
+/* Pago con Mercado Pago: mail + botón celeste (el color de Mercado Pago) */
+.ticket__pay {
+  display: grid;
+  gap: 10px;
+}
+
+.ticket__mail {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ticket__mail input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font: 500 14px/1.2 var(--font-body);
+}
+
+.ticket__mail input:focus {
+  outline: 3px solid color-mix(in srgb, #009EE3 35%, transparent);
+  border-style: solid;
+  border-color: #009EE3;
+}
+
+.ticket__send--mp {
+  width: 100%;
+  border: 0;
+  background: #009EE3;
+  color: #fff;
+  cursor: pointer;
+}
+
+.ticket__send--mp:hover {
+  background: #0087c2;
+}
+
+.ticket__send--mp:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ticket__msg {
+  margin: 0;
+  min-height: 1.5em;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ticket__msg:empty {
+  display: none;
+}
+
+.ticket__alt {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.shop__mine {
+  justify-self: center;
+  font: 700 12px/1.3 var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-underline-offset: 4px;
+}
+
 /* Librito que vuela al pedido */
 .book-fly {
   position: fixed;

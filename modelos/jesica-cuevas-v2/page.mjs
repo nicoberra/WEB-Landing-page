@@ -39,12 +39,16 @@ const bookIcons = [
 
 /** Tiendita: fachada con toldo, estante con los recetarios y un mostrador
  *  con caja registradora que imprime el pedido (se manda por WhatsApp). */
+/** Precio en pesos con puntos de miles: 9900 → "$ 9.900". */
+const money = (n) => '$ ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const forSale = (it) => typeof it.price === 'number' && it.price > 0;
+
 function shopSection(config) {
   const s = config.v2.shop;
   if (!s || !s.items || !s.items.length) return '';
   const first = s.items[0];
   const send = `https://wa.me/${config.contact.whatsapp.number}?text=${encodeURIComponent(s.orderIntro)}`;
-  return `<section class="shop" id="tienda" aria-labelledby="tienda-titulo" data-shop data-soon="${esc(s.soonPrice)}" data-intro="${esc(s.orderIntro)}" data-wa="${esc(config.contact.whatsapp.number)}">
+  return `<section class="shop" id="tienda" aria-labelledby="tienda-titulo" data-shop data-soon="${esc(s.soonPrice)}" data-intro="${esc(s.orderIntro)}" data-wa="${esc(config.contact.whatsapp.number)}"${s.payments ? ' data-payments' : ''}>
     <div class="shop__awning" data-awning aria-hidden="true"><span></span></div>
     <div class="shop__sign" data-sign aria-hidden="true"><span>${esc(s.sign)}</span></div>
     <div class="wrap shop__in">
@@ -57,7 +61,7 @@ function shopSection(config) {
         <ul class="shelf" role="list" data-shelf>
           ${s.items
             .map(
-              (it, i) => `<li class="shelf__item shelf__item--${i % 5}" data-book data-title="${esc(it.title)}" data-text="${esc(it.description)}" data-format="${esc(it.format)}" data-price="${esc(it.price || '')}">
+              (it, i) => `<li class="shelf__item shelf__item--${i % 5}" data-book data-id="${esc(it.id)}" data-title="${esc(it.title)}" data-text="${esc(it.description)}" data-format="${esc(it.format)}" data-price="${forSale(it) ? it.price : ''}" data-price-label="${forSale(it) ? money(it.price) : ''}">
             <button class="book" type="button" data-pick aria-pressed="${i === 0}" aria-label="Ver ${esc(it.title)}">
               <span class="book__cover">
                 <span class="book__label">Recetario</span>
@@ -66,7 +70,7 @@ function shopSection(config) {
                 <span class="book__brand">Jesica Cuevas</span>
               </span>
             </button>
-            <span class="pricetag" aria-hidden="true">${esc(it.price || 'Pronto')}</span>
+            <span class="pricetag" aria-hidden="true">${forSale(it) ? money(it.price) : 'Pronto'}</span>
           </li>`
             )
             .join('\n          ')}
@@ -77,7 +81,7 @@ function shopSection(config) {
             <h3 class="counter__title" data-p-title>${esc(first.title)}</h3>
             <p class="counter__text" data-p-text>${esc(first.description)}</p>
             <div class="counter__row">
-              <span class="counter__price" data-p-price>${esc(first.price || s.soonPrice)}</span>
+              <span class="counter__price" data-p-price>${forSale(first) ? money(first.price) : esc(s.soonPrice)}</span>
               <button class="counter__add" type="button" data-add>Agregar al pedido</button>
             </div>
           </div>
@@ -91,9 +95,15 @@ function shopSection(config) {
               <ol class="ticket__list" data-ticket-list></ol>
               <p class="ticket__empty" data-ticket-empty>Elegí un recetario del estante y sumalo acá.</p>
               <p class="ticket__total"><span>Total</span><strong data-ticket-total>—</strong></p>
-              <a class="ticket__send" data-send ${linkAttrs(send)}>Pedir por WhatsApp${arrow}</a>
+              ${s.payments ? `<div class="ticket__pay" data-pay-box>
+                <label class="ticket__mail"><span>Tu mail: ahí te llegan los recetarios</span><input type="email" name="email" data-mail autocomplete="email" inputmode="email" placeholder="tu@mail.com" required></label>
+                <button class="ticket__send ticket__send--mp" type="button" data-pay>Pagar con Mercado Pago${arrow}</button>
+                <p class="ticket__msg" data-pay-msg role="status" aria-live="polite"></p>
+              </div>
+              <a class="ticket__alt" data-send ${linkAttrs(send)}>¿Dudas? Escribime por WhatsApp</a>` : `<a class="ticket__send" data-send ${linkAttrs(send)}>Pedir por WhatsApp${arrow}</a>`}
             </div>
           </div>
+          ${s.payments ? '<a class="shop__mine" href="mis-recetarios.html">¿Ya compraste? Descargá tus recetarios</a>' : ''}
         </aside>
       </div>
     </div>
@@ -408,4 +418,122 @@ ${headHtml}
 </body>
 </html>
 `;
+}
+
+/** Archivos extra del sitio (los escribe scripts/build.mjs junto a index.html):
+ *  - tienda.json: catálogo público (id, título y precio) que leen las funciones
+ *    de /api para cobrar siempre el precio correcto.
+ *  - mis-recetarios.html: página a la que vuelve la persona después de pagar
+ *    (descarga) y donde puede pedir de nuevo sus recetarios con su mail. */
+export function extraFiles(config) {
+  const s = config.v2 && config.v2.shop;
+  if (!s || !s.payments) return {};
+  const c = config.colors.light;
+  const catalog = s.items.map((it) => ({ id: it.id, title: it.title, price: forSale(it) ? it.price : null }));
+  const page = `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mis recetarios · ${esc(config.person.name)}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="${esc(config.fonts.googleFontsUrl)}">
+<style>
+  :root { --bg: ${c.bg}; --surface: ${c.surface}; --ink: ${c.ink}; --muted: ${c.muted}; --line: ${c.line}; --accent: ${c.accent}; --apple: ${c.highlight}; --paper: #FFFDF7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: radial-gradient(70% 50% at 80% 0%, #DCE3D2, transparent 70%), var(--bg); color: var(--ink); font: 400 16px/1.6 'Figtree', system-ui, sans-serif; display: grid; place-items: start center; padding: 32px 16px 64px; }
+  main { width: 100%; max-width: 520px; }
+  .back { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 600; margin-bottom: 28px; }
+  .back img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+  h1 { margin: 0 0 10px; font: 800 clamp(34px, 9vw, 52px)/0.95 'Archivo', system-ui, sans-serif; font-variation-settings: 'wdth' 85; text-transform: uppercase; letter-spacing: -0.02em; }
+  p { margin: 0 0 18px; color: var(--muted); }
+  .card { margin-top: 24px; padding: 24px 20px 30px; background: var(--paper); box-shadow: 0 18px 30px -20px rgb(31 45 37 / .6); font-family: ui-monospace, Menlo, monospace; font-size: 14px;
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; }
+  .card h2 { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1.5px dashed #9aa59c; text-align: center; font-size: 14px; letter-spacing: .24em; text-transform: uppercase; }
+  label { display: grid; gap: 6px; font-weight: 600; }
+  input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font: inherit; color: var(--ink); }
+  input:focus { outline: 3px solid color-mix(in srgb, var(--apple) 50%, transparent); border-color: var(--accent); }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 14px; padding: 14px 18px; border: 0; border-radius: 999px; background: var(--apple); color: var(--ink); font: 700 13px/1 'Archivo', system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
+  .btn--dark { background: var(--accent); color: var(--paper); }
+  .btn[disabled] { opacity: .5; cursor: wait; }
+  ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .msg { margin: 14px 0 0; font-family: 'Figtree', system-ui, sans-serif; color: var(--ink); }
+  .small { font-size: 13px; }
+  .small a { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="./#tienda"><img src="${esc(config.person.photo.src)}" alt="" width="44" height="44">Volver a la tienda</a>
+  <h1 data-title>Mis recetarios</h1>
+  <p data-lead>Poné el mail con el que compraste y te mandamos un link para descargar todos tus recetarios, las veces que quieras.</p>
+
+  <section class="card" data-result hidden>
+    <h2>Tu compra</h2>
+    <p class="msg" data-result-msg></p>
+    <ul data-files></ul>
+  </section>
+
+  <form class="card" data-form>
+    <h2>Descargar de nuevo</h2>
+    <label>Tu mail<input type="email" name="email" required autocomplete="email" inputmode="email" placeholder="tu@mail.com"></label>
+    <button class="btn" type="submit">Mandarme el link</button>
+    <p class="msg" data-form-msg role="status" aria-live="polite"></p>
+  </form>
+  <p class="small">¿Problemas con tu compra? <a href="https://wa.me/${esc(config.contact.whatsapp.number)}">Escribime por WhatsApp</a>.</p>
+</main>
+<script>
+(function () {
+  var qs = new URLSearchParams(location.search);
+  var $ = function (s) { return document.querySelector(s); };
+  var result = $('[data-result]'), resMsg = $('[data-result-msg]'), files = $('[data-files]');
+  var form = $('[data-form]'), formMsg = $('[data-form-msg]');
+  // Vuelta desde Mercado Pago: ?payment_id=...&status=...&external_reference=...
+  var pay = qs.get('payment_id') || qs.get('collection_id');
+  var status = qs.get('status') || qs.get('collection_status');
+  if (status === 'rejected' || status === 'null') {
+    result.hidden = false;
+    resMsg.textContent = 'El pago no se completó. Podés volver a la tienda e intentarlo de nuevo.';
+  } else if (pay && qs.get('external_reference')) {
+    result.hidden = false;
+    $('[data-title]').textContent = '¡Gracias por tu compra!';
+    $('[data-lead]').textContent = 'También te mandamos los links por mail. Si no lo ves, revisá en spam o promociones.';
+    resMsg.textContent = 'Buscando tu compra…';
+    fetch('/api/pago?payment_id=' + encodeURIComponent(pay) + '&external_reference=' + encodeURIComponent(qs.get('external_reference')))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d.status === 'approved' && d.files && d.files.length) {
+          resMsg.textContent = 'Listo, ya podés descargarlos:';
+          d.files.forEach(function (f) {
+            var li = document.createElement('li'), a = document.createElement('a');
+            a.className = 'btn btn--dark'; a.href = f.url; a.textContent = 'Descargar ' + f.title;
+            li.appendChild(a); files.appendChild(li);
+          });
+        } else if (d.status === 'pending' || d.status === 'in_process') {
+          resMsg.textContent = 'Tu pago está en proceso. Cuando se acredite te llega un mail con los links de descarga.';
+        } else {
+          resMsg.textContent = d.error || 'No pudimos encontrar tu compra. Si ya pagaste, escribime por WhatsApp.';
+        }
+      })
+      .catch(function () { resMsg.textContent = 'No pudimos cargar tu compra. Probá de nuevo en un rato o escribime por WhatsApp.'; });
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = form.querySelector('button'), email = form.email.value.trim();
+    btn.disabled = true; formMsg.textContent = 'Enviando…';
+    fetch('/api/mis-recetarios', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { formMsg.textContent = d.message || d.error || 'Listo.'; })
+      .catch(function () { formMsg.textContent = 'No pudimos enviarlo. Probá de nuevo en un rato.'; })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
+`;
+  return { 'tienda.json': JSON.stringify({ items: catalog }, null, 2) + '\n', 'mis-recetarios.html': page };
 }

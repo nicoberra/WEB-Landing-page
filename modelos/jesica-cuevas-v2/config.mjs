@@ -137,9 +137,16 @@ export default {
     productsSoonText: 'Disponible próximamente',
     // --- Tiendita de recetarios (documentos digitales) ---
     // Toma los recetarios del modelo principal y suma dos basados en sus
-    // posteos (menú semanal y tartas/wraps). PENDIENTE: títulos, precios,
-    // contenido de cada uno y forma de pago. Precio vacío = "a confirmar".
-    // El pedido se manda por WhatsApp con la lista de lo elegido.
+    // posteos (menú semanal y tartas/wraps). PENDIENTE: títulos, precios y
+    // contenido de cada uno.
+    //
+    // Venta con Mercado Pago (ver TIENDA.md en esta carpeta):
+    //  - id: nombre corto y fijo de cada recetario (no cambiarlo después de
+    //    vender: con él se encuentra su PDF y las compras anteriores).
+    //  - price: precio en pesos, solo el número (ej.: 9900). null = todavía no
+    //    está a la venta y se muestra "Precio a confirmar".
+    //  - payments: true muestra el pago con Mercado Pago en el ticket; si los
+    //    pagos todavía no están configurados en Vercel, ofrece WhatsApp.
     shop: {
       eyebrow: 'Tienda',
       title: 'La tiendita de Jesi',
@@ -147,10 +154,17 @@ export default {
       intro: base.products.intro,
       soonPrice: 'Precio a confirmar',
       orderIntro: 'Hola Jesi! Quiero estos recetarios:',
+      payments: true,
       items: [
-        ...base.products.items.map((it) => ({ title: it.title, description: it.description, format: it.format, price: it.price })),
-        { title: 'Menú semanal', description: 'Almuerzos y cenas organizados para toda la semana, para cambiar hábitos sin complicarte.', format: 'Recetario digital · PDF', price: '' },
-        { title: 'Tartas y wraps caseros', description: 'Rellenos fáciles para variar almuerzos y cenas, con ideas para toda la familia.', format: 'Recetario digital · PDF', price: '' },
+        ...base.products.items.map((it, i) => ({
+          id: ['snacks-dulces', 'pre-post-entreno', 'viandas-rapiditas'][i] || `recetario-${i + 1}`,
+          title: it.title,
+          description: it.description,
+          format: it.format,
+          price: null,
+        })),
+        { id: 'menu-semanal', title: 'Menú semanal', description: 'Almuerzos y cenas organizados para toda la semana, para cambiar hábitos sin complicarte.', format: 'Recetario digital · PDF', price: null },
+        { id: 'tartas-wraps', title: 'Tartas y wraps caseros', description: 'Rellenos fáciles para variar almuerzos y cenas, con ideas para toda la familia.', format: 'Recetario digital · PDF', price: null },
       ],
     },
     contactText: 'Escribime y coordinamos tu consulta, online o presencial en Castelar.',

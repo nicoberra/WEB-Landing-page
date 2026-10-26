@@ -146,8 +146,9 @@
     cv.addEventListener('pointerup', function () { last = null; });
   })();
   // ---------- Tiendita: elegir recetarios y armar el pedido ----------
-  // Funciona también sin animaciones. El pedido se guarda en este navegador
-  // y se manda por WhatsApp con la lista de lo elegido.
+  // Funciona también sin animaciones. El pedido se guarda en este navegador.
+  // Con pagos: se paga con Mercado Pago (api/checkout.js) y los recetarios
+  // llegan por mail. Sin pagos configurados: se pide por WhatsApp.
   (function () {
     var shop = document.querySelector('[data-shop]');
     if (!shop) return;
@@ -161,14 +162,17 @@
     var list = q('[data-ticket-list]'), empty = q('[data-ticket-empty]'), totalEl = q('[data-ticket-total]');
     var send = q('[data-send]'), ticket = q('[data-ticket]'), regTop = q('.register__top');
     var anim = function () { return window.gsap && !reduce ? window.gsap : null; };
-    var titles = books.map(function (b) { return b.getAttribute('data-title'); });
+    var ids = books.map(function (b) { return b.getAttribute('data-id'); });
+    var bookOf = function (id) { return books[ids.indexOf(id)]; };
+    var nameOf = function (id) { return bookOf(id).getAttribute('data-title'); };
+    var priceOf = function (id) { var n = Number(bookOf(id).getAttribute('data-price')); return n > 0 ? n : null; };
+    var money = function (n) { return '$ ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
     var current = 0, order = [];
     try {
-      order = JSON.parse(localStorage.getItem('jc-pedido') || '[]').filter(function (t) { return titles.indexOf(t) >= 0; });
+      order = JSON.parse(localStorage.getItem('jc-pedido') || '[]').filter(function (id) { return ids.indexOf(id) >= 0; });
     } catch (err) { order = []; }
     var save = function () { try { localStorage.setItem('jc-pedido', JSON.stringify(order)); } catch (err) {} };
-    var priceOf = function (t) { return books[titles.indexOf(t)].getAttribute('data-price') || ''; };
-    var amount = function (pr) { var n = pr.replace(/[^\d]/g, ''); return n ? Number(n) : null; };
+    var payBtn = q('[data-pay]'), mail = q('[data-mail]'), payMsg = q('[data-pay-msg]');
 
     var pick = function (i) {
       current = i;
@@ -177,33 +181,38 @@
       pv.format.textContent = b.getAttribute('data-format');
       pv.title.textContent = b.getAttribute('data-title');
       pv.text.textContent = b.getAttribute('data-text');
-      pv.price.textContent = b.getAttribute('data-price') || soon;
-      addBtn.textContent = order.indexOf(titles[i]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
+      pv.price.textContent = b.getAttribute('data-price-label') || soon;
+      addBtn.textContent = order.indexOf(ids[i]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
       var g = anim();
       if (g) g.fromTo(preview.children, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.05, ease: 'power3.out', overwrite: true });
     };
 
     var render = function (fresh) {
       list.textContent = '';
-      order.forEach(function (t, k) {
+      order.forEach(function (id, k) {
         var li = document.createElement('li');
-        var name = document.createElement('span'); name.className = 'ticket__name'; name.textContent = t;
-        var pr = document.createElement('span'); pr.className = 'ticket__price'; pr.textContent = priceOf(t);
+        var name = document.createElement('span'); name.className = 'ticket__name'; name.textContent = nameOf(id);
+        var pr = document.createElement('span'); pr.className = 'ticket__price'; pr.textContent = priceOf(id) ? money(priceOf(id)) : '';
         var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'ticket__remove';
-        rm.setAttribute('data-remove', String(k)); rm.setAttribute('aria-label', 'Quitar ' + t); rm.textContent = '×';
+        rm.setAttribute('data-remove', String(k)); rm.setAttribute('aria-label', 'Quitar ' + nameOf(id)); rm.textContent = '×';
         li.appendChild(name); li.appendChild(pr); li.appendChild(rm);
         list.appendChild(li);
-        if (t === fresh && anim()) anim().from(li, { height: 0, opacity: 0, y: -10, duration: 0.6, ease: 'power3.out' });
+        if (id === fresh && anim()) anim().from(li, { height: 0, opacity: 0, y: -10, duration: 0.6, ease: 'power3.out' });
       });
       empty.hidden = order.length > 0;
       ticket.classList.toggle('is-empty', !order.length);
       countEl.textContent = String(order.length);
       var sum = 0, known = order.length > 0;
-      order.forEach(function (t) { var n = amount(priceOf(t)); if (n === null) known = false; else sum += n; });
-      totalEl.textContent = !order.length ? '—' : known ? '$ ' + sum.toLocaleString('es-AR') : 'A confirmar';
-      var msg = intro + (order.length ? '\n' + order.map(function (t) { return '• ' + t; }).join('\n') : '');
+      order.forEach(function (id) { var n = priceOf(id); if (n === null) known = false; else sum += n; });
+      totalEl.textContent = !order.length ? '—' : known ? money(sum) : 'A confirmar';
+      var msg = intro + (order.length ? '\n' + order.map(function (id) { return '• ' + nameOf(id); }).join('\n') : '');
       send.href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
-      addBtn.textContent = order.indexOf(titles[current]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
+      addBtn.textContent = order.indexOf(ids[current]) >= 0 ? 'Ya está en tu pedido' : 'Agregar al pedido';
+      // Solo se puede pagar si todo lo elegido ya tiene precio
+      if (payBtn) {
+        payBtn.disabled = !order.length || !known;
+        payMsg.textContent = order.length && !known ? 'Algunos recetarios todavía no están a la venta. Mientras, podés pedirlos por WhatsApp.' : '';
+      }
       save();
     };
 
@@ -237,7 +246,7 @@
       b.querySelector('[data-pick]').addEventListener('click', function () { pick(i); });
     });
     addBtn.addEventListener('click', function () {
-      var t = titles[current];
+      var t = ids[current];
       if (order.indexOf(t) >= 0) {
         var g = anim();
         if (g) g.fromTo(ticket, { x: -6 }, { x: 0, duration: 0.5, ease: 'elastic.out(1.2, 0.3)' });
@@ -253,6 +262,34 @@
       order.splice(Number(btn.getAttribute('data-remove')), 1);
       render();
     });
+    // Pagar: el servidor arma el cobro con los precios del catálogo y
+    // devuelve la página de Mercado Pago. Si los pagos no están listos, se
+    // ofrece WhatsApp.
+    if (payBtn) {
+      payBtn.addEventListener('click', function () {
+        var email = (mail.value || '').trim();
+        if (!mail.checkValidity() || !email) {
+          payMsg.textContent = 'Escribí tu mail: ahí te llegan los recetarios.';
+          mail.focus();
+          return;
+        }
+        payBtn.disabled = true;
+        payMsg.textContent = 'Te llevamos a Mercado Pago…';
+        fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: order, email: email }) })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (d) {
+            if (d.url) { location.href = d.url; return; }
+            payBtn.disabled = false;
+            payMsg.textContent = d.code === 'pagos-no-configurados' || !d.error
+              ? 'Los pagos se habilitan muy pronto. Mientras, pedilos por WhatsApp.'
+              : d.error;
+          })
+          .catch(function () {
+            payBtn.disabled = false;
+            payMsg.textContent = 'Los pagos se habilitan muy pronto. Mientras, pedilos por WhatsApp.';
+          });
+      });
+    }
     render();
   })();
 

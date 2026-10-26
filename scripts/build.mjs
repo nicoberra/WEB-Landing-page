@@ -37,14 +37,17 @@ export async function build(model) {
   // su carpeta). Si no, usa la plantilla general de /src.
   const own = (file) => (existsSync(path.join(model.dir, file)) ? path.join(model.dir, file) : null);
   const page = own('page.mjs');
-  const html = page
-    ? (await import(`${pathToFileURL(page).href}?t=${Date.now()}`)).renderPage(config)
-    : renderPage(config);
+  const pageModule = page ? await import(`${pathToFileURL(page).href}?t=${Date.now()}`) : null;
+  const html = pageModule ? pageModule.renderPage(config) : renderPage(config);
+  // La plantilla propia puede sumar otros archivos (por ejemplo, el catálogo de
+  // la tienda o la página de descargas).
+  const extra = pageModule && pageModule.extraFiles ? pageModule.extraFiles(config) : {};
   const modelFavicon = path.join(model.assets, 'favicon.svg');
 
   const url = config.site.url;
   await Promise.all([
     writeFile(path.join(dist, 'index.html'), html),
+    ...Object.entries(extra).map(([name, content]) => writeFile(path.join(dist, name), content)),
     copyFile((page && own('styles.css')) || path.join(root, 'src/styles.css'), path.join(dist, 'styles.css')),
     copyFile((page && own('main.js')) || path.join(root, 'src/main.js'), path.join(dist, 'main.js')),
     existsSync(modelFavicon)
