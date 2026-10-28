@@ -4,7 +4,7 @@
 // "reducir movimiento" todo se ve igual, quieto y completo.
 import { esc, rich, linkAttrs, media, whatsappUrl } from '../../src/helpers.mjs';
 import { head } from '../../src/render.mjs';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 // Foto que aparece dentro del círculo al pasar el mouse (si está cargada).
 const ALT_PHOTO = 'assets/jesica-saco.webp';
@@ -126,6 +126,18 @@ function brandFonts() {
   return `<style>${rules.join('')}</style>`;
 }
 
+// Logo de la apertura en piezas (cada letra, comida y parte del corazón es un
+// <path>), para que al abrir se desarme y las piezas salgan por los costados.
+// Si no está el archivo de piezas, va el logo como imagen.
+const LOGO_PARTS = 'assets/logo-cj-partes.svg';
+function loaderLogo(config) {
+  const file = new URL('./' + LOGO_PARTS, import.meta.url);
+  if (!existsSync(file)) {
+    return `<img class="loader__logo" data-loader-logo src="${esc(config.logo.full.src)}" alt="" width="${config.logo.full.width}" height="${config.logo.full.height}" fetchpriority="high">`;
+  }
+  return readFileSync(file, 'utf8').trim().replace('<svg ', '<svg class="loader__logo loader__logo--parts" data-loader-logo aria-hidden="true" focusable="false" ').replace(/<path /g, '<path data-part ');
+}
+
 /** Turnos: por ahora todos llevan al WhatsApp de contacto (no hay turnero). */
 function bookingLink(config) {
   const b = config.booking || {};
@@ -160,7 +172,7 @@ ${headHtml}
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 <div class="loader" data-loader aria-hidden="true">
   <div class="loader__card" data-loader-card>
-    <img class="loader__logo" data-loader-logo src="${esc(config.logo.full.src)}" alt="" width="${config.logo.full.width}" height="${config.logo.full.height}" fetchpriority="high">
+    ${loaderLogo(config)}
   </div>
 </div>
 <div class="progress" aria-hidden="true"><span data-progress></span></div>
@@ -426,7 +438,12 @@ ${headHtml}
 
 <footer class="foot">
   <div class="wrap foot__in">
-    <img class="foot__logo" src="${esc(config.logo.full.src)}" alt="${esc(config.logo.full.alt)}" width="${config.logo.full.width}" height="${config.logo.full.height}" loading="lazy">
+    <!-- Logo del pie en dos partes: el dibujo sube a la barra al final y las
+         letras se desvanecen en el camino (en chiquito queda solo el dibujo). -->
+    <div class="foot__logo" role="img" aria-label="${esc(config.logo.full.alt)}">
+      <img class="foot__mark" src="${esc(config.logo.src)}" alt="" width="${config.logo.width}" height="${config.logo.height}" loading="lazy">
+      <img class="foot__words" src="assets/logo-cj-texto.svg" alt="" width="110" height="66" loading="lazy">
+    </div>
     <p>${rich(config.footer.note)}</p>
   </div>
   <p class="foot__legal">© <span data-year>${new Date().getFullYear()}</span> ${esc(p.name)}</p>

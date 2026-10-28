@@ -443,8 +443,36 @@
       .addLabel('abrir')
       .to(loader, { padding: 0, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
       .to('[data-loader-card]', { borderRadius: 0, duration: 0.8, ease: 'expo.inOut' }, 'abrir')
-      .to('[data-loader-logo]', { scale: 1.6, opacity: 0, duration: 0.7, ease: 'power2.in' }, 'abrir+=0.2')
-      .to(loader, { opacity: 0, duration: 0.35 }, '-=0.15');
+      .to(loader, { opacity: 0, duration: 0.35 }, 'abrir+=0.95');
+    // El logo se desarma: cada pieza (letras, comidas, partes del corazón) sale
+    // volando hacia su costado, girando, hasta irse de la pantalla.
+    // (en su propia función para no pisar nombres del resto del archivo)
+    (function () {
+    var parts = [].slice.call(document.querySelectorAll('[data-loader-logo] [data-part]'));
+    if (parts.length) {
+      var lsvg = document.querySelector('[data-loader-logo]');
+      var vb = lsvg.viewBox.baseVal, upp = vb.width / (lsvg.clientWidth || 150);
+      var vw = window.innerWidth, vh = view.h || window.innerHeight;
+      parts.forEach(function (pt, i) {
+        var bb = pt.getBBox();
+        var dx = bb.x + bb.width / 2 - (vb.x + vb.width / 2), dy = bb.y + bb.height / 2 - (vb.y + vb.height / 2);
+        var side = Math.abs(dx) < vb.width * 0.04 ? (i % 2 ? 1 : -1) : dx > 0 ? 1 : -1;
+        var r = Math.sin(i * 12.9898) * 0.5 + 0.5; // al azar pero siempre igual
+        pt.__out = { x: side * (vw * (0.62 + r * 0.35)) * upp, y: (dy * 1.4 + (r - 0.5) * vh * 0.5 * upp), rot: side * (40 + r * 160) };
+      });
+      open.to(parts, {
+        x: function (i, el) { return el.__out.x; },
+        y: function (i, el) { return el.__out.y; },
+        rotation: function (i, el) { return el.__out.rot; },
+        transformOrigin: '50% 50%',
+        duration: 0.95,
+        ease: 'power3.in',
+        stagger: { amount: 0.3, from: 'center' },
+      }, 'abrir');
+    } else {
+      open.to('[data-loader-logo]', { scale: 1.6, opacity: 0, duration: 0.7, ease: 'power2.in' }, 'abrir+=0.2');
+    }
+    })();
     // Un clic saltea la apertura.
     loader.addEventListener('click', function () { open.progress(1); });
   } else {
@@ -666,6 +694,7 @@
   var slot = document.querySelector('[data-avatar-slot]');
   var slotLogo = document.querySelector('[data-avatar-logo]');
   var footLogo = document.querySelector('.foot__logo');
+  var footWords = footLogo && footLogo.querySelector('.foot__words');
   if (fly && holder && slot) {
     fly.classList.add('is-flying');
     var smooth = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
@@ -717,16 +746,23 @@
           x = ccx - (h.width * k) / 2;
           y = ccy - (h.height * k) / 2 + view.off;
           // El logo del pie sube hasta el lugar de la foto en la barra
+          // (solo el dibujo: las letras se desvanecen en el camino)
+          var footMark = footLogo.querySelector('.foot__mark') || footLogo;
+          var mcx = footMark === footLogo ? lw / 2 : footMark.offsetLeft + footMark.offsetWidth / 2;
+          var mcy = footMark === footLogo ? lh / 2 : footMark.offsetTop + footMark.offsetHeight / 2;
           var sTop = s.top - view.off;
-          var ls = (s.height * 0.95) / lh;
-          var tdx = (s.left + s.width / 2) - (lx + lw / 2);
-          var tdy = (sTop + s.height / 2) - (ly + lh / 2);
+          var ls = (s.height * 0.95) / footMark.offsetHeight;
+          var tdx = (s.left + s.width / 2) - (lx + mcx);
+          var tdy = (sTop + s.height / 2) - (ly + mcy);
           var spin = Math.sin(q * Math.PI) * -18;
+          footLogo.style.transformOrigin = mcx.toFixed(1) + 'px ' + mcy.toFixed(1) + 'px';
+          if (footWords) footWords.style.opacity = String(Math.max(0, 1 - q / 0.45));
           footLogo.style.transform = 'translate3d(' + (tdx * q).toFixed(1) + 'px,' + (tdy * q).toFixed(1) + 'px,0) rotate(' + spin.toFixed(2) + 'deg) scale(' + ((1 + (ls - 1) * q) * (1 + Math.sin(q * Math.PI) * 0.2)).toFixed(4) + ')';
           footLogo.style.zIndex = '60';
         } else if (footLogo.style.transform) {
           footLogo.style.transform = '';
           footLogo.style.zIndex = '';
+          if (footWords) footWords.style.opacity = '';
         }
       }
       fly.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';

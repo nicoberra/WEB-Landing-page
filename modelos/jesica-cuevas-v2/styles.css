@@ -236,6 +236,11 @@ main:focus {
   height: auto;
 }
 
+.loader__logo--parts {
+  aspect-ratio: 176 / 350;
+  overflow: visible;
+}
+
 /* ---------- Barra de progreso y encabezado ---------- */
 
 .progress {
@@ -2072,7 +2077,18 @@ main section[id] {
   position: relative;
   transform-origin: 50% 50%;
   will-change: transform;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
   width: clamp(110px, 11vw, 140px);
+}
+
+.foot__mark {
+  width: 100%;
+}
+
+.foot__words {
+  width: 62%;
 }
 
 .foot__in p {
