@@ -232,7 +232,7 @@ main:focus {
 }
 
 .loader__logo {
-  width: min(44vw, 240px);
+  width: min(26vw, 150px);
   height: auto;
 }
 
@@ -343,7 +343,7 @@ main:focus {
 }
 
 .top__slot img {
-  height: 40px;
+  height: 50px;
   width: auto;
   transition: opacity 0.25s;
 }
@@ -2072,7 +2072,7 @@ main section[id] {
   position: relative;
   transform-origin: 50% 50%;
   will-change: transform;
-  width: clamp(170px, 18vw, 220px);
+  width: clamp(110px, 11vw, 140px);
 }
 
 .foot__in p {

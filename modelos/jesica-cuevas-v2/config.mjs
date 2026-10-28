@@ -81,6 +81,18 @@ export default {
     },
   },
 
+  // Logo nuevo "CJ nutrición" (dibujo de línea, vectorizado a partir de la
+  // imagen que mandó). En el encabezado va solo el dibujo; completo en la
+  // carga y en el pie. El ícono de la pestaña es "CJ" (assets/favicon.svg).
+  logo: {
+    ...base.logo,
+    src: 'assets/isotipo-cj.svg',
+    alt: '',
+    width: 178,
+    height: 272,
+    full: { src: 'assets/logo-cj.svg', alt: 'CJ nutrición', width: 176, height: 350 },
+  },
+
   // Letras de su marca: Raleway (textos y botones), Times New Roman MT
   // Condensed (títulos) y Biro Script Plus (detalles a mano). Las dos últimas
   // son pagas: si se cargan sus archivos en assets/fonts/ (ver page.mjs) se
