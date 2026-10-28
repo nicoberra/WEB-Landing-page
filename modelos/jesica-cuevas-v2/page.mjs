@@ -110,6 +110,22 @@ function shopSection(config) {
   </section>`;
 }
 
+// Letras pagas de la marca. Se usan si están instaladas en la compu de quien
+// mira o si se suben sus archivos (con licencia para web) a assets/fonts/ con
+// estos nombres. Si no, styles.css usa Instrument Serif y Caveat.
+const BRAND_FONTS = [
+  { family: 'Times New Roman MT Condensed', local: ['Times New Roman MT Condensed', 'TimesNewRomanMTCondensed', 'Times New Roman Condensed'], file: 'assets/fonts/times-new-roman-mt-condensed.woff2' },
+  { family: 'Biro Script Plus', local: ['Biro Script Plus', 'BiroScriptPlus', 'Biro Script plus'], file: 'assets/fonts/biro-script-plus.woff2' },
+];
+function brandFonts() {
+  const rules = BRAND_FONTS.map((f) => {
+    const src = f.local.map((n) => `local('${n}')`);
+    if (existsSync(new URL('./' + f.file, import.meta.url))) src.push(`url('${f.file}') format('woff2')`);
+    return `@font-face{font-family:'${f.family}';src:${src.join(',')};font-display:swap}`;
+  });
+  return `<style>${rules.join('')}</style>`;
+}
+
 /** Turnos: por ahora todos llevan al WhatsApp de contacto (no hay turnero). */
 function bookingLink(config) {
   const b = config.booking || {};
@@ -128,7 +144,7 @@ export function renderPage(config) {
   const products = config.products;
   const tick = v.ticker.map((t) => `<span>${esc(t)}</span>${leaf('tick__leaf')}`).join('');
 
-  const headHtml = head(config).replace(
+  const headHtml = head(config).replace('<link rel="stylesheet" href="styles.css">', `${brandFonts()}\n<link rel="stylesheet" href="styles.css">`).replace(
     '<script src="main.js" defer></script>',
     `<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>

@@ -64,18 +64,37 @@ export default {
     ),
   },
 
-  // Archivo: una letra variable (ancho y peso) que se anima con el scroll.
-  // Figtree para los textos largos.
+  // Colores de su marca: salvia #A3B28C, piedra #DAD7CD y verde bosque #344E41.
+  colors: {
+    light: {
+      ...base.colors.light,
+      bg: '#DAD7CD', // piedra (fondo general)
+      surface: '#E6E4DC', // tarjetas y paneles (piedra más clara)
+      placeholder: '#CBD0BE',
+      ink: '#344E41', // verde bosque (textos y fondos oscuros)
+      muted: '#46564C', // textos secundarios (verde bosque más apagado, con buen contraste)
+      line: '#C4C1B5',
+      accent: '#344E41', // botones y enlaces
+      accentInk: '#FFFFFF',
+      accentSoft: '#C8CFB8',
+      highlight: '#A3B28C', // salvia (detalles y formas)
+    },
+  },
+
+  // Letras de su marca: Raleway (textos y botones), Times New Roman MT
+  // Condensed (títulos) y Biro Script Plus (detalles a mano). Las dos últimas
+  // son pagas: si se cargan sus archivos en assets/fonts/ (ver page.mjs) se
+  // usan; si no, se ven Instrument Serif y Caveat, que son muy parecidas.
   fonts: {
     googleFontsUrl:
-      'https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Figtree:wght@400;500;600&display=swap',
-    display: "'Archivo', 'Arial Narrow', Arial, sans-serif",
-    displayWeight: 800,
-    body: "'Figtree', 'Helvetica Neue', Arial, sans-serif",
-    accent: "'Archivo', 'Arial Narrow', Arial, sans-serif",
-    accentStyle: 'italic',
+      'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400..800;1,400..800&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500..700&display=swap',
+    display: "'Raleway', 'Helvetica Neue', Arial, sans-serif",
+    displayWeight: 700,
+    body: "'Raleway', 'Helvetica Neue', Arial, sans-serif",
+    accent: "'Biro Script Plus', 'Caveat', cursive",
+    accentStyle: 'normal',
     accentSize: '1em',
-    mono: "'Archivo', Arial, sans-serif",
+    mono: "'Raleway', Arial, sans-serif",
   },
 
   v2: {

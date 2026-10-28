@@ -3015,3 +3015,65 @@ main section[id] {
     transition: none !important;
   }
 }
+
+/* ---------- Marca de Jesi: letras ---------- */
+/* Títulos en Times New Roman MT Condensed (o Instrument Serif mientras no
+   estén sus archivos), detalles a mano en Biro Script Plus (o Caveat) y el
+   resto en Raleway. Las letras de títulos tienen un solo grosor: se ven
+   finas y elegantes, sin negrita falsa. */
+:root {
+  --font-title: 'Times New Roman MT Condensed', 'Instrument Serif', 'Times New Roman', Times, serif;
+  --font-script: var(--font-accent);
+  --sage: #A3B28C;
+  --sage-soft: #C2CBB0;
+  --stone: #DAD7CD;
+  /* Salvia más oscura para textos a mano sobre el fondo piedra (se lee bien) */
+  --sage-ink: #5F7350;
+}
+
+h1,
+h2,
+h3,
+h4,
+.manifesto__text,
+.book__title,
+.plan__n,
+.step__n,
+.tick__row,
+.rail__item strong,
+.card__cover {
+  font-family: var(--font-title);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -0.005em;
+}
+
+.hero__title .hl__in {
+  font-weight: 400;
+}
+
+/* Portada: la línea del medio va escrita a mano */
+.hero__title .hl:nth-child(2) .hl__in {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--sage-ink);
+  -webkit-text-stroke: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1.05em;
+}
+
+/* Frase firmada del manifiesto, a mano */
+.manifesto__sign {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: clamp(26px, 2.6vw, 36px);
+}
+
+.manifesto__sign em {
+  color: var(--sage-ink);
+}
