@@ -135,7 +135,8 @@
     var rub = function (e) {
       var pt = at(e), from = last || pt;
       mctx.lineCap = mctx.lineJoin = 'round';
-      mctx.lineWidth = cv.width * 0.12;
+      // Pincel grande: con pocas pasadas ya se ve la otra foto
+      mctx.lineWidth = cv.width * 0.3;
       mctx.beginPath(); mctx.moveTo(from.x, from.y); mctx.lineTo(pt.x + 0.01, pt.y); mctx.stroke();
       last = pt;
       if (!queued) { queued = true; requestAnimationFrame(render); }

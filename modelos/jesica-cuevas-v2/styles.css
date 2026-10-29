@@ -869,8 +869,21 @@ main section[id] {
 }
 
 .steps .big-title {
-  margin: 12px 0 44px;
-  max-width: 14ch;
+  display: inline-block;
+  margin: 14px 0 44px;
+  padding-bottom: 0.1em;
+  /* A lo largo y subrayado */
+  max-width: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 3px no-repeat;
+}
+
+/* "Tu primera consulta" en una etiqueta salvia */
+.steps .eyebrow {
+  display: table;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--highlight);
+  color: var(--ink);
 }
 
 .steps__list {
@@ -1015,7 +1028,7 @@ main section[id] {
 .manifesto__figure {
   position: relative;
   margin: 0;
-  width: min(100%, 500px);
+  width: min(100%, 400px);
   justify-self: center;
   aspect-ratio: 900 / 1207;
 }
@@ -1170,11 +1183,11 @@ main section[id] {
   display: grid;
   gap: 10px;
   padding-inline: var(--gutter);
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .plans__head h2 {
-  font-size: clamp(34px, 5.4vw, 84px);
+  font-size: clamp(34px, 4.4vw, 68px);
   text-transform: uppercase;
   font-variation-settings: 'wdth' 70;
 }
@@ -1190,6 +1203,17 @@ main section[id] {
 }
 
 /* Con animación: una fila que se desplaza de costado (main.js agrega la clase) */
+.plans.is-horizontal {
+  /* Fijada arriba: deja lugar a la barra para que se lea todo el título */
+  padding-top: 118px;
+}
+
+@media (max-width: 900px) {
+  .plans.is-horizontal {
+    padding-top: 136px;
+  }
+}
+
 .plans.is-horizontal .plans__track {
   display: flex;
   width: max-content;
@@ -1197,8 +1221,9 @@ main section[id] {
 }
 
 .plans.is-horizontal .plan {
-  width: min(78vw, 440px);
-  min-height: min(calc(var(--screen) * 0.62), 520px);
+  /* Tarjetas más chicas: así el título "Elegí tu objetivo" entra entero arriba */
+  width: min(72vw, 340px);
+  min-height: min(calc(var(--screen) * 0.46), 400px);
 }
 
 .plan {
@@ -1231,7 +1256,7 @@ main section[id] {
 }
 
 .plan h3 {
-  font-size: clamp(30px, 3.2vw, 46px);
+  font-size: clamp(26px, 2.4vw, 36px);
   text-transform: uppercase;
   font-variation-settings: 'wdth' 80;
 }
@@ -2111,7 +2136,7 @@ main section[id] {
   }
 
   .manifesto__figure {
-    width: min(78%, 330px);
+    width: min(64%, 270px);
   }
 
   /* Marca a la izquierda e íconos + "Turnos" a la derecha; la matrícula
