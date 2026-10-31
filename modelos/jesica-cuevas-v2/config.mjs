@@ -81,6 +81,9 @@ export default {
     },
   },
 
+  // Pie: sin "Castelar · Online y presencial"
+  footer: { ...base.footer, note: 'Licenciada en Nutrición · M.N. 12233. Nutrición deportiva y hormonal.' },
+
   // Logo nuevo "CJ nutrición" (dibujo de línea, vectorizado a partir de la
   // imagen que mandó). En el encabezado va solo el dibujo; completo en la
   // carga y en el pie. El ícono de la pestaña es "CJ" (assets/favicon.svg).
@@ -111,13 +114,17 @@ export default {
 
   v2: {
     // Frase gigante de la portada: cada línea se anima por separado.
+    // Etiqueta de arriba (la que sube a la barra), junto a la matrícula.
+    tagText: 'Especialista en nutrición deportiva y hormonal',
     heroLines: ['Una alimentación', 'que acompañe', 'tu vida.'],
-    heroText: 'Nutrición personalizada para mejorar tus hábitos, cuidar tu salud y acompañar tu entrenamiento. Atención online y presencial en Castelar.',
+    heroText: 'Nutrición personalizada para generar buenos hábitos, mejorar tu composición corporal, cuidar tu salud hormonal y potenciar tu rendimiento.',
+    // Etiqueta debajo de los botones de la portada
+    heroWhere: 'Consulta virtual en cualquier parte y presencial',
     heroCta: 'Consultá por tu turno',
     // Texto que gira alrededor de la foto.
     ring: 'Nutrición deportiva ✦ Salud hormonal ✦ Antropometría ISAK ✦ ',
     // Cinta inclinada.
-    ticker: ['Comé para nutrirte', 'No para castigarte', 'No elimines: agregá y mejorá', 'No hace falta hacerlo perfecto', 'Rendí mejor'],
+    ticker: ['Rendí mejor', 'Explotá tu potencial', 'Construí hábitos'],
     // Manifiesto: se va "encendiendo" palabra por palabra al bajar.
     manifestoEyebrow: 'Mi forma de trabajar',
     manifesto:
@@ -125,7 +132,7 @@ export default {
     // Columna de matrícula y formación (debajo de la foto, en compu): solo datos
     // reales y verificables (de su CV y de la placa de servicios).
     trust: [
-      { big: 'M.N. 12233', small: 'Licenciada en Nutrición' },
+      { big: 'M.N. 12233', small: 'Especialista en nutrición deportiva y hormonal' },
       { big: 'UNLaM', small: 'Universidad Nacional de La Matanza' },
       { big: 'ISAK 2', small: 'Antropometrista certificada' },
       { big: 'Clubes', small: 'Argentinos de Castelar y Club 77' },
@@ -198,8 +205,8 @@ export default {
         { id: 'tartas-wraps', title: 'Tartas y wraps caseros', description: 'Rellenos fáciles para variar almuerzos y cenas, con ideas para toda la familia.', format: 'Recetario digital · PDF', price: null },
       ],
     },
-    contactText: 'Escribime y coordinamos tu consulta, online o presencial en Castelar.',
+    contactText: 'Escribime y coordinamos tu consulta, online o presencial.',
     bookingTitle: 'No hace falta hacerlo perfecto para empezar.',
-    bookingText: 'Reservá tu primera consulta, online o presencial en Castelar.',
+    bookingText: 'Reservá tu primera consulta, online o presencial.',
   },
 };

@@ -192,7 +192,6 @@ ${headHtml}
        botones de la portada llegan arriba; se va cuando pasa la cinta) -->
   <nav class="top__menu" aria-label="Secciones" data-top-menu>
     <a href="#planes">Planes</a>
-    <a href="#trayectoria">Trayectoria</a>
     <a href="#recetarios">Recetarios</a>
     <a href="#contacto">Contacto</a>
   </nav>
@@ -227,12 +226,11 @@ ${headHtml}
       </div>
     </div>
     <div class="hero__copy">
-      <p class="tag" data-tag><span class="tag__dot"></span>${esc(p.profession)} · ${esc(p.license)}</p>
+      <p class="tag" data-tag><span class="tag__dot"></span>${esc(v.tagText || p.profession)} · ${esc(p.license)}</p>
       <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
       <nav class="hero__nav" aria-label="Principal" data-hero-nav>
         <a href="#planes">Planes</a>
-        <a href="#trayectoria">Trayectoria</a>
-        <a href="#recetarios">Recetarios</a>
+            <a href="#recetarios">Recetarios</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <h1 class="hero__title" id="inicio-titulo">
@@ -241,9 +239,8 @@ ${headHtml}
       <p class="hero__text">${rich(v.heroText)}</p>
       <div class="hero__ctas">
         <a class="btn btn--solid" data-magnetic ${linkAttrs(book.href)}>${esc(v.heroCta)}${arrow}</a>
-        <a class="btn btn--line" data-magnetic href="#planes">Ver planes</a>
       </div>
-      <p class="hero__where">${esc(p.location)}</p>
+      <p class="hero__where">${esc(v.heroWhere || p.location)}</p>
     </div>
     <!-- El hueco (hero__visual) guarda el lugar; al bajar, "hero__fly" vuela
          achicándose hasta el lugar del logo en el encabezado (ver main.js). -->
@@ -289,7 +286,6 @@ ${headHtml}
         <p class="manifesto__text" data-words>${esc(v.manifesto)}</p>
         <div class="manifesto__foot">
           <p class="manifesto__sign">${rich(config.about.title)}</p>
-          <p class="manifesto__name">${esc(v.signature)}</p>
         </div>
       </div>
     </div>
@@ -323,34 +319,6 @@ ${headHtml}
       <ol class="steps__list">
         ${config.process.steps.map((s, i) => `<li class="step" data-step><span class="step__n">${i + 1}</span><h3>${esc(s.title)}</h3><p>${rich(s.text)}</p></li>`).join('\n        ')}
       </ol>
-    </div>
-  </section>
-
-  <section class="career" id="trayectoria" aria-labelledby="trayectoria-titulo">
-    <div class="wrap">
-      <p class="eyebrow">${esc(v.careerEyebrow)}</p>
-      <h2 class="big-title" id="trayectoria-titulo" data-rise-words>${esc(v.careerTitle)}</h2>
-      <div class="career__grid">
-        <div class="career__exp">
-          <h3 class="career__label">${esc(cred.experienceTitle || 'Experiencia')}</h3>
-          ${(cred.experience || [])
-            .map((e) => `<article class="exp" data-rise><h4>${esc(e.title)}</h4><p class="exp__place">${esc(e.place)}</p><p>${rich(e.detail)}</p></article>`)
-            .join('\n          ')}
-        </div>
-        <div class="career__edu">
-          <h3 class="career__label">${esc(cred.educationTitle || 'Formación')}</h3>
-          <div class="timeline">
-            <svg class="timeline__line" viewBox="0 0 4 100" preserveAspectRatio="none" aria-hidden="true"><line x1="2" y1="0" x2="2" y2="100" data-draw/></svg>
-            <ul role="list">
-              ${cred.education
-                .map(
-                  (e) => `<li class="edu" data-rise><span class="edu__dot" aria-hidden="true"></span><span class="edu__title">${esc(e.title)}${e.status ? ` <em class="edu__status">${esc(e.status)}</em>` : ''}</span><span class="edu__detail">${esc(e.detail)}</span></li>`
-                )
-                .join('\n              ')}
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
