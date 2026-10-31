@@ -132,10 +132,8 @@ export default {
     // Columna de matrícula y formación (debajo de la foto, en compu): solo datos
     // reales y verificables (de su CV y de la placa de servicios).
     trust: [
-      { big: 'M.N. 12233', small: 'Especialista en nutrición deportiva y hormonal' },
-      { big: 'UNLaM', small: 'Universidad Nacional de La Matanza' },
+      { big: 'Especialista', small: 'En nutrición deportiva y hormonal' },
       { big: 'ISAK 2', small: 'Antropometrista certificada' },
-      { big: 'Clubes', small: 'Argentinos de Castelar y Club 77' },
     ],
     // Debajo de la foto del manifiesto.
     signature: 'Lic. Jesica Cuevas · M.N. 12233',
