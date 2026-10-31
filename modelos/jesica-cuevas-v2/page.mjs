@@ -226,7 +226,7 @@ ${headHtml}
       </div>
     </div>
     <div class="hero__copy">
-      <p class="tag" data-tag><span class="tag__dot"></span>${esc(v.tagText || p.profession)} · ${esc(p.license)}</p>
+      <p class="tag" data-tag><span class="tag__dot"></span>${esc(v.tagText || p.profession)}</p>
       <!-- Menú: arranca en burbujas alrededor de la foto y al bajar se alinea acá (main.js) -->
       <nav class="hero__nav" aria-label="Principal" data-hero-nav>
         <a href="#planes">Planes</a>
@@ -246,10 +246,6 @@ ${headHtml}
          achicándose hasta el lugar del logo en el encabezado (ver main.js). -->
     <div class="hero__visual" data-hero-visual>
       <div class="hero__fly" data-fly>
-        <svg class="ring" viewBox="0 0 400 400" aria-hidden="true">
-          <defs><path id="ring-path" d="M200,200 m-170,0 a170,170 0 1,1 340,0 a170,170 0 1,1 -340,0"/></defs>
-          <text><textPath href="#ring-path" textLength="1060" lengthAdjust="spacing">${esc(v.ring)}</textPath></text>
-        </svg>
         <div class="blob" data-blob>
           <img src="${esc(p.photo.src)}" alt="${esc(p.photo.alt)}" width="${p.photo.width}" height="${p.photo.height}" style="object-position:${esc(p.photo.position || '50% 30%')}" fetchpriority="high">
         </div>

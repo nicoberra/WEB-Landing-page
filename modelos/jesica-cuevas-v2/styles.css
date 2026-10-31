@@ -3118,3 +3118,50 @@ h4,
 .manifesto__sign em {
   color: var(--sage-ink);
 }
+
+/* ---------- Nombre de Jesi siempre en el medio de la barra ---------- */
+.top__name {
+  position: absolute;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + 52px);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Compu: el nombre arriba y la etiqueta que sube de la portada, debajo */
+@media (min-width: 901px) {
+  .top__name {
+    top: calc(env(safe-area-inset-top, 0px) + 30px);
+  }
+
+  .top__tag {
+    align-self: end;
+  }
+}
+
+@media (max-width: 900px) {
+  .top__name {
+    top: calc(env(safe-area-inset-top, 0px) + 42px);
+  }
+}
+
+/* Celular: el nombre al medio entre la foto y "Turnos" (los íconos de
+   Instagram y WhatsApp se esconden para que entre; están en Contacto) */
+@media (max-width: 560px) {
+  .top__name {
+    top: calc(env(safe-area-inset-top, 0px) + 35px);
+  }
+
+  .top__cta .top__icon {
+    display: none;
+  }
+}
+
+/* Muy angosto: el nombre en dos renglones, centrado */
+@media (max-width: 380px) {
+  .top__name {
+    white-space: normal;
+    width: 7ch;
+  }
+}
