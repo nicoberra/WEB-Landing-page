@@ -365,7 +365,7 @@ export default {
   },
 
   contact: {
-    whatsapp: { number: WA, display: '11 5493-8280', message: 'Hola Daniela! Quería consultar por un turno.' },
+    whatsapp: { number: WA, display: '+54 9 11 5493-8280', message: 'Hola Daniela! Quería consultar por un turno.' },
     email: '',
     location: 'Terravista',
   },
