@@ -770,6 +770,12 @@ strong {
   font-size: clamp(34px, 4vw, 54px);
 }
 
+/* Palabras muy largas (Electroestimulación, Electroporación…): más chicas para que entren */
+.ficha .tt--long {
+  font-size: clamp(24px, 2.3vw, 33px);
+  letter-spacing: 0.01em;
+}
+
 .ficha .rule {
   margin-inline: 0;
   width: 180px;
@@ -960,6 +966,11 @@ strong {
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 0 0 8px var(--paper), 0 0 0 9px var(--mocha), 0 30px 50px -30px rgb(62 59 57 / 0.6);
+}
+
+.oval--wide {
+  aspect-ratio: 3 / 2;
+  margin-top: 12%;
 }
 
 .oval img {

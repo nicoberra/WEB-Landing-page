@@ -57,7 +57,7 @@ const swatches = '<span class="swatches" aria-hidden="true"><i></i><i></i><i></i
 
 /** Título en dos tonos: arriba gris carbón, abajo moka */
 const twoTone = (t, tag = 'h3', id = '') =>
-  `<${tag} class="tt"${id ? ` id="${id}"` : ''}>${t[0] ? `<span class="tt__a">${esc(t[0])}</span>` : ''}<span class="tt__b">${esc(t[1])}</span></${tag}>`;
+  `<${tag} class="tt${t.join(' ').split(' ').some((w) => w.length > 13) ? ' tt--long' : ''}"${id ? ` id="${id}"` : ''}>${t[0] ? `<span class="tt__a">${esc(t[0])}</span>` : ''}<span class="tt__b">${esc(t[1])}</span></${tag}>`;
 
 const leaf = (name, cls) => `<img class="leaf ${cls}" src="assets/${name}.webp" alt="" aria-hidden="true" loading="lazy" data-sway>`;
 
@@ -81,7 +81,7 @@ function ficha(config, it, cat, first) {
   if (it.note) body.push(`<p class="ficha__note">${hl(it.note)}</p>`);
   return `<article class="ficha" id="t-${esc(cat.id)}-${esc(it.id)}" data-ficha="${esc(cat.id)}:${esc(it.id)}"${first ? ' data-current' : ''} aria-labelledby="t-${esc(cat.id)}-${esc(it.id)}-h">
           <div class="ficha__media">
-            <div class="oval"><img src="${esc(it.photo)}" alt="" loading="lazy"></div>
+            <div class="oval${it.photoWide ? ' oval--wide' : ''}"><img src="${esc(it.photo)}" alt="" loading="lazy"></div>
             ${it.equipment ? `<div class="equipo"><img src="${esc(it.equipment)}" alt="Equipo de ${esc(it.title.filter(Boolean).join(' '))}" loading="lazy"></div>` : ''}
           </div>
           <div class="ficha__copy">

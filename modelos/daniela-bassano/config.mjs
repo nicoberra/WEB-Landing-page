@@ -277,6 +277,7 @@ export default {
           title: ['', 'Electroestimulación'],
           icon: 'muscle',
           photo: 'assets/foto-electroestimulacion.webp',
+          photoWide: true, // foto apaisada: va entera en un óvalo horizontal
           time: '40 minutos',
           points: [
             { icon: 'muscle', text: 'Proporciona **firmeza** y **desarrollo** al músculo.' },
