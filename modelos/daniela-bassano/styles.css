@@ -1164,22 +1164,35 @@ strong {
 .arch {
   position: relative;
   margin: 0;
+  /* Lugar para el texto en curva sobre el arco */
+  padding-top: 13%;
 }
 
 .arch--1 {
   transform: translateY(-40px);
 }
 
+/* Texto en curva: sigue el borde del arco, a la misma distancia en todo el
+   recorrido (las medidas del dibujo son en "por ciento del ancho del arco") */
 .arch__curve {
-  display: block;
-  width: 112%;
-  margin: 0 -6% -10px;
+  position: absolute;
+  left: -16%;
+  top: 0;
+  width: 132%;
+  height: auto;
   overflow: visible;
+  transform: translateY(-24.24%);
+  pointer-events: none;
   font-family: var(--font-display);
-  font-size: 19px;
-  letter-spacing: 0.16em;
+  font-size: 6.2px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   fill: var(--gray);
+}
+
+.arch--wide .arch__curve {
+  transform: translateY(-38.1%);
+  font-size: 3.3px;
 }
 
 .arch__frame {
@@ -1633,15 +1646,11 @@ strong {
   }
 
   .arch--wide .arch__curve {
-    font-size: 26px;
+    font-size: 4.2px;
   }
 
   .arch--1 {
     transform: none;
-  }
-
-  .arch__curve {
-    font-size: 22px;
   }
 
   .result {
