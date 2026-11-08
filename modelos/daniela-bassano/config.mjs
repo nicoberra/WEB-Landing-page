@@ -232,7 +232,7 @@ export default {
           title: ['Venus', 'Legacy'],
           icon: 'machine',
           photo: 'assets/foto-venus-corporal.webp',
-          equipment: 'assets/equipo-venus.webp',
+          equipment: 'assets/equipo-venus-corporal.webp',
           time: '30 minutos por zona',
           points: [
             { icon: 'waist', text: 'La solución ideal contra la **flacidez y celulitis**.' },
