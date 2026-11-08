@@ -84,7 +84,7 @@ export default {
     secondary: 'Ver tratamientos',
   },
 
-  agenda: ['La agenda está abierta para todos los tratamientos', 'Recordá sacar turno con anticipación'],
+  agenda: ['La agenda está abierta para todos los tratamientos'],
 
   // --- Tratamientos ---------------------------------------------------------------
   // Cada uno: id, title (dos partes: arriba gris y abajo moka, como en las placas),

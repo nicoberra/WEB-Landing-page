@@ -215,9 +215,9 @@ function hours(config) {
     ${leaf('eucalipto-arriba', 'leaf--tr leaf--small')}
     <div class="wrap hours__in">
       <div class="hours__agenda" data-reveal>
+        <p class="script">Turnos</p>
         <p class="hours__big">${esc(config.agenda[0])}</p>
-        <span class="hours__sep" aria-hidden="true">✦</span>
-        <p class="hours__small">${esc(config.agenda[1])}</p>
+        ${rule()}
       </div>
       <div class="card" data-reveal>
         <span class="card__clock">${icon('clock')}</span>

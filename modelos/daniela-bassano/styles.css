@@ -1266,34 +1266,38 @@ strong {
 .hours__in {
   display: grid;
   justify-items: center;
-  gap: 40px;
+  gap: 26px;
   text-align: center;
 }
 
-.hours__big,
-.hours__small {
-  font-size: clamp(17px, 2vw, 23px);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1.4;
-  color: var(--gray);
+.hours {
+  padding-block: clamp(60px, 8vw, 100px);
 }
 
+.hours__agenda {
+  width: 100%;
+}
+
+/* Título de punta a punta */
 .hours__big {
-  max-width: 26ch;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 62px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray);
+  text-wrap: balance;
 }
 
-.hours__sep {
-  display: block;
-  margin: 10px 0;
-  color: var(--mocha);
+.hours__agenda .rule {
+  margin-bottom: 18px;
 }
 
 .card {
   position: relative;
-  width: min(100%, 420px);
-  padding: 46px 30px 30px;
+  width: min(100%, 340px);
+  padding: 34px 24px 20px;
   border: 1px solid var(--greige);
   border-radius: 20px;
   background: var(--bg);
@@ -1305,8 +1309,8 @@ strong {
   top: 0;
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: var(--accent-soft);
   color: var(--mocha-ink);
@@ -1322,7 +1326,7 @@ strong {
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: 40px;
+  font-size: 32px;
   color: var(--mocha-ink);
 }
 
@@ -1330,17 +1334,17 @@ strong {
   display: block;
   width: 60%;
   height: 1px;
-  margin: 12px auto 16px;
+  margin: 8px auto 10px;
   background: var(--greige);
 }
 
 .card__days {
-  font-size: 19px;
+  font-size: 16px;
   color: var(--gray);
 }
 
 .card__time {
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 600;
   color: var(--mocha-ink);
 }
