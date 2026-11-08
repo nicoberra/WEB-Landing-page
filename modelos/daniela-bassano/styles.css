@@ -1078,7 +1078,8 @@ strong {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--line);
-  border-radius: 999px 22px 22px 999px;
+  border-radius: 999px;
+  padding-right: 26px;
   background: var(--paper);
   text-align: left;
   font: inherit;
@@ -1123,7 +1124,9 @@ strong {
 }
 
 .result__time {
+  display: block;
   font-size: 12px;
+  line-height: 1.4;
   color: var(--muted);
 }
 
