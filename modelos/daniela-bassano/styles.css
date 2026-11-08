@@ -1156,7 +1156,7 @@ strong {
 
 .arches {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.6fr);
   gap: clamp(14px, 2.4vw, 30px);
   align-items: end;
 }
@@ -1213,6 +1213,20 @@ strong {
   top: 40%;
 }
 
+/* Arco ancho para la foto apaisada de la sala */
+.arch--wide {
+  transform: none;
+}
+
+.arch--wide .arch__frame {
+  border-radius: 50% 50% 10px 10px / 34% 34% 10px 10px;
+}
+
+.arch--wide .arch__frame img {
+  aspect-ratio: 4 / 3;
+  border-radius: 50% 50% 6px 6px / 33% 33% 6px 6px;
+}
+
 .motion .arch__frame img {
   clip-path: inset(100% 0 0 0 round 999px 999px 6px 6px);
   transition: clip-path 1.4s var(--ease);
@@ -1220,6 +1234,14 @@ strong {
 
 .motion .arch.is-in .arch__frame img {
   clip-path: inset(0 0 0 0 round 999px 999px 6px 6px);
+}
+
+.motion .arch--wide .arch__frame img {
+  clip-path: inset(100% 0 0 0);
+}
+
+.motion .arch--wide.is-in .arch__frame img {
+  clip-path: inset(0 0 0 0);
 }
 
 /* ---------- Horarios ---------- */
@@ -1601,13 +1623,17 @@ strong {
   }
 
   .arches {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 
   .arch--0 {
-    grid-column: 1 / -1;
     width: 70%;
     justify-self: center;
+  }
+
+  .arch--wide .arch__curve {
+    font-size: 26px;
   }
 
   .arch--1 {

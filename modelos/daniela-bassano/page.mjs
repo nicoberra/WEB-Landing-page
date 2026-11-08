@@ -185,8 +185,10 @@ function space(config) {
       <div class="arches">
         ${s.photos
           .map(
-            (p, i) => `<figure class="arch arch--${i}" data-arch>
-          <svg class="arch__curve" viewBox="0 0 300 120" aria-hidden="true"><defs><path id="arc-${i}" d="M20 112 A130 100 0 0 1 280 112"/></defs><text><textPath href="#arc-${i}" startOffset="50%" text-anchor="middle">${esc(s.title)}</textPath></text></svg>
+            (p, i) => `<figure class="arch arch--${i}${p.wide ? ' arch--wide' : ''}" data-arch>
+          ${p.wide
+            ? `<svg class="arch__curve" viewBox="0 0 600 120" aria-hidden="true"><defs><path id="arc-${i}" d="M40 114 A290 110 0 0 1 560 114"/></defs>`
+            : `<svg class="arch__curve" viewBox="0 0 300 120" aria-hidden="true"><defs><path id="arc-${i}" d="M20 112 A130 100 0 0 1 280 112"/></defs>`}<text><textPath href="#arc-${i}" startOffset="50%" text-anchor="middle">${esc(s.title)}</textPath></text></svg>
           <div class="arch__frame"><img src="${esc(p.src)}" alt="${esc(p.alt)}" width="${p.width}" height="${p.height}" loading="lazy"></div>
           <span class="arch__star arch__star--l" aria-hidden="true">✦</span><span class="arch__star arch__star--r" aria-hidden="true">✦</span>
         </figure>`
