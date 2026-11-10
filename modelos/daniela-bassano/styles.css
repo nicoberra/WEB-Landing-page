@@ -1536,6 +1536,26 @@ strong {
   pointer-events: none;
 }
 
+/* Títulos que se escriben: cada letra aparece de a una (main.js) */
+.type__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.type__ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.25em);
+  filter: blur(4px);
+  transition: opacity 0.35s ease, transform 0.5s var(--ease), filter 0.5s ease;
+}
+
+.type.is-typed .type__ch {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
 /* ---------- Apariciones al bajar ---------- */
 
 .motion [data-reveal] {
@@ -1691,6 +1711,30 @@ strong {
 }
 
 @media (max-width: 640px) {
+  /* "¿Qué querés mejorar?": las opciones en una fila que se desliza con el
+     dedo, así ocupan poco lugar */
+  .chips {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 8px;
+    margin: 0 calc(var(--gutter) * -1) 26px;
+    padding: 2px var(--gutter) 8px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex: none;
+    padding: 9px 15px;
+    font-size: 13px;
+    scroll-snap-align: start;
+  }
+
   /* Celular: "Reservar" pasa a ser un botón redondo con el ícono de
      WhatsApp, así entra "Estética Facial y Corporal" en el centro */
   .top .btn--small {

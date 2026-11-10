@@ -40,6 +40,42 @@
   // Por las dudas, nada queda escondido
   setTimeout(function () { shown.forEach(function (el) { el.classList.add('is-in'); }); }, 4000);
 
+  // ---------- Títulos que se escriben letra por letra ----------
+  // Al llegar a cada título de sección, las letras van apareciendo de a una
+  // (como si se escribiera) y después quedan fijas.
+  if (!reduce && 'IntersectionObserver' in window) {
+    var titles = $$('h2.title');
+    titles.forEach(function (t) {
+      var text = t.textContent;
+      t.setAttribute('aria-label', text);
+      t.textContent = '';
+      var n = 0;
+      text.split(/(\s+)/).forEach(function (word) {
+        if (!word) return;
+        if (/^\s+$/.test(word)) { t.appendChild(document.createTextNode(' ')); return; }
+        var w = document.createElement('span');
+        w.className = 'type__word';
+        w.setAttribute('aria-hidden', 'true');
+        word.split('').forEach(function (ch) {
+          var c = document.createElement('span');
+          c.className = 'type__ch';
+          c.textContent = ch;
+          c.style.transitionDelay = (n++ * 55) + 'ms';
+          w.appendChild(c);
+        });
+        t.appendChild(w);
+      });
+      t.classList.add('type');
+    });
+    var tio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('is-typed'); tio.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    titles.forEach(function (t) { tio.observe(t); });
+    setTimeout(function () { titles.forEach(function (t) { if (t.getBoundingClientRect().top < window.innerHeight) t.classList.add('is-typed'); }); }, 4000);
+  }
+
   // ---------- Faciales / Corporales ----------
   var sw = $('[data-switch]');
   var tabs = $$('[data-cat]');
