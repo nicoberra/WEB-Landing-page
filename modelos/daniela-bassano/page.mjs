@@ -278,13 +278,13 @@ ${head(config)}
         </div>
       </div>
       <span class="hero__lotus">${icon('lotus')}</span>
+      <p class="hero__who"><span>${esc(config.person.name)}</span>${esc(config.person.profession)}</p>
       <h1 class="hero__title" id="inicio-titulo"><span>${esc(h.title)}</span><span class="hero__sub">${esc(h.titleSub)}</span></h1>
       <p class="hero__text">${esc(h.text)}</p>
       <div class="hero__ctas">
         <a class="btn btn--solid" data-magnetic ${linkAttrs(book)}>${waIcon}${esc(h.cta)}</a>
         <a class="btn btn--line" data-magnetic href="#tratamientos">${esc(h.secondary)}</a>
       </div>
-      <p class="hero__who"><span>${esc(config.person.name)}</span>${esc(config.person.profession)}</p>
     </div>
     <a class="hero__down" href="#tratamientos" aria-label="Bajar a los tratamientos"><span></span></a>
   </section>

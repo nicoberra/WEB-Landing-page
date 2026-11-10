@@ -546,19 +546,24 @@ strong {
   margin-top: 28px;
 }
 
+/* Quién es y qué hace: bien visible al entrar */
 .hero__who {
   display: grid;
-  gap: 2px;
-  margin-top: 26px;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  gap: 4px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mocha-ink);
 }
 
 .hero__who span {
   font-family: var(--font-display);
-  font-size: 22px;
-  letter-spacing: 0.04em;
+  font-size: clamp(24px, 2.6vw, 30px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: none;
   color: var(--char);
 }
 
