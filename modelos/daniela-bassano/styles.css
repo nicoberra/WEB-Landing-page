@@ -624,6 +624,10 @@ strong {
   color: var(--gold);
 }
 
+@keyframes chips {
+  to { transform: translateX(-50%); }
+}
+
 @keyframes band {
   to { transform: translateX(-50%); }
 }
@@ -1137,8 +1141,11 @@ strong {
 
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
-  gap: 18px;
+  /* Lista numerada, uno debajo del otro: del más recomendado al resto */
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 720px;
+  margin-inline: auto !important;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1146,11 +1153,11 @@ strong {
 
 .result {
   display: grid;
-  grid-template-columns: 74px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: auto 74px minmax(0, 1fr);
+  gap: 12px;
   align-items: center;
   width: 100%;
-  padding: 12px;
+  padding: 12px 12px 12px 14px;
   border: 1px solid var(--line);
   border-radius: 999px;
   padding-right: 26px;
@@ -1159,8 +1166,8 @@ strong {
   font: inherit;
   color: inherit;
   cursor: pointer;
-  animation: pop 0.6s var(--ease) both;
-  animation-delay: calc(var(--i, 0) * 70ms);
+  animation: pop 0.7s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 280ms);
   transition: transform 0.4s var(--ease), box-shadow 0.4s;
 }
 
@@ -1170,8 +1177,36 @@ strong {
 }
 
 @keyframes pop {
-  from { opacity: 0; transform: translateY(14px) scale(0.97); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(-14px) scale(0.96); clip-path: inset(0 0 100% 0 round 999px); }
+  to { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 999px); }
+}
+
+/* Número de orden (1, 2, 3…) a la izquierda de cada tratamiento */
+.result {
+  position: relative;
+}
+
+.result__num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--mocha);
+  font: 600 12px/1 var(--font-body);
+  color: var(--mocha-ink);
+}
+
+/* El más recomendado se destaca */
+.result--top {
+  border-color: var(--accent);
+  box-shadow: 0 18px 36px -26px rgb(62 59 57 / 0.7);
+}
+
+.result--top .result__num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .result img {
@@ -1711,21 +1746,32 @@ strong {
 }
 
 @media (max-width: 640px) {
-  /* "¿Qué querés mejorar?": las opciones en una fila que se desliza con el
-     dedo, así ocupan poco lugar */
-  .chips {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
+  /* "¿Qué querés mejorar?": dos filas que se mueven solas (main.js) */
+  .chips.is-moving {
+    display: grid;
     gap: 8px;
     margin: 0 calc(var(--gutter) * -1) 26px;
-    padding: 2px var(--gutter) 8px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+    padding: 2px 0 6px;
+    overflow: hidden;
   }
 
-  .chips::-webkit-scrollbar {
-    display: none;
+  .chips__row {
+    display: flex;
+    gap: 8px;
+    width: max-content;
+    padding-right: 8px;
+    animation: chips 26s linear infinite;
+  }
+
+  .chips__row--1 {
+    animation-duration: 30s;
+    animation-direction: reverse;
+  }
+
+  /* Al apoyar el dedo se frena, para poder elegir tranquila */
+  .chips.is-moving:active .chips__row,
+  .chips.is-moving:hover .chips__row {
+    animation-play-state: paused;
   }
 
   .chip {
@@ -1796,7 +1842,7 @@ strong {
   }
 
   .result {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: auto 64px minmax(0, 1fr);
   }
 
   .result img {

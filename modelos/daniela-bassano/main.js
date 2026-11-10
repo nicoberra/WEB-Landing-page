@@ -134,9 +134,15 @@
     var all = [];
     try { all = JSON.parse(dataEl.textContent); } catch (err) { all = []; }
     var render = function (need) {
-      chips.forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-need') === need ? 'true' : 'false'); });
+      $$('[data-need]').forEach(function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-need') === need ? 'true' : 'false'); });
       results.textContent = '';
-      all.filter(function (t) { return t.needs.indexOf(need) >= 0; }).forEach(function (t, i) {
+      // Primero el más recomendado: el tratamiento que nombra esta necesidad
+      // en primer lugar (sin perder el orden de la placa entre iguales)
+      all.filter(function (t) { return t.needs.indexOf(need) >= 0; })
+        .map(function (t, k) { return { t: t, k: k }; })
+        .sort(function (x, y) { return (x.t.needs.indexOf(need) - y.t.needs.indexOf(need)) || (x.k - y.k); })
+        .map(function (x) { return x.t; })
+        .forEach(function (t, i) {
         var li = document.createElement('li');
         var b = document.createElement('button');
         b.type = 'button';
@@ -148,8 +154,15 @@
         var cat = document.createElement('span'); cat.className = 'result__cat'; cat.textContent = t.catLabel;
         var name = document.createElement('span'); name.className = 'result__name'; name.textContent = t.title;
         var time = document.createElement('span'); time.className = 'result__time'; time.textContent = t.time + ' · Ver tratamiento';
+        cat.textContent = i === 0 ? '★ Recomendado · ' + t.catLabel : t.catLabel;
         txt.appendChild(cat); txt.appendChild(name); txt.appendChild(time);
-        b.appendChild(img); b.appendChild(txt);
+        // Número de orden, como una lista que se va armando
+        var num = document.createElement('span');
+        num.className = 'result__num';
+        num.setAttribute('aria-hidden', 'true');
+        num.textContent = String(i + 1);
+        if (i === 0) b.classList.add('result--top');
+        b.appendChild(num); b.appendChild(img); b.appendChild(txt);
         b.addEventListener('click', function () {
           pick(t.cat + ':' + t.id, false);
           var sec = $('#tratamientos');
@@ -163,6 +176,27 @@
     };
     chips.forEach(function (c) { c.addEventListener('click', function () { render(c.getAttribute('data-need')); }); });
     render(chips[0].getAttribute('data-need'));
+    // Celular: las opciones van en dos filas que se mueven solas (en sentidos
+    // contrarios), así se ve que hay más. Cada fila lleva una copia para que
+    // el movimiento no se corte; las copias también se pueden tocar.
+    var box = $('[data-needs]');
+    if (box && !reduce && window.matchMedia('(max-width: 640px)').matches) {
+      var half = Math.ceil(chips.length / 2);
+      [chips.slice(0, half), chips.slice(half)].forEach(function (group, r) {
+        var row = document.createElement('div');
+        row.className = 'chips__row chips__row--' + r;
+        group.forEach(function (c) { row.appendChild(c); });
+        group.forEach(function (c) {
+          var copy = c.cloneNode(true);
+          copy.setAttribute('aria-hidden', 'true');
+          copy.tabIndex = -1;
+          copy.addEventListener('click', function () { c.click(); });
+          row.appendChild(copy);
+        });
+        box.appendChild(row);
+      });
+      box.classList.add('is-moving');
+    }
   }
 
   // ---------- Logo y texto de la portada que vuelan a la barra ----------

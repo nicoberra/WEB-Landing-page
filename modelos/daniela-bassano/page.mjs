@@ -178,7 +178,7 @@ function space(config) {
     <div class="wrap space__in">
       <div class="space__text" data-reveal>
         <p class="script">Terra</p>
-        <h2 class="title" id="espacio-titulo">${esc(s.title)}</h2>
+        <h2 class="title" id="espacio-titulo">Mi espacio</h2>
         ${rule()}
         ${s.lines.map((l, i) => `<p class="space__line">${esc(l)}</p>${i < s.lines.length - 1 ? rule('rule--small') : ''}`).join('\n        ')}
       </div>
