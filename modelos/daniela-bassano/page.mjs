@@ -251,15 +251,16 @@ ${head(config)}
 <header class="top" data-top>
   <a class="top__brand" href="#inicio" aria-label="${esc(b.logo.alt)}, ir al inicio">
     <img src="${esc(b.logo.src)}" alt="" width="${b.logo.width}" height="${b.logo.height}">
-    <span class="top__words"><span class="top__script">${esc(b.script)}</span><span class="top__place">${esc(b.place)}</span></span>
   </a>
+  <!-- "Estética Facial y Corporal · Terra" siempre en el centro de la barra -->
+  <a class="top__words" href="#inicio" aria-hidden="true" tabindex="-1"><span class="top__script">${esc(b.script)}</span><span class="top__place">${esc(b.place)}</span></a>
   <nav class="top__nav" aria-label="Secciones">
     <a href="#tratamientos">Tratamientos</a>
     <a href="#encontra">Encontrá el tuyo</a>
     <a href="#espacio">Mi espacio</a>
     <a href="#horarios">Horarios</a>
   </nav>
-  <a class="btn btn--small" ${linkAttrs(book)}>Reservar</a>
+  <a class="btn btn--small" ${linkAttrs(book)} aria-label="Reservar por WhatsApp">${waIcon}<span>Reservar</span></a>
 </header>
 
 <main>
@@ -271,11 +272,17 @@ ${head(config)}
     ${leaf('espiga-abajo', 'leaf--br')}
     <div class="hero__frame" aria-hidden="true"></div>
     <div class="hero__in">
+      <!-- Al bajar, el logo vuela a la barra (arriba a la izquierda) y el texto
+           al centro de la barra (main.js) -->
       <div class="logo" data-logo>
-        <img src="${esc(b.logo.src)}" alt="${esc(b.logo.alt)}" width="${b.logo.width}" height="${b.logo.height}" fetchpriority="high">
+        <img src="${esc(b.logo.src)}" alt="${esc(b.logo.alt)}" width="${b.logo.width}" height="${b.logo.height}" fetchpriority="high" data-fly-logo>
       </div>
-      <p class="hero__script" data-write>${esc(b.script)}</p>
-      <p class="hero__place">${esc(b.place)}</p>
+      <div class="hero__brand">
+        <div class="hero__brand-in" data-fly-words>
+          <p class="hero__script" data-write>${esc(b.script)}</p>
+          <p class="hero__place">${esc(b.place)}</p>
+        </div>
+      </div>
       <span class="hero__lotus">${icon('lotus')}</span>
       <h1 class="hero__title" id="inicio-titulo"><span>${esc(h.title)}</span><span class="hero__sub">${esc(h.titleSub)}</span></h1>
       <p class="hero__text">${esc(h.text)}</p>

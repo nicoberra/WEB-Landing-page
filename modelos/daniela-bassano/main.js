@@ -129,6 +129,42 @@
     render(chips[0].getAttribute('data-need'));
   }
 
+  // ---------- Logo y texto de la portada que vuelan a la barra ----------
+  // Arriba de todo solo se ven en el centro de la portada. Al bajar, el logo
+  // va a la barra (arriba a la izquierda) y "Estética Facial y Corporal" al
+  // centro de la barra; ahí se cambian por los de la barra, que quedan fijos.
+  (function () {
+    var fl = $('[data-fly-logo]'), fw = $('[data-fly-words]');
+    var tl = $('.top__brand img'), tw = $('.top__words');
+    if (!fl || !fw || !tl || !tw || !top) return;
+    top.setAttribute('data-fly', '');
+    var smooth = function (t) { return t * t * (3 - 2 * t); };
+    var place = function (el, target, e) {
+      el.style.transform = '';
+      if (e <= 0) return;
+      var a = el.getBoundingClientRect(), b = target.getBoundingClientRect();
+      if (!a.width) return;
+      var k = 1 + (b.height / a.height - 1) * e;
+      var dx = (b.left + b.width / 2 - (a.left + a.width / 2)) * e;
+      var dy = (b.top + b.height / 2 - (a.top + a.height / 2)) * e;
+      el.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
+    };
+    var tick = function () {
+      var dist = Math.max(220, Math.min(420, window.innerHeight * 0.45));
+      var p = Math.min(1, Math.max(0, window.scrollY / dist));
+      var e = reduce ? (p >= 1 ? 1 : 0) : smooth(p);
+      var docked = p >= 1;
+      top.classList.toggle('is-docked', docked);
+      fl.style.opacity = fw.style.opacity = docked ? '0' : '';
+      if (!docked) { place(fl, tl, e); place(fw, tw, e); }
+    };
+    tick();
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', tick);
+    // La portada entra con una animación: se acomoda al terminar
+    setTimeout(tick, 1800);
+  })();
+
   if (reduce) return;
 
   // ---------- Portada: el logo sigue un poco al mouse y las hojas se mueven al bajar ----------
@@ -145,7 +181,6 @@
     cx += (mx - cx) * 0.06; cy += (my - cy) * 0.06;
     var y = window.scrollY;
     if (y < window.innerHeight * 1.2) {
-      if (logo) logo.style.transform = 'translate3d(' + (cx * 10).toFixed(2) + 'px,' + (cy * 8 + y * 0.12).toFixed(2) + 'px,0) rotate(' + (cx * 2).toFixed(2) + 'deg)';
       leaves.forEach(function (l, i) {
         var dir = i % 2 ? 1 : -1;
         l.style.translate = (cx * 12 * dir).toFixed(1) + 'px ' + (y * (0.08 + i * 0.03) * (i < 2 ? -1 : 1) + cy * 8).toFixed(1) + 'px';
