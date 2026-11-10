@@ -446,7 +446,8 @@ strong {
   will-change: transform;
 }
 
-[data-fly-logo] {
+[data-fly-logo],
+.top__brand img {
   transform-origin: 50% 50%;
   will-change: transform;
 }

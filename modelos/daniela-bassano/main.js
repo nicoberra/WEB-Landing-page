@@ -223,6 +223,7 @@
   (function () {
     var fl = $('[data-fly-logo]'), fw = $('[data-fly-words]');
     var tl = $('.top__brand img'), tw = $('.top__words');
+    var end = $('.end__logo');
     if (!fl || !fw || !tl || !tw || !top) return;
     top.setAttribute('data-fly', '');
     var smooth = function (t) { return t * t * (3 - 2 * t); };
@@ -244,6 +245,25 @@
       top.classList.toggle('is-docked', docked);
       fl.style.opacity = fw.style.opacity = docked ? '0' : '';
       if (!docked) { place(fl, tl, e); place(fw, tw, e); }
+      // Al final de la página, el logo de la barra baja hasta el logo del
+      // cierre ("Reservá tu turno"), agrandándose, y se queda ahí.
+      if (end) {
+        tl.style.transform = '';
+        var r = end.getBoundingClientRect(), vh = window.innerHeight;
+        var from = vh, to = vh * 0.35; // empieza al asomar y llega con el logo a un tercio de la pantalla
+        var q = docked ? Math.min(1, Math.max(0, (from - r.top) / (from - to))) : 0;
+        var arrived = q >= 1;
+        end.style.opacity = arrived || !docked ? '' : '0';
+        tl.style.opacity = arrived ? '0' : '';
+        if (q > 0 && !arrived) {
+          var qe = reduce ? 1 : smooth(q);
+          var a = tl.getBoundingClientRect();
+          var k = 1 + (r.height / a.height - 1) * qe;
+          var dx = (r.left + r.width / 2 - (a.left + a.width / 2)) * qe;
+          var dy = (r.top + r.height / 2 - (a.top + a.height / 2)) * qe;
+          tl.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + k.toFixed(4) + ')';
+        }
+      }
     };
     tick();
     window.addEventListener('scroll', tick, { passive: true });
