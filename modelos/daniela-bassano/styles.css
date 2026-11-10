@@ -789,6 +789,10 @@ strong {
   transform: rotate(-8deg) scale(1.05);
 }
 
+.menu__item[data-ask] {
+  text-decoration: none;
+}
+
 .menu__item[data-ask] .menu__name::after {
   content: ' · consultá';
   font-size: 12px;
@@ -1695,6 +1699,17 @@ strong {
   }
 
   /* El listado: todos a la vista, en dos columnas (sin deslizar) */
+  /* Si queda uno solo en la última fila, ocupa todo el ancho */
+  .menu li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .menu__name {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
   .menu {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
