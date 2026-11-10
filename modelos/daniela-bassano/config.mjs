@@ -99,7 +99,7 @@ export default {
       items: [
         {
           id: 'limpieza',
-          short: 'Limpieza de cutis con punta de diamantes',
+          short: 'Limpieza de cutis',
           title: ['Limpieza de cutis', 'profunda'],
           icon: 'sparkle',
           photo: 'assets/foto-limpieza.webp',
@@ -149,7 +149,7 @@ export default {
         },
         {
           id: 'venus-rostro',
-          short: 'Venus Legacy (radiofrecuencia médica)',
+          short: 'Venus Legacy',
           title: ['Venus', 'Legacy'],
           icon: 'waves',
           photo: 'assets/venus-rostro.webp',

@@ -138,23 +138,39 @@
       results.textContent = '';
       // Primero el más recomendado: el tratamiento que nombra esta necesidad
       // en primer lugar (sin perder el orden de la placa entre iguales)
-      all.filter(function (t) { return t.needs.indexOf(need) >= 0; })
+      // Separados en Faciales y Corporales, cada grupo con su título y su
+      // propia numeración (y su recomendado).
+      var list = all.filter(function (t) { return t.needs.indexOf(need) >= 0; })
         .map(function (t, k) { return { t: t, k: k }; })
         .sort(function (x, y) { return (x.t.needs.indexOf(need) - y.t.needs.indexOf(need)) || (x.k - y.k); })
-        .map(function (x) { return x.t; })
-        .forEach(function (t, i) {
+        .map(function (x) { return x.t; });
+      var groups = [];
+      list.forEach(function (t) {
+        var g = groups.filter(function (x) { return x.cat === t.cat; })[0];
+        if (!g) { g = { cat: t.cat, label: t.catLabel, items: [] }; groups.push(g); }
+        g.items.push(t);
+      });
+      groups.sort(function (x, y) { return x.cat === 'faciales' ? -1 : y.cat === 'faciales' ? 1 : 0; });
+      var step = 0;
+      groups.forEach(function (g) {
+        var head = document.createElement('li');
+        head.className = 'results__group';
+        head.style.setProperty('--i', String(step++));
+        head.textContent = g.label;
+        results.appendChild(head);
+        g.items.forEach(function (t, i) {
         var li = document.createElement('li');
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'result';
-        b.style.setProperty('--i', String(i));
+        b.style.setProperty('--i', String(step++));
         var img = document.createElement('img');
         img.src = t.photo; img.alt = ''; img.loading = 'lazy';
         var txt = document.createElement('span');
         var cat = document.createElement('span'); cat.className = 'result__cat'; cat.textContent = t.catLabel;
         var name = document.createElement('span'); name.className = 'result__name'; name.textContent = t.title;
         var time = document.createElement('span'); time.className = 'result__time'; time.textContent = t.time + ' · Ver tratamiento';
-        cat.textContent = i === 0 ? '★ Recomendado · ' + t.catLabel : t.catLabel;
+        cat.textContent = i === 0 ? '★ Recomendado' : t.catLabel;
         txt.appendChild(cat); txt.appendChild(name); txt.appendChild(time);
         // Número de orden, como una lista que se va armando
         var num = document.createElement('span');
@@ -172,6 +188,7 @@
         });
         li.appendChild(b);
         results.appendChild(li);
+        });
       });
     };
     chips.forEach(function (c) { c.addEventListener('click', function () { render(c.getAttribute('data-need')); }); });

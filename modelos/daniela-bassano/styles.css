@@ -1181,6 +1181,32 @@ strong {
   to { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 999px); }
 }
 
+/* Título de cada grupo (Faciales / Corporales) en los resultados */
+.results__group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mocha-ink);
+  animation: pop 0.7s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 280ms);
+}
+
+.results__group:first-child {
+  margin-top: 0;
+}
+
+.results__group::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--greige);
+}
+
 /* Número de orden (1, 2, 3…) a la izquierda de cada tratamiento */
 .result {
   position: relative;
@@ -1667,54 +1693,43 @@ strong {
     margin-inline: auto;
   }
 
-  /* El listado se vuelve una fila que se desliza con el dedo */
+  /* El listado: todos a la vista, en dos columnas (sin deslizar) */
   .menu {
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    margin-inline: calc(var(--gutter) * -1);
-    padding: 4px var(--gutter) 10px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-  }
-
-  .menu::-webkit-scrollbar {
-    display: none;
   }
 
   .menu li + li {
     border-top: 0;
   }
 
-  .menu li {
-    scroll-snap-align: start;
-  }
-
   .menu__item {
-    grid-template-columns: auto auto;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: 8px;
-    padding: 6px 16px 6px 6px;
+    height: 100%;
+    padding: 6px 10px 6px 6px;
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: 16px;
     background: var(--paper);
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.25;
   }
 
   .menu__item:hover,
   .menu__item[aria-pressed='true'] {
     padding-left: 6px;
     border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent-soft) 60%, var(--paper));
   }
 
   .menu__ico {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   .menu__ico .ico {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
   }
 
   .menu__go {
@@ -1848,6 +1863,18 @@ strong {
   .result img {
     width: 64px;
     height: 64px;
+  }
+}
+
+@media (max-width: 380px) {
+  .menu__item {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .menu__ico {
+    width: 26px;
+    height: 26px;
   }
 }
 
