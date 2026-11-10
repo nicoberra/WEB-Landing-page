@@ -1366,6 +1366,43 @@ strong {
   top: 40%;
 }
 
+/* Collage del espacio: una sola imagen, marco con esquinas redondeadas y
+   el texto en curva suave arriba */
+.arches:has(.arch--collage) {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+
+.arch--collage {
+  width: min(100%, 560px);
+  padding-top: 9%;
+}
+
+/* Texto en curva suave sobre el marco (mismo dibujo que el arco ancho) */
+.arch--collage .arch__curve {
+  transform: translateY(-38.1%);
+  font-size: 3.3px;
+}
+
+.arch--collage .arch__frame,
+.arch--collage .arch__frame img {
+  border-radius: 22px;
+}
+
+.arch--collage .arch__frame img {
+  aspect-ratio: 1122 / 1402;
+  height: auto;
+  object-fit: cover;
+}
+
+.motion .arch.arch--collage .arch__frame img {
+  clip-path: inset(100% 0 0 0 round 22px);
+}
+
+.motion .arch.arch--collage.is-in .arch__frame img {
+  clip-path: inset(0 0 0 0 round 22px);
+}
+
 /* Arco ancho para la foto apaisada de la sala */
 .arch--wide {
   transform: none;

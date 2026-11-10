@@ -184,9 +184,9 @@ function space(config) {
       <div class="arches">
         ${s.photos
           .map(
-            (p, i) => `<figure class="arch arch--${i}${p.wide ? ' arch--wide' : ''}" data-arch>
+            (p, i) => `<figure class="arch arch--${i}${p.wide ? ' arch--wide' : ''}${p.collage ? ' arch--collage' : ''}" data-arch>
           <div class="arch__frame">
-          ${p.wide
+          ${p.wide || p.collage
             ? `<svg class="arch__curve" viewBox="-16 -16 132 42" aria-hidden="true"><defs><path id="arc-${i}" d="M-6 26 A56 32 0 0 1 106 26"/></defs>`
             : `<svg class="arch__curve" viewBox="-16 -16 132 66" aria-hidden="true"><defs><path id="arc-${i}" d="M-6 50 A56 56 0 0 1 106 50"/></defs>`}<text><textPath href="#arc-${i}" startOffset="50%" text-anchor="middle">${esc(s.title)}</textPath></text></svg>
           <img src="${esc(p.src)}" alt="${esc(p.alt)}" width="${p.width}" height="${p.height}" loading="lazy"></div>

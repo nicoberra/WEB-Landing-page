@@ -352,10 +352,9 @@ export default {
   space: {
     title: 'Mi espacio en Terravista',
     lines: ['Lugar pensado para poder relajarte y embellecerte.', 'La mejor aparatología para cada necesidad.'],
+    // Una sola imagen: el collage del espacio (sala, camilla y estantería)
     photos: [
-      { src: 'assets/espacio-camilla.webp', alt: 'Camilla con botas de presoterapia en el espacio de Terravista', width: 991, height: 1587 },
-      // Foto apaisada: va en un arco ancho
-      { src: 'assets/espacio-sala.webp', alt: 'Sala con los equipos de aparatología y la estantería de productos', width: 1448, height: 1086, wide: true },
+      { src: 'assets/espacio-collage.webp', alt: 'Mi espacio en Terravista: la sala con los equipos, la camilla con botas de presoterapia y la estantería de productos', width: 1122, height: 1402, collage: true },
     ],
   },
 
