@@ -226,12 +226,6 @@ function hours(config) {
         <p class="card__days">${esc(h.days)}</p>
         <p class="card__time">${esc(h.time)}</p>
       </div>
-      <div class="who" data-reveal>
-        <span class="who__ico">${icon('user')}</span>
-        <p class="who__name">${esc(p.name)}</p>
-        <p class="who__job">${esc(p.profession)}</p>
-        <a class="who__phone" ${linkAttrs(wa(config))}>${icon('phone')}<span>${esc(config.contact.whatsapp.display)}</span></a>
-      </div>
     </div>
   </section>`;
 }
