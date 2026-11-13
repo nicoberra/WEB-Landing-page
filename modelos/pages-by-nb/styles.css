@@ -1,4 +1,4 @@
-/* Pages by NB · colorido y juguetón, con azul eléctrico */
+/* NB.studio · colorido y juguetón, con azul eléctrico */
 :root {
   --blue: var(--accent);
   --blue-2: #5A6CFF;
@@ -27,10 +27,11 @@ p { margin: 0; }
 .demo-note { background: var(--ink); color: #fff; text-align: center; font-size: 13px; padding: 6px 12px; margin: 0; }
 
 /* ---------- Logo ---------- */
-.logo { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 800; text-decoration: none; }
-.logo__word { font-size: 28px; letter-spacing: -.05em; color: var(--ink); line-height: 1; }
-.logo__tag { background: var(--blue); color: #fff; font-size: 13px; padding: 5px 10px 6px; border-radius: 99px; transform: rotate(-6deg); transition: transform .5s var(--ease); white-space: nowrap; }
-a:hover .logo__tag { transform: rotate(6deg) scale(1.08); }
+.logo { display: inline-flex; align-items: baseline; font-family: var(--font-display); font-weight: 800; text-decoration: none; line-height: 1; white-space: nowrap; }
+.logo__word { font-size: 32px; letter-spacing: -.04em; color: var(--ink); }
+.logo__dot { font-size: 32px; color: var(--yellow); -webkit-text-stroke: 1.5px var(--ink); margin: 0 1px; }
+.logo__tag { font: 400 26px/1 var(--font-accent); color: var(--blue); display: inline-block; transition: transform .5s var(--ease); }
+a:hover .logo__tag { transform: rotate(-6deg) translateY(-2px); }
 
 /* ---------- Botones ---------- */
 .btn { --bg-b: var(--blue); --fg-b: #fff; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 22px; border-radius: 99px; border: 2.5px solid var(--ink); background: var(--bg-b); color: var(--fg-b); font: 700 16px/1.1 var(--font-body); text-decoration: none; box-shadow: 0 4px 0 var(--ink); transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .3s; will-change: transform; }
@@ -57,7 +58,8 @@ a:hover .logo__tag { transform: rotate(6deg) scale(1.08); }
 .top__nav a:hover, .top__nav a.is-here { background: var(--accent-soft); color: var(--blue); }
 @media (max-width: 860px) {
   .top__nav { display: none; }
-  .logo__word { font-size: 24px; }
+  .logo__word, .logo__dot { font-size: 28px; }
+  .logo__tag { font-size: 23px; }
 }
 
 /* ---------- Portada ---------- */

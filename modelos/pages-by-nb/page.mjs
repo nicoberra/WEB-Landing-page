@@ -1,4 +1,4 @@
-// Plantilla propia de "Pages by NB" (venta de páginas web).
+// Plantilla propia de "NB.studio" (venta de páginas web).
 // Colorida y juguetona: azul eléctrico, stickers, formas redondas y mucho
 // movimiento. Los textos salen de config.mjs. Sin JavaScript se ve todo.
 import { esc } from '../../src/helpers.mjs';
@@ -17,7 +17,7 @@ const arrow = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable
 const star = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1.5c.9 6.4 4.1 9.6 10.5 10.5-6.4.9-9.6 4.1-10.5 10.5C11.1 16.1 7.9 12.9 1.5 12 7.9 11.1 11.1 7.9 12 1.5Z" fill="currentColor"/></svg>';
 
 const logo = (config, cls = '') =>
-  `<span class="logo ${cls}"><span class="logo__word">${esc(config.brand.word)}</span><span class="logo__tag">${esc(config.brand.tag)}</span></span>`;
+  `<span class="logo ${cls}"><span class="logo__word">${esc(config.brand.word)}</span><span class="logo__dot">.</span><span class="logo__tag">${esc(config.brand.tag)}</span></span>`;
 
 /** Mini ilustraciones de cada producto (hechas con HTML y CSS) */
 const ART = {
@@ -124,7 +124,7 @@ ${config.demo ? '<p class="demo-note">Vista previa · nombre y precios provisori
 
 <header class="top" data-top>
   <div class="top__in">
-    <a class="top__brand" href="#inicio" aria-label="${esc(config.brand.word + ' ' + config.brand.tag)}, inicio">${logo(config)}</a>
+    <a class="top__brand" href="#inicio" aria-label="${esc(config.brand.word + '.' + config.brand.tag)}, inicio">${logo(config)}</a>
     <nav class="top__nav" aria-label="Secciones">
       <a href="#productos">Productos</a>
       <a href="#trabajos">Trabajos</a>

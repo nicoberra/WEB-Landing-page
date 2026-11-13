@@ -1,5 +1,5 @@
 // ============================================================================
-//  MODELO: Pages by NB · venta de páginas web (Nicolás Berra)
+//  MODELO: NB.studio · venta de páginas web (Nicolás Berra)
 //  Estilo colorido y juguetón, con el azul como color principal.
 //  Tres productos: landing page, web e-commerce y CRM. Portfolio con todas
 //  las webs hechas (capturas en assets/web-*.webp y assets/cel-*.webp).
@@ -16,7 +16,7 @@ export default {
     lang: 'es-AR',
     locale: 'es_AR',
     url: 'https://www.example.com', // PENDIENTE: dominio final
-    title: 'Pages by NB · Páginas web, tiendas online y CRM',
+    title: 'NB.studio · Páginas web, tiendas online y CRM',
     description:
       'Diseño páginas web a medida para emprendedores y marcas: landing pages, tiendas online con Mercado Pago y CRM para ordenar tus clientes.',
     ogImage: '',
@@ -30,9 +30,9 @@ export default {
     photo: null,
   },
 
-  // Nombre de la marca (PENDIENTE: confirmar). "word" va grande y "tag" en la
-  // etiqueta de color al lado.
-  brand: { word: 'pages', tag: 'by NB' },
+  // Nombre de la marca: "word" en letra gruesa, un punto amarillo y "tag"
+  // en letra a mano (PENDIENTE: tipografías finales del logo).
+  brand: { word: 'NB', tag: 'studio' },
 
   logo: { type: 'monogram', text: 'nb' },
   social: [],
