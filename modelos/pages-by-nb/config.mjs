@@ -38,9 +38,8 @@ export default {
   social: [],
 
   contact: {
-    // PENDIENTE: número real de WhatsApp (con 549 + código de área, sin 0 ni 15)
     whatsapp: {
-      number: '5490000000000',
+      number: '5491131751517',
       display: 'WhatsApp',
       message: '¡Hola Nico! Quiero consultar por una página web.',
     },

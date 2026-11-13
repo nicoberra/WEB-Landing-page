@@ -120,7 +120,7 @@ ${head(config)}
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
-${config.demo ? '<p class="demo-note">Vista previa · nombre, WhatsApp y precios provisorios</p>' : ''}
+${config.demo ? '<p class="demo-note">Vista previa · nombre y precios provisorios</p>' : ''}
 
 <header class="top" data-top>
   <div class="top__in">
