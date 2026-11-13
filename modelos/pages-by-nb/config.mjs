@@ -30,8 +30,8 @@ export default {
     photo: null,
   },
 
-  // Nombre de la marca: "word" en letra gruesa, un punto amarillo y "tag"
-  // en letra a mano (PENDIENTE: tipografías finales del logo).
+  // Logo: "word" en Baloo 2 (N22), punto verde y "tag" en Gochi Hand (S2)
+  // saliendo del punto en diagonal. Elegido en el mezclador de letras.
   brand: { word: 'NB', tag: 'studio' },
 
   logo: { type: 'monogram', text: 'nb' },
@@ -63,7 +63,7 @@ export default {
 
   fonts: {
     googleFontsUrl:
-      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400..800&family=Gochi+Hand&display=swap',
+      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400..800&family=Gochi+Hand&family=Baloo+2:wght@800&display=swap',
     display: "'Bricolage Grotesque', 'Arial Rounded MT Bold', sans-serif",
     displayWeight: 800,
     body: "'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif",
