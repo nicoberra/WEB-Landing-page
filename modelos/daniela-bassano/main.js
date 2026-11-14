@@ -20,8 +20,18 @@
   var onScroll = function () {
     var y = window.scrollY;
     if (top) top.classList.toggle('is-solid', y > 30);
-    if (float && hero) float.classList.toggle('is-hidden', y < hero.offsetHeight * 0.6);
+    if (float && hero) float.classList.toggle('is-hidden', y < hero.offsetHeight * 0.6 || endVisible);
   };
+  // En el cierre ya está el botón grande de WhatsApp: el flotante se esconde
+  // para no taparlo (ni al pie).
+  var endVisible = false;
+  var endSec = $('.end');
+  if (endSec && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      endVisible = en[0].isIntersecting;
+      onScroll();
+    }, { rootMargin: '0px 0px -25% 0px' }).observe(endSec);
+  }
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 

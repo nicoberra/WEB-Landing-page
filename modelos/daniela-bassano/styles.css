@@ -1943,3 +1943,95 @@ strong {
     scroll-behavior: auto;
   }
 }
+
+/* ===================== Celular: ajustes finos =====================
+   Botones cómodos para el dedo (mínimo ~44 px), letras legibles y el
+   botón flotante de WhatsApp sin tapar textos ni otros botones. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+summary {
+  touch-action: manipulation;
+}
+
+@media (max-width: 1000px) {
+  .switch__btn {
+    min-height: 46px;
+  }
+
+  .menu__item {
+    min-height: 54px;
+  }
+
+  .menu__name {
+    font-size: 13.5px;
+    line-height: 1.25;
+  }
+
+  .ficha__cat {
+    font-size: 12px;
+  }
+
+  .top__place {
+    font-size: 11px;
+  }
+
+  .hero__down::before {
+    content: '';
+    position: absolute;
+    inset: -12px -16px;
+  }
+
+  /* Lugar libre abajo para que el botón flotante no tape el pie */
+  .foot {
+    padding-bottom: 96px;
+  }
+
+  .foot__legal {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chip {
+    min-height: 42px;
+    padding: 11px 16px;
+    font-size: 14px;
+  }
+
+  .result__cat {
+    font-size: 11px;
+  }
+
+  .result__time,
+  .result__num {
+    font-size: 13px;
+  }
+
+  .wa-float {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 380px) {
+  .menu__item {
+    font-size: 13px;
+  }
+
+  .menu__name {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .top__brand {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-grid;
+    place-items: center;
+  }
+}
