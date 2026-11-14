@@ -211,7 +211,7 @@ export default {
           title: ['Máscara', 'LED'],
           icon: 'mask',
           photo: 'assets/foto-led.webp',
-          time: '60 minutos',
+          time: '15 minutos',
           intro: 'La máscara LED se utiliza para finalizar los tratamientos faciales. Su objetivo es ofrecer un cuidado completo y profundo en la piel.',
           listTitle: 'Sus principales beneficios son:',
           list: ['Estimula el colágeno', 'Reduce el tamaño de los poros', 'Disminuye el acné', 'Disminuye la inflamación y congestión de la piel'],
@@ -322,8 +322,7 @@ export default {
           list: ['Recupera la elasticidad cutánea', 'Aumenta el aporte de oxígeno a los tejidos', 'Indicada en edemas', 'Activa el sistema circulatorio', 'Mejora la **celulitis** y previene las arañitas'],
           needs: ['celulitis', 'circulacion'],
         },
-        // En la placa de corporales también figuran estos dos:
-        { id: 'electroporacion', short: 'Electroporación', ref: 'electroporacion', icon: 'bolt' },
+        // En la placa de corporales también figura:
         {
           id: 'termoterapia',
           short: 'Termoterapia',
