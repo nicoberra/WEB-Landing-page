@@ -81,7 +81,7 @@ export default {
     cta: 'Quiero mi web',
     secondary: 'Ver trabajos',
     // Capturas de la portada (número de trabajo en works.items, desde 0)
-    shots: [3, 4, 1],
+    shots: [4, 5, 1],
     stickers: ['100% a medida', 'Rápida en el celu', '¡Con animaciones!'],
   },
 
@@ -153,6 +153,16 @@ export default {
         web: 'assets/web-nutrisigo.webp',
         cel: 'assets/cel-nutrisigo.webp',
         url: 'https://www.nutrisigo.com',
+      },
+      {
+        name: 'Suple Market',
+        kind: 'Suplementos deportivos',
+        type: ['tienda'],
+        tags: ['E-commerce', 'Combos', 'Ofertas'],
+        color: 'mint',
+        web: 'assets/web-suplemarket.webp',
+        cel: 'assets/cel-suplemarket.webp',
+        url: 'https://suplemarket.com.ar',
       },
       {
         name: 'San Ou',
