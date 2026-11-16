@@ -1041,7 +1041,10 @@ strong {
 }
 
 .oval--wide {
-  aspect-ratio: 3 / 2;
+  /* Foto apaisada entera (electroestimulación): recuadro redondeado en vez
+     de óvalo, para que no se corten la cara ni los pies */
+  aspect-ratio: 2 / 1;
+  border-radius: 32px;
   margin-top: 12%;
 }
 
