@@ -451,7 +451,7 @@ export function extraFiles(config) {
     -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; }
   .card h2 { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1.5px dashed #9aa59c; text-align: center; font-size: 14px; letter-spacing: .24em; text-transform: uppercase; }
   label { display: grid; gap: 6px; font-weight: 600; }
-  input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font: inherit; color: var(--ink); }
+  input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font: inherit; font-size: 16px; color: var(--ink); }
   input:focus { outline: 3px solid color-mix(in srgb, var(--apple) 50%, transparent); border-color: var(--accent); }
   .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 14px; padding: 14px 18px; border: 0; border-radius: 999px; background: var(--apple); color: var(--ink); font: 700 13px/1 'Archivo', system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; cursor: pointer; }
   .btn--dark { background: var(--accent); color: var(--paper); }

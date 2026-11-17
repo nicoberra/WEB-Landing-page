@@ -227,9 +227,11 @@ strong {
   box-shadow: 0 14px 30px -18px rgb(62 59 57 / 0.7);
 }
 
-.btn--solid:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--solid:hover {
   background: var(--char);
   border-color: var(--char);
+}
 }
 
 .btn--line {
@@ -237,9 +239,11 @@ strong {
   color: var(--accent);
 }
 
-.btn--line:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--line:hover {
   background: var(--accent);
   color: var(--accent-ink);
+}
 }
 
 .btn--small {
@@ -249,8 +253,10 @@ strong {
   color: var(--accent-ink);
 }
 
-.btn--small:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--small:hover {
   background: var(--char);
+}
 }
 
 .btn--big {
@@ -381,8 +387,10 @@ strong {
   transition: transform 0.4s var(--ease);
 }
 
-.top__nav a:hover::after {
+@media (hover: hover) and (pointer: fine) {
+  .top__nav a:hover::after {
   transform: scaleX(1);
+}
 }
 
 /* ---------- Portada ---------- */
@@ -771,16 +779,28 @@ strong {
   height: 18px;
 }
 
-.menu__item:hover,
 .menu__item[aria-pressed='true'] {
   padding-left: 12px;
   color: var(--mocha-ink);
 }
 
-.menu__item:hover .menu__go,
+@media (hover: hover) and (pointer: fine) {
+  .menu__item:hover {
+  padding-left: 12px;
+  color: var(--mocha-ink);
+}
+}
+
 .menu__item[aria-pressed='true'] .menu__go {
   opacity: 1;
   transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .menu__item:hover .menu__go {
+  opacity: 1;
+  transform: none;
+}
 }
 
 .menu__item[aria-pressed='true'] .menu__ico {
@@ -1136,9 +1156,11 @@ strong {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.4s var(--ease);
 }
 
-.chip:hover {
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
   transform: translateY(-2px);
   border-color: var(--mocha);
+}
 }
 
 .chip[aria-pressed='true'] {
@@ -1179,9 +1201,11 @@ strong {
   transition: transform 0.4s var(--ease), box-shadow 0.4s;
 }
 
-.result:hover {
+@media (hover: hover) and (pointer: fine) {
+  .result:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 40px -28px rgb(62 59 57 / 0.7);
+}
 }
 
 @keyframes pop {
@@ -1632,8 +1656,10 @@ strong {
   height: 28px;
 }
 
-.wa-float:hover {
+@media (hover: hover) and (pointer: fine) {
+  .wa-float:hover {
   transform: scale(1.08);
+}
 }
 
 .wa-float.is-hidden {
@@ -1840,7 +1866,12 @@ strong {
   }
 
   /* Al apoyar el dedo se frena, para poder elegir tranquila */
-  .chips.is-moving:active .chips__row,
+  .chips.is-moving:active .chips__row {
+    animation-play-state: paused;
+  }
+
+  /* Sin restricción a propósito: en el celu, después de tocar una opción
+     las filas quedan quietas para elegir otra con tranquilidad */
   .chips.is-moving:hover .chips__row {
     animation-play-state: paused;
   }
@@ -2036,5 +2067,30 @@ summary {
     min-height: 44px;
     display: inline-grid;
     place-items: center;
+  }
+}
+
+/* Los textos de los botones no se seleccionan al mantener apretado y
+   responden apenas se apoya el dedo */
+button,
+summary,
+[role='button'],
+[role='tab'],
+.btn,
+.chip,
+.menu__item {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@media (pointer: coarse) {
+  .btn:active,
+  .chip:active,
+  .menu__item:active,
+  .switch__btn:active,
+  .wa-float:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
   }
 }

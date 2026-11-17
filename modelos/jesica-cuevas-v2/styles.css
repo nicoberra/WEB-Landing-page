@@ -183,17 +183,21 @@ main:focus {
   color: var(--accent-ink);
 }
 
-.btn--solid:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--solid:hover {
   background: var(--ink);
+}
 }
 
 .btn--line {
   box-shadow: inset 0 0 0 2px var(--ink);
 }
 
-.btn--line:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--line:hover {
   background: var(--ink);
   color: var(--bg);
+}
 }
 
 .btn--light {
@@ -201,8 +205,10 @@ main:focus {
   color: var(--ink);
 }
 
-.btn--light:hover {
+@media (hover: hover) and (pointer: fine) {
+  .btn--light:hover {
   background: var(--apple);
+}
 }
 
 /* ---------- Apertura con el logo ----------
@@ -378,11 +384,18 @@ main:focus {
   transition: background-color 0.25s, color 0.25s, transform 0.25s var(--ease);
 }
 
-.top__icon:hover,
 .top__icon:focus-visible {
   background: var(--accent);
   color: var(--accent-ink);
   transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .top__icon:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: translateY(-2px);
+}
 }
 
 .top__icon svg {
@@ -563,10 +576,16 @@ main:focus {
   transition: background-color 0.25s, color 0.25s;
 }
 
-.hero__nav a:hover,
 .hero__nav a:focus-visible {
   background: var(--accent);
   color: var(--accent-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__nav a:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
 }
 
 /* Con movimiento, arrancan ocultas y aparecen como burbujas (main.js) */
@@ -654,8 +673,10 @@ main:focus {
   background: var(--bg);
 }
 
-.hero__ctas .btn--line:hover {
+@media (hover: hover) and (pointer: fine) {
+  .hero__ctas .btn--line:hover {
   background: var(--ink);
+}
 }
 
 .hero__visual {
@@ -1659,8 +1680,10 @@ main section[id] {
   text-decoration: none;
 }
 
-.card__link:hover {
+@media (hover: hover) and (pointer: fine) {
+  .card__link:hover {
   color: var(--ink);
+}
 }
 
 /* Recetarios en preparación: etiqueta y aviso sin enlace (no se venden aún) */
@@ -1819,8 +1842,10 @@ main section[id] {
   display: none;
 }
 
-.chat__q:hover {
+@media (hover: hover) and (pointer: fine) {
+  .chat__q:hover {
   transform: translateY(-2px);
+}
 }
 
 .chat__qa[open] .chat__q {
@@ -1965,8 +1990,10 @@ main section[id] {
   transition: transform 0.3s var(--ease), background-color 0.3s;
 }
 
-.contact__link:hover {
+@media (hover: hover) and (pointer: fine) {
+  .contact__link:hover {
   background: color-mix(in srgb, var(--bg) 85%, var(--apple));
+}
 }
 
 .contact__icon {
@@ -2578,9 +2605,14 @@ main section[id] {
   opacity: 0.7;
 }
 
-.book:hover,
 .book:focus-visible {
   transform: translateY(-14px) rotateY(-16deg) rotateZ(-2deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .book:hover {
+  transform: translateY(-14px) rotateY(-16deg) rotateZ(-2deg);
+}
 }
 
 .book[aria-pressed='true'] {
@@ -2640,9 +2672,14 @@ main section[id] {
   background: var(--wood-dark);
 }
 
-.shelf__item:hover .pricetag,
 .book[aria-pressed='true'] + .pricetag {
   transform: translateX(-50%) rotate(6deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shelf__item:hover .pricetag {
+  transform: translateX(-50%) rotate(6deg);
+}
 }
 
 /* ---- Mostrador ---- */
@@ -2708,9 +2745,11 @@ main section[id] {
   transition: transform 0.3s var(--ease), background-color 0.3s;
 }
 
-.counter__add:hover {
+@media (hover: hover) and (pointer: fine) {
+  .counter__add:hover {
   background: var(--ink);
   transform: translateY(-2px);
+}
 }
 
 .counter__add:active {
@@ -2849,9 +2888,11 @@ main section[id] {
   cursor: pointer;
 }
 
-.ticket__remove:hover {
+@media (hover: hover) and (pointer: fine) {
+  .ticket__remove:hover {
   background: var(--surface);
   color: var(--ink);
+}
 }
 
 .ticket__empty {
@@ -2887,9 +2928,11 @@ main section[id] {
   transition: transform 0.3s var(--ease), background-color 0.3s;
 }
 
-.ticket__send:hover {
+@media (hover: hover) and (pointer: fine) {
+  .ticket__send:hover {
   transform: translateY(-2px);
   background: color-mix(in srgb, var(--apple) 80%, var(--paper));
+}
 }
 
 .ticket.is-empty .ticket__send {
@@ -2917,7 +2960,8 @@ main section[id] {
   border-radius: 10px;
   background: #fff;
   color: var(--ink);
-  font: 500 14px/1.2 var(--font-body);
+  /* 16 px: con menos, el iPhone hace zoom al escribir y no vuelve */
+  font: 500 16px/1.2 var(--font-body);
 }
 
 .ticket__mail input:focus {
@@ -2934,8 +2978,10 @@ main section[id] {
   cursor: pointer;
 }
 
-.ticket__send--mp:hover {
+@media (hover: hover) and (pointer: fine) {
+  .ticket__send--mp:hover {
   background: #0087c2;
+}
 }
 
 .ticket__send--mp:disabled {
@@ -3163,5 +3209,70 @@ h4,
   .top__name {
     white-space: normal;
     width: 7ch;
+  }
+}
+
+/* ===================== Celular: sensación de app =====================
+   Sin el destello gris al tocar, toques sin demora, los textos de los
+   botones no se seleccionan al mantener apretado y respuesta inmediata
+   al apoyar el dedo (los efectos de "pasar el mouse" solo con mouse). */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+summary,
+label,
+[role='button'],
+[role='tab'] {
+  touch-action: manipulation;
+}
+
+button,
+summary,
+[role='button'],
+[role='tab'],
+.btn {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@media (pointer: coarse) {
+  .btn:active,
+  button:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+  }
+}
+
+/* Celular: enlaces y botones cómodos para el dedo (mínimo ~44 px) y
+   rótulos chiquitos un poco más grandes */
+@media (pointer: coarse), (max-width: 760px) {
+  .plan__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .counter__add {
+    min-height: 46px;
+  }
+
+  .ticket__alt,
+  .shop__mine {
+    display: inline-block;
+    padding-block: 13px;
+  }
+
+  .contact__link span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero__nav a {
+    font-size: 12px;
   }
 }
