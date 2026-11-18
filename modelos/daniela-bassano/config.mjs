@@ -14,12 +14,12 @@
 const WA = '5491154938280';
 
 export default {
-  demo: true,
+  demo: false,
 
   site: {
     lang: 'es-AR',
     locale: 'es_AR',
-    url: 'https://www.example.com', // PENDIENTE: dominio final
+    url: 'https://danyesteticaterra.com.ar',
     title: 'DN Estética Facial y Corporal · Daniela Bassano',
     description:
       'Tratamientos faciales y corporales en Terravista: Venus Legacy, HIFU 12D, Velashape II, Alquimia y más. Belleza y tecnología para tu piel.',
