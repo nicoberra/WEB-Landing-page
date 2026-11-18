@@ -19,7 +19,7 @@ export default {
   site: {
     lang: 'es-AR',
     locale: 'es_AR',
-    url: 'https://danyesteticaterra.com.ar',
+    url: 'https://www.danyesteticaterra.com.ar',
     title: 'DN Estética Facial y Corporal · Daniela Bassano',
     description:
       'Tratamientos faciales y corporales en Terravista: Venus Legacy, HIFU 12D, Velashape II, Alquimia y más. Belleza y tecnología para tu piel.',
