@@ -66,7 +66,7 @@ export default {
   // sans geométrica liviana y "Estética Facial y Corporal" escrita a mano.
   fonts: {
     googleFontsUrl:
-      'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600&family=Allura&display=swap',
+      'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&family=Allura&display=swap',
     display: "'Cormorant Garamond', Georgia, 'Times New Roman', serif",
     displayWeight: 500,
     body: "'Montserrat', 'Helvetica Neue', Arial, sans-serif",
