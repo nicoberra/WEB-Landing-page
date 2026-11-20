@@ -95,14 +95,20 @@ p { margin: 0; }
 .hero__art { position: relative; height: 520px; }
 .stack { position: absolute; inset: 0; }
 .stack__card { position: absolute; width: 74%; transition: translate .2s linear; }
-.stack__card--0 { right: 0; top: 30px; rotate: 4deg; z-index: 3; }
-.stack__card--1 { left: 0; top: 150px; rotate: -7deg; z-index: 2; width: 62%; }
-.stack__card--2 { right: 12%; top: 280px; rotate: -2deg; z-index: 1; width: 58%; }
+.stack__card--0 { left: 0; top: 70px; rotate: -5deg; z-index: 1; width: 70%; }
+.stack__card--1 { right: 2%; top: 0; rotate: 6deg; z-index: 3; width: 34%; }
+.stack__card--2 { left: 34%; top: 170px; rotate: -4deg; z-index: 4; width: 30%; }
 .stack__card .browser__view { height: 250px; }
-.stack__card--1 .browser__view, .stack__card--2 .browser__view { height: 200px; }
+/* Celular de la portada: muestra la página completa recorriéndose sola */
+.phone--hero { padding: 6px; border-radius: 30px; border: 2.5px solid var(--ink); box-shadow: 0 8px 0 var(--ink); }
+.phone__view { display: block; aspect-ratio: 9 / 19; overflow: hidden; border-radius: 24px; background: #fff; }
+.phone.phone--hero img { width: 100%; height: auto; aspect-ratio: auto; object-fit: initial; border-radius: 0; }
+@keyframes peek-phone { 0%, 10% { transform: translateY(0); } 90%, 100% { transform: translateY(-60%); } }
 .stack__card img { animation: peek 16s ease-in-out infinite alternate; }
 .stack__card--1 img { animation-delay: -5s; }
 .stack__card--2 img { animation-delay: -10s; }
+.stack__card--phone img { animation: peek-phone 18s ease-in-out infinite alternate; }
+.stack__card--2.stack__card--phone img { animation-delay: -7s; }
 @keyframes peek { 0%, 12% { transform: translateY(0); } 88%, 100% { transform: translateY(-38%); } }
 .sticker--float { position: absolute; z-index: 5; font-size: 15px; animation: bob 4s ease-in-out infinite; }
 .sticker--0 { left: 4%; top: 40px; background: var(--mint); rotate: -8deg; }
@@ -121,9 +127,8 @@ p { margin: 0; }
   .hero__in { grid-template-columns: 1fr; gap: 26px; }
   .hero__art { height: 380px; max-width: 520px; width: 100%; margin-inline: auto; }
   .stack__card .browser__view { height: 190px; }
-  .stack__card--1 .browser__view, .stack__card--2 .browser__view { height: 150px; }
-  .stack__card--1 { top: 110px; }
-  .stack__card--2 { top: 210px; }
+  .stack__card--0 { top: 60px; }
+  .stack__card--2 { top: 130px; }
   .sticker--1 { top: 190px; }
   .hero__ctas .btn { flex: 1 1 220px; }
 }

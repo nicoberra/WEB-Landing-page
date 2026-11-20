@@ -80,8 +80,9 @@ export default {
     text: 'Diseño páginas web a medida para emprendedores y marcas con ganas de crecer: lindas, rápidas en el celu y pensadas para que te escriban (y te compren).',
     cta: 'Quiero mi web',
     secondary: 'Ver trabajos',
-    // Capturas de la portada (número de trabajo en works.items, desde 0)
-    shots: [1, 2, 3],
+    // Capturas de la portada: work = número de trabajo en works.items (desde 0);
+    // phone: true lo muestra en un celular (con celFull, la página completa).
+    shots: [{ work: 3 }, { work: 1, phone: true }, { work: 2, phone: true }],
     stickers: ['100% a medida', 'Rápida en el celu', '¡Con animaciones!'],
   },
 
@@ -162,6 +163,7 @@ export default {
         color: 'mint',
         web: 'assets/web-suplemarket.webp',
         cel: 'assets/cel-suplemarket.webp',
+        celFull: 'assets/celfull-suplemarket.webp',
         url: 'https://suplemarket.com.ar',
       },
       {
@@ -172,6 +174,7 @@ export default {
         color: 'yellow',
         web: 'assets/web-sanou.webp',
         cel: 'assets/cel-sanou.webp',
+        celFull: 'assets/celfull-sanou.webp',
         url: 'https://sanou.com.ar',
       },
       {

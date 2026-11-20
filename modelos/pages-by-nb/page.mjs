@@ -154,9 +154,14 @@ ${config.demo ? '<p class="demo-note">Vista previa · nombre y precios provisori
       <div class="hero__art" aria-hidden="true" data-parallax>
         <div class="stack">
           ${(h.shots || [0, 1, 2])
-            .map((n) => config.works.items[n])
-            .filter(Boolean)
-            .map((it, i) => `<div class="stack__card stack__card--${i}" data-depth="${(i + 1) * 0.6}"><span class="browser browser--mini"><span class="browser__bar"><i></i><i></i><i></i></span><span class="browser__view"><img src="${esc(it.web)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></span></span></div>`)
+            .map((s) => (typeof s === 'number' ? { work: s } : s))
+            .map((s) => ({ ...s, it: config.works.items[s.work] }))
+            .filter((s) => s.it)
+            .map((s, i) =>
+              s.phone
+                ? `<div class="stack__card stack__card--${i} stack__card--phone" data-depth="${(i + 1) * 0.6}"><span class="phone phone--hero"><span class="phone__view"><img src="${esc(s.it.celFull || s.it.cel)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></span></span></div>`
+                : `<div class="stack__card stack__card--${i}" data-depth="${(i + 1) * 0.6}"><span class="browser browser--mini"><span class="browser__bar"><i></i><i></i><i></i></span><span class="browser__view"><img src="${esc(s.it.web)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></span></span></div>`
+            )
             .join('')}
           ${h.stickers.map((s, i) => `<span class="sticker sticker--float sticker--${i}" data-depth="${1.6 + i * 0.4}">${esc(s)}</span>`).join('')}
           <span class="spark spark--a" data-depth="2.4">${star}</span>
