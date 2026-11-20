@@ -81,7 +81,7 @@ export default {
     cta: 'Quiero mi web',
     secondary: 'Ver trabajos',
     // Capturas de la portada (número de trabajo en works.items, desde 0)
-    shots: [4, 5, 1],
+    shots: [1, 2, 3],
     stickers: ['100% a medida', 'Rápida en el celu', '¡Con animaciones!'],
   },
 
