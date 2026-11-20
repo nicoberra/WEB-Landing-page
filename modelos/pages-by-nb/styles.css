@@ -27,14 +27,14 @@ p { margin: 0; }
 .demo-note { background: var(--ink); color: #fff; text-align: center; font-size: 13px; padding: 6px 12px; margin: 0; }
 
 /* ---------- Logo ---------- */
-/* Logo elegido: NB en Baloo 2, punto verde y "studio" a mano saliendo del
-   punto en diagonal (−35°). --L es el tamaño de NB. */
-.logo { --L: 44px; position: relative; display: inline-block; font: 800 var(--L)/.9 'Baloo 2', var(--font-display); letter-spacing: -.01em; text-decoration: none; white-space: nowrap; margin-right: calc(var(--L) * 1.5); }
+/* Logo elegido: NB en Shrikhand (N12), punto verde y "studio" en
+   Yellowtail (S5), apenas inclinado (−10°). --L es el tamaño de NB. */
+.logo { --L: 34px; position: relative; display: inline-block; font: 400 var(--L)/.9 'Shrikhand', var(--font-display); letter-spacing: 0; text-decoration: none; white-space: nowrap; margin-right: calc(var(--L) * 2.15); }
 .logo__word { color: var(--ink); }
 .logo__dot { color: var(--mint); -webkit-text-stroke: 1.5px var(--ink); paint-order: stroke fill; }
-.logo__tag { position: absolute; left: calc(100% + 2px); top: calc(var(--L) * .6); font: 400 calc(var(--L) * .5)/1 var(--font-accent); letter-spacing: 0; color: var(--blue); transform-origin: 0 70%; transform: rotate(-35deg); transition: transform .5s var(--ease); }
+.logo__tag { position: absolute; left: calc(100% + 1px); top: calc(var(--L) * .02); font: 400 calc(var(--L) * .78)/1 'Yellowtail', var(--font-accent); letter-spacing: 0; color: var(--blue); transform-origin: 0 70%; transform: rotate(-10deg); transition: transform .5s var(--ease); }
 @media (hover: hover) and (pointer: fine) {
-  a:hover .logo__tag { transform: rotate(-28deg) scale(1.08); }
+  a:hover .logo__tag { transform: rotate(-16deg) scale(1.06); }
 }
 
 /* ---------- Botones ---------- */
@@ -68,7 +68,7 @@ p { margin: 0; }
 }
 @media (max-width: 860px) {
   .top__nav { display: none; }
-  .logo { --L: 36px; }
+  .logo { --L: 30px; }
 }
 
 /* ---------- Portada ---------- */
@@ -398,7 +398,7 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-.logo--foot { --L: 64px; margin: 20px 0 30px; }
+.logo--foot { --L: 52px; margin: 20px calc(var(--L) * 2.15) 30px 0; }
 
 /* ===================== Celular: sensación de app =====================
    Sin el destello gris al tocar, toques sin demora, los textos de los

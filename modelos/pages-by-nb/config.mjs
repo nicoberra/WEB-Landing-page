@@ -30,7 +30,7 @@ export default {
     photo: null,
   },
 
-  // Logo: "word" en Baloo 2 (N22), punto verde y "tag" en Gochi Hand (S2)
+  // Logo: "word" en Shrikhand (N12), punto verde y "tag" en Yellowtail (S5)
   // saliendo del punto en diagonal. Elegido en el mezclador de letras.
   brand: { word: 'NB', tag: 'studio' },
 
@@ -63,7 +63,7 @@ export default {
 
   fonts: {
     googleFontsUrl:
-      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400..800&family=Gochi+Hand&family=Baloo+2:wght@800&display=swap',
+      'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400..800&family=Gochi+Hand&family=Shrikhand&family=Yellowtail&display=swap',
     display: "'Bricolage Grotesque', 'Arial Rounded MT Bold', sans-serif",
     displayWeight: 800,
     body: "'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif",
