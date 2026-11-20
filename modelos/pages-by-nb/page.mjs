@@ -19,6 +19,10 @@ const star = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><pat
 const logo = (config, cls = '') =>
   `<span class="logo ${cls}"><span class="logo__word">${esc(config.brand.word)}</span><span class="logo__dot">.</span><span class="logo__tag">${esc(config.brand.tag)}</span></span>`;
 
+/** Celular estilo iPhone: isla, barra de estado, botones y raya de inicio */
+const iphone = (src, attrs = '', cls = '') =>
+  `<span class="iphone ${cls}"><span class="iphone__screen"><span class="iphone__status" aria-hidden="true"><b>9:41</b><i class="iphone__island"></i><span class="iphone__icons"><i class="i-signal"></i><i class="i-wifi"></i><i class="i-batt"></i></span></span><img src="${esc(src)}" alt="" ${attrs}><span class="iphone__home" aria-hidden="true"></span></span></span>`;
+
 /** Mini ilustraciones de cada producto (hechas con HTML y CSS) */
 const ART = {
   landing: `<div class="art art--landing" aria-hidden="true"><div class="art__bar"><i></i><i></i><i></i></div><div class="art__hero"><b></b><span></span><span></span><em></em></div><div class="art__row"><i></i><i></i><i></i></div></div>`,
@@ -87,7 +91,7 @@ function works(config) {
         <button type="button" class="work__shot" data-open="${i}" aria-label="Ver la web de ${esc(it.name)} completa">
           <span class="browser"><span class="browser__bar"><i></i><i></i><i></i><span>${esc(it.url ? it.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : it.name)}</span></span>
             <span class="browser__view"><img src="${esc(it.web)}" alt="Página de ${esc(it.name)} en la compu" loading="lazy" decoding="async"></span></span>
-          <span class="phone"><img src="${esc(it.cel)}" alt="" loading="lazy" decoding="async"></span>
+          ${iphone(it.cel, 'loading="lazy" decoding="async"', 'phone')}
           <span class="work__zoom" aria-hidden="true">Ver completa ↗</span>
         </button>
         <div class="work__info">
@@ -159,7 +163,7 @@ ${config.demo ? '<p class="demo-note">Vista previa · nombre y precios provisori
             .filter((s) => s.it)
             .map((s, i) =>
               s.phone
-                ? `<div class="stack__card stack__card--${i} stack__card--phone" data-depth="${(i + 1) * 0.6}"><span class="phone phone--hero"><span class="phone__view"><img src="${esc(s.it.celFull || s.it.cel)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></span></span></div>`
+                ? `<div class="stack__card stack__card--${i} stack__card--phone" data-depth="${(i + 1) * 0.6}">${iphone(s.it.celFull || s.it.cel, i === 0 ? 'fetchpriority="high"' : 'loading="lazy"', 'iphone--hero')}</div>`
                 : `<div class="stack__card stack__card--${i}" data-depth="${(i + 1) * 0.6}"><span class="browser browser--mini"><span class="browser__bar"><i></i><i></i><i></i></span><span class="browser__view"><img src="${esc(s.it.web)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></span></span></div>`
             )
             .join('')}

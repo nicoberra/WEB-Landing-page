@@ -100,15 +100,12 @@ p { margin: 0; }
 .stack__card--2 { left: 34%; top: 170px; rotate: -4deg; z-index: 4; width: 30%; }
 .stack__card .browser__view { height: 250px; }
 /* Celular de la portada: muestra la página completa recorriéndose sola */
-.phone--hero { padding: 6px; border-radius: 30px; border: 2.5px solid var(--ink); box-shadow: 0 8px 0 var(--ink); }
-.phone__view { display: block; aspect-ratio: 9 / 19; overflow: hidden; border-radius: 24px; background: #fff; }
-.phone.phone--hero img { width: 100%; height: auto; aspect-ratio: auto; object-fit: initial; border-radius: 0; }
 @keyframes peek-phone { 0%, 10% { transform: translateY(0); } 90%, 100% { transform: translateY(-60%); } }
 .stack__card img { animation: peek 16s ease-in-out infinite alternate; }
 .stack__card--1 img { animation-delay: -5s; }
 .stack__card--2 img { animation-delay: -10s; }
-.stack__card--phone img { animation: peek-phone 18s ease-in-out infinite alternate; }
-.stack__card--2.stack__card--phone img { animation-delay: -7s; }
+.stack__card--phone .iphone__screen img { animation: peek-phone 18s ease-in-out infinite alternate; }
+.stack__card--2.stack__card--phone .iphone__screen img { animation-delay: -7s; }
 @keyframes peek { 0%, 12% { transform: translateY(0); } 88%, 100% { transform: translateY(-38%); } }
 .sticker--float { position: absolute; z-index: 5; font-size: 15px; animation: bob 4s ease-in-out infinite; }
 .sticker--0 { left: 4%; top: 40px; background: var(--mint); rotate: -8deg; }
@@ -142,8 +139,6 @@ p { margin: 0; }
 .browser__bar span { margin-left: 8px; padding: 2px 12px; border-radius: 99px; background: var(--placeholder); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .browser__view { display: block; overflow: hidden; background: var(--placeholder); }
 .browser__view img { width: 100%; }
-.phone { display: block; background: var(--ink); border-radius: 26px; padding: 7px; box-shadow: 0 6px 0 rgba(15, 20, 64, .3); }
-.phone img { border-radius: 20px; aspect-ratio: 1 / 2; object-fit: cover; object-position: top; width: 100%; }
 
 /* ---------- Cinta ---------- */
 .ticker { background: var(--blue); color: #fff; border-block: 2.5px solid var(--ink); rotate: -2deg; margin: 0 -20px; overflow: hidden; position: relative; z-index: 2; }
@@ -450,3 +445,27 @@ summary,
 .work__visit {
   min-height: 44px;
 }
+
+/* ---------- Celular estilo iPhone ----------
+   Marco oscuro finito, isla, barra de estado (9:41), botones laterales y
+   raya de inicio. Todo se mide en % del ancho del celu (cqw), así se ve
+   igual de chico o de grande. */
+.iphone { position: relative; display: block; container-type: inline-size; padding: 3.6%; border-radius: 17% / 8%; background: linear-gradient(145deg, #2c2d35, #121318 60%, #26272e); box-shadow: inset 0 0 0 1.5px #4a4b55, 0 8px 0 var(--ink); border: 2.5px solid var(--ink); }
+.iphone::before, .iphone::after { content: ""; position: absolute; width: 2.2%; border-radius: 2px; background: #2a2b33; border: 1.5px solid var(--ink); }
+.iphone::before { right: -3.2%; top: 26%; height: 14%; }
+.iphone::after { left: -3.2%; top: 20%; height: 9%; box-shadow: 0 calc(12cqw) 0 #2a2b33, 0 calc(24cqw) 0 #2a2b33; }
+.iphone__screen { position: relative; display: block; aspect-ratio: 9 / 19.5; overflow: hidden; border-radius: 13.5% / 6.3%; background: #fff; }
+.iphone__screen img { display: block; width: 100%; height: auto; aspect-ratio: auto; object-fit: initial; border-radius: 0; padding-top: 13cqw; background: #fff; }
+.iphone__status { position: absolute; z-index: 2; inset: 0 0 auto; height: 13cqw; display: flex; align-items: center; justify-content: space-between; padding: 0 9cqw 0 11cqw; background: rgba(255, 255, 255, .94); backdrop-filter: blur(6px); font: 700 5.4cqw/1 -apple-system, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif; color: #000; }
+.iphone__status b { font-weight: 700; }
+.iphone__island { position: absolute; left: 50%; top: 3.2cqw; width: 31cqw; height: 9cqw; margin-left: -15.5cqw; border-radius: 99px; background: #000; }
+.iphone__icons { display: flex; align-items: center; gap: 1.6cqw; }
+.iphone__icons i { display: block; background: #000; }
+.i-signal { width: 5.6cqw; height: 3.6cqw; clip-path: polygon(0 100%, 0 75%, 20% 75%, 20% 100%, 27% 100%, 27% 50%, 47% 50%, 47% 100%, 54% 100%, 54% 25%, 74% 25%, 74% 100%, 81% 100%, 81% 0, 100% 0, 100% 100%); }
+.i-wifi { width: 5cqw; height: 3.6cqw; clip-path: polygon(50% 100%, 0 30%, 15% 12%, 50% 0, 85% 12%, 100% 30%); }
+.i-batt { position: relative; width: 7.4cqw; height: 3.6cqw; border-radius: 1.2cqw; background: transparent !important; box-shadow: inset 0 0 0 .5cqw #000; }
+.i-batt::after { content: ""; position: absolute; inset: 1cqw 1.6cqw 1cqw 1cqw; border-radius: .6cqw; background: #000; }
+.iphone__home { position: absolute; z-index: 2; left: 50%; bottom: 2.6cqw; width: 36cqw; height: 1.5cqw; margin-left: -18cqw; border-radius: 99px; background: rgba(0, 0, 0, .75); }
+/* En el portfolio el iPhone muestra solo la primera pantalla */
+.phone.iphone .iphone__screen img { height: 100%; object-fit: cover; object-position: top; }
+.work .phone.iphone { border-color: #fff; }
