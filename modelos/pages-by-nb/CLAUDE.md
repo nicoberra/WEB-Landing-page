@@ -42,8 +42,8 @@ ni `src/`, `scripts/` o `api/`, salvo que Nicolás lo pida explícitamente.
 ## Pendiente
 - Precios de cada producto (hoy "Consultá el precio": `products.items[].price`).
 - Links de Instagram y Facebook cuando existan.
-- Dominio propio y proyecto en Vercel (variable `MODELO` = `pages-by-nb`); al publicar,
-  `demo: false` y `site.url` con el dominio.
+- Dominio propio y proyecto en Vercel (variable `MODELO` = `pages-by-nb`). Ya está `demo: false`;
+  `site.url` toma sola la dirección de Vercel (VERCEL_PROJECT_PRODUCTION_URL).
 
 ## Canva
 Con el conector de Canva conectado, hacé placas y publicaciones con esta marca (colores,
