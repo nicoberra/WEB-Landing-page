@@ -469,3 +469,23 @@ summary,
 /* En el portfolio el iPhone muestra solo la primera pantalla */
 .phone.iphone .iphone__screen img { height: 100%; object-fit: cover; object-position: top; }
 .work .phone.iphone { border-color: #fff; }
+
+/* Planes del CRM */
+.plans { background: #F1FFF8; border-block: 2.5px solid var(--ink); }
+.plans__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 46px; align-items: stretch; }
+.plan { --c: #fff; position: relative; display: flex; flex-direction: column; padding: 26px; border-radius: var(--r); border: 2.5px solid var(--ink); background: var(--c); box-shadow: var(--shadow); transition: transform .45s var(--ease), box-shadow .45s var(--ease); }
+.plan--mint { --c: #CDF7E6; }
+.plan--blue { --c: #DDE2FF; }
+.plan--pink { --c: #FFDDEE; }
+.plan--star { box-shadow: 0 10px 0 var(--blue); }
+@media (hover: hover) and (pointer: fine) { .plan:hover { transform: translateY(-6px); } }
+.plan__badge { position: absolute; top: -16px; right: 18px; rotate: 5deg; background: var(--yellow); }
+.plan__level { font: 800 13px/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--blue); margin: 0; }
+.plan__name { font-size: 28px; line-height: 1.1; margin: 10px 0 0; }
+.plan__plus { font-weight: 700; font-size: 15px; margin: 16px 0 0; }
+.plan .card__list { margin-bottom: 0; }
+.plan .card__foot { margin-top: auto; padding-top: 18px; }
+.plan .card__list + .card__foot { margin-top: 22px; }
+.plans__extras { list-style: none; padding: 0; margin: 40px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.plans__extras li { padding: 10px 16px; border-radius: 99px; border: 2px solid var(--ink); background: #fff; font-weight: 700; font-size: 15px; }
+@media (max-width: 960px) { .plans__grid { grid-template-columns: 1fr; max-width: 560px; } }

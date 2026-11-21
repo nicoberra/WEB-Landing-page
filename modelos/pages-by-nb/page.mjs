@@ -68,6 +68,36 @@ function products(config) {
 </section>`;
 }
 
+function crmPlans(config) {
+  const c = config.crmPlans;
+  if (!c) return '';
+  return `<section class="sec plans" id="planes-crm" aria-labelledby="planes-crm-titulo">
+  <div class="wrap">
+    <p class="eyebrow">${esc(c.eyebrow)}</p>
+    <h2 class="title" id="planes-crm-titulo">${hl(c.title)}</h2>
+    <p class="lead">${esc(c.intro)}</p>
+    <div class="plans__grid">
+      ${c.items
+        .map(
+          (it, i) => `<article class="plan plan--${esc(it.color)}${it.badge ? ' plan--star' : ''}" data-reveal style="--d:${i * 120}ms">
+        ${it.badge ? `<span class="sticker plan__badge">${esc(it.badge)}</span>` : ''}
+        <p class="plan__level">${esc(it.level)}</p>
+        <h3 class="plan__name">${esc(it.name)}</h3>
+        ${it.plus ? `<p class="plan__plus">${esc(it.plus)}</p>` : ''}
+        <ul class="card__list">${it.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+        <div class="card__foot">
+          <span class="card__price">${esc(config.products.soonPrice)}</span>
+          <a class="btn btn--ink" data-magnetic href="${wa(config, `¡Hola Nico! Quiero consultar por el CRM "${it.name}".`)}" ${ext}>Consultar ${arrow}</a>
+        </div>
+      </article>`
+        )
+        .join('\n      ')}
+    </div>
+    <ul class="plans__extras">${c.extras.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+  </div>
+</section>`;
+}
+
 function works(config) {
   const w = config.works;
   const types = [
@@ -181,6 +211,8 @@ ${config.demo ? '<p class="demo-note">Vista previa · nombre y precios provisori
   </div>
 
   ${products(config)}
+
+  ${crmPlans(config)}
 
   ${works(config)}
 

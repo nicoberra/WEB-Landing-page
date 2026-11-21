@@ -137,6 +137,37 @@ export default {
     soonPrice: 'Consultá el precio',
   },
 
+  // Planes del CRM (sale de investigacion-crm.md). Precios: PENDIENTE.
+  crmPlans: {
+    eyebrow: 'CRM a medida',
+    title: 'Tu CRM, en *3 niveles*',
+    intro: 'Arrancás con lo justo y crecés cuando lo necesites. Precio en pesos, sin cobro por usuario y sin permanencia.',
+    items: [
+      {
+        level: 'Plan 1',
+        name: 'Que no se pierda ninguna consulta',
+        color: 'mint',
+        features: ['Fichas de clientes con historial', 'Embudo de ventas visual', 'Tareas y recordatorios', 'WhatsApp a un toque desde la ficha', 'Formulario de tu web conectado', 'Cómodo desde el celular', 'Importás tu Excel y exportás cuando quieras'],
+      },
+      {
+        level: 'Plan 2',
+        name: 'Vendé más y trabajá menos',
+        color: 'blue',
+        badge: 'Recomendado',
+        plus: 'Todo lo del Plan 1, más:',
+        features: ['WhatsApp oficial e Instagram en una bandeja', 'Varios usuarios y chats repartidos', 'Seguimientos automáticos', 'Presupuestos con estado', 'Link de Mercado Pago que confirma el pago solo', 'Reportes por canal y vendedor', 'Agenda y turnos'],
+      },
+      {
+        level: 'Plan 3',
+        name: 'Tu negocio en un solo panel',
+        color: 'pink',
+        plus: 'Todo lo del Plan 2, más:',
+        features: ['Asistente con IA que responde y agenda', 'Difusiones por WhatsApp', 'Factura de ARCA y cuenta corriente', 'Conexión con tu tienda online', 'Cobros recurrentes', 'App o portal para tus clientes'],
+      },
+    ],
+    extras: ['💵 Precio en pesos', '🙅 Sin permanencia', '👥 Sin cobro por usuario', '💬 Soporte por WhatsApp', '🔒 Tus datos son tuyos'],
+  },
+
   // Portfolio: para sumar una web, agregá un ítem con sus capturas en assets/
   // (web-*.webp: página completa de compu, 720 px de ancho; cel-*.webp: celu).
   // url: dirección publicada (si está vacía, no se muestra el botón "Visitar").
