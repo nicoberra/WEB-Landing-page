@@ -42,7 +42,8 @@ ni `src/`, `scripts/` o `api/`, salvo que Nicolás lo pida explícitamente.
 ## Pendiente
 - Precios de cada producto (hoy "Consultá el precio": `products.items[].price`).
 - Links de Instagram y Facebook cuando existan.
-- Dominio propio y proyecto en Vercel (variable `MODELO` = `pages-by-nb`). Ya está `demo: false`;
+- **Publicada** en Vercel: proyecto `nbstudio-web` (equipo "Paginas web"), https://nbstudio-web.vercel.app,
+  variable `MODELO` = `pages-by-nb`. Cada push se publica solo. Falta dominio propio;
   `site.url` toma sola la dirección de Vercel (VERCEL_PROJECT_PRODUCTION_URL).
 
 ## Canva
