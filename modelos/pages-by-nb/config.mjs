@@ -15,8 +15,7 @@ export default {
   site: {
     lang: 'es-AR',
     locale: 'es_AR',
-    // Vercel avisa solo cuál es la dirección publicada (o el dominio propio, cuando lo tengas).
-    url: process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'https://nb-studio.vercel.app',
+    url: 'https://www.nbestudio.com.ar',
     title: 'NB.studio · Páginas web, tiendas online y CRM',
     description:
       'Diseño páginas web a medida para emprendedores y marcas: landing pages, tiendas online con Mercado Pago y CRM para ordenar tus clientes.',
